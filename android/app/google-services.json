@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "72553459558",
+    "firebase_url": "https://food-express-shop.firebaseio.com",
+    "project_id": "food-express-shop",
+    "storage_bucket": "food-express-shop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:72553459558:android:2c00267e3511ec7b1722a7",
+        "android_client_info": {
+          "package_name": "com.inilabs.foodshopapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "72553459558-6c5873b2lheilbj9oetsn4cd0aug7u5e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inilabs.foodshopapp",
+            "certificate_hash": "2a2b4092fee0c63cb0330a61d92a3cf33d2453f0"
+          }
+        },
+        {
+          "client_id": "72553459558-r62iceuk2ncmgt8njsv9r3sv2tqupmo6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYf9u5vLkmnHqvn2pIyRbhCBwljs1-7Zo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "72553459558-r62iceuk2ncmgt8njsv9r3sv2tqupmo6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
