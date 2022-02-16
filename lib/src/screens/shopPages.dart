@@ -61,7 +61,8 @@ class _ShopPageState extends State<ShopPages> {
   TextEditingController editingController = TextEditingController();
   GlobalKey<RefreshIndicatorState>? refreshKey;
   late Position _currentPosition;
-
+  TextEditingController nameController = TextEditingController();
+  String UserName = '';
   Future<void> _checkPermission() async {
     // verify permissions
     LocationPermission permission = await Geolocator.requestPermission();
@@ -84,6 +85,10 @@ class _ShopPageState extends State<ShopPages> {
   List _areas = [];
   List _shops = [];
   String? selectedValueSingleDialog;
+  bool haris = true;
+
+
+  final items = List<String>.generate(10000, (i) => "Item $i");
 
   Future<void> setting() async {
     await Provider.of<AuthProvider>(context, listen: false).setting();
@@ -120,9 +125,12 @@ class _ShopPageState extends State<ShopPages> {
     if (response.statusCode == 200) {
       setState(() {
         _areas = resBody['data']['areas'];
+         original = resBody['data']['areas'];
+         persons = resBody['data']['areas'];
         _shops.clear();
         _shops = resBody['data']['shops'];
         print(url);
+        setState(() {});
         print("harisurlgetArea");
       });
     } else {
@@ -194,18 +202,51 @@ class _ShopPageState extends State<ShopPages> {
   initAuthProvider(context) async {
     Provider.of<AuthProvider>(context, listen: false).initAuthProvider();
   }
+  onItemChanged(String value) {
+    setState(() {
+      // newDataList = mainDataList
+      //     .where((string) => string.toLowerCase().contains(value.toLowerCase()))
+      //     .toList();
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _checkPermission();
-    this.getArea(
-        );
+    getArea();
     _getCurrentLocation();
     this.setting();
     initAuthProvider(context);
   }
 
+  List original = [];
+  List persons = [];
+
+
+
+  void search(String query) {
+    if (query.isEmpty) {
+      persons = original;
+
+      setState(() {});
+      return;
+    }
+    haris =true;
+    query = query.toLowerCase();
+    print(query);
+    List result = [];
+    persons.forEach((p) {
+      var name = p["name"].toString().toLowerCase();
+      if (name.contains(query)) {
+        result.add(p);
+      }
+    });
+
+    persons = result;
+    setState(() {});
+  }
+  TextEditingController txtQuery = new TextEditingController();
   _getCurrentLocation() {
     Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
@@ -337,7 +378,7 @@ class _ShopPageState extends State<ShopPages> {
                         padding:
                             EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
                         child: Container(
-                          height: MediaQuery.of(context).size.height / 13.5,
+                          height: haris ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.height * .12 ,
                           width: MediaQuery.of(context).size.width * .80,
                           padding: EdgeInsets.all(3.0),
                           decoration: BoxDecoration(
@@ -349,55 +390,102 @@ class _ShopPageState extends State<ShopPages> {
                               topRight: Radius.circular(10.0),
                             ),
                           ),
-                          child: Row(
+                          child: Column(
                             children: <Widget>[
-                              SvgPicture.asset(
-                                "assets/icons/maps-and-flags.svg",
-                              ),
-                              SizedBox(width:10),
-                              Expanded(child: SearchChoices.single(
-                                items: _areas.map((area) {
-                                  return DropdownMenuItem(
-                                    child: new Text(
-                                      area['name'] ,
-                                      overflow: TextOverflow.fade,
-                                      maxLines: 1,
-                                      softWrap: false,
+
+                              Container(
+                                margin: EdgeInsets.all(10),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+
+                                    TextFormField(
+                                      controller: txtQuery,
+                                      onChanged: search,
+                                      decoration: InputDecoration(
+                                        hintText: "Search",
+                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.0)),
+                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+                                        prefixIcon: Icon(Icons.search),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(Icons.clear),
+                                          onPressed: () {
+                                            txtQuery.text = '';
+                                            search(txtQuery.text);
+                                            //haris =true;
+                                          },
+                                        ),
+                                      ),
                                     ),
-                                    value: area['name'],
-
-                                  );
-                                }).toList(),
-                                hint: _selectedArea != null
-                                    ? _selectedArea
-                                    : null,
-                                searchHint: "Select one",
-                                value: _selectedArea != null
-                                    ? _selectedArea
-                                    : null,
-
-
-                                onChanged: (area) {
-                                  setState(() {
-                                    //selectedValueSingleDialog = area as String?;
-                                    _selectedArea = area;
-                                    print("_selectedArea");
-                                    print(_selectedArea);
-
-                                    _shops.clear();
-                                    getShops(
-                                        area!,
-                                        _currentPosition != null
-                                            ? _currentPosition.latitude
-                                            : '',
-                                        _currentPosition != null
-                                            ? _currentPosition.longitude
-                                            : '');
-                                  });
-                                },
-                                isExpanded: true,
-                              )
+                                  ],
+                                ),
                               ),
+                               haris ? _listView(persons) : Container()
+                              // SvgPicture.asset(
+                              //   "assets/icons/maps-and-flags.svg",
+                              // // ),
+                              // Padding(
+                              //   padding: const EdgeInsets.all(12.0),
+                              //   child: TextField(
+                              //     //controller: _textController,
+                              //     decoration: InputDecoration(
+                              //       hintText: 'Search Here...',
+                              //     ),
+                              //     onChanged: onItemChanged,
+                              //   ),
+                              // ),
+                              // Expanded(
+                              //   child:  ListView.builder(
+                              //     itemCount: _areas.length,
+                              //     itemBuilder: (context, index) => Card(
+                              //       key: ValueKey(_areas[index]["id"]),
+                              //       color: Colors.amberAccent,
+                              //       elevation: 4,
+                              //       margin: const EdgeInsets.symmetric(vertical: 10),
+                              //       child:
+                              //
+                              //       ListTile(
+                              //         leading: Text(
+                              //           _areas[index]["id"].toString(),
+                              //           style: const TextStyle(fontSize: 24),
+                              //         ),
+                              //           onTap: ()=> print(_areas[index]['name']),
+                              //         title: Text(_areas[index]['name']),
+                              //         subtitle: Text(
+                              //             '${_areas[index]["slug"].toString()} '),
+                              //       ),
+                              //     ),
+                              //   )
+                              // ),
+                              // SizedBox(width:10),
+                              // Expanded(child:
+                              //
+                              //
+                              // TextFormField(
+                              //     readOnly: true,
+                              //     onTap: () {
+                              //       showDialog(
+                              //           context: context,
+                              //           builder: (BuildContext context) {
+                              //             return AlertDialog(
+                              //               title: Text('Country List'),
+                              //               content: setupAlertDialoadContainer(),
+                              //             );
+                              //           });
+                              //     },
+                              //   controller: editingController,
+                              //   decoration: InputDecoration(
+                              //       labelText: "Search",
+                              //       hintText: "Search",
+                              //       prefixIcon: Icon(Icons.search),
+                              //       border: OutlineInputBorder(
+                              //           borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+                              // ),
+                              //
+                              //
+                              // ),
+
                               // Expanded(
                               //   child: DropdownButton(
                               //     isExpanded: true,
@@ -518,6 +606,54 @@ class _ShopPageState extends State<ShopPages> {
     );
   }
 
+  Widget _listView(persons) {
+    return Expanded(
+      child: ListView.builder(
+          itemCount: persons.length,
+          itemBuilder: (context, index) {
+            var person = persons[index];
+            return ListTile(
+              onTap: () {
+                print(person['slug']);
+                setState(() {});
+                haris=false;
+              },
+              leading: CircleAvatar(
+                child: Text(person['name'][0]),
+              ),
+              title: Text(person['name']),
+             // subtitle: Text("City: " + person['id']),
+            );
+          }),
+    );
+  }
+  Widget setupAlertDialoadContainer() {
+    return Container(
+      height: 300.0, // Change as per your requirement
+      width: 300.0, // Change as per your requirement
+      child:
+
+
+      ListView.builder(
+        itemCount: _areas.length,
+        itemBuilder: (context, index) => Card(
+          key: ValueKey(_areas[index]["id"]),
+          color: Colors.amberAccent,
+          elevation: 2,
+          margin: const EdgeInsets.symmetric(vertical:5),
+          child: ListTile(
+            // leading: Text(
+            //   _areas[index]["id"].toString(),
+            //   style: const TextStyle(fontSize: 24),
+            // ),
+            title: Text(_areas[index]['name']),
+            // subtitle: Text(
+            //     '${_areas[index]} '),
+          ),
+        ),
+      )
+    );
+  }
   Widget _buildCard(String name, String imgPath, String address, int shopID) {
     return InkWell(
       highlightColor: Colors.transparent,
