@@ -142,7 +142,7 @@ class _ShopPageState extends State<ShopPages> {
 
   Future<String> getShops(String areaID, latitude, longitude) async {
 
-    final url = areaID != null ? "$api/areas?id=$areaID" : '$api/areas';
+    final url = areaID != null ? "$api/areasproduct?id=$areaID" : '$api/areas';
     print("getShops");
     print(url);
 

@@ -79,7 +79,7 @@ class Router extends StatelessWidget {
           if (user.shopID != null) {
             return MyHomePage();
           } else {
-            return ShopAddPage();
+            return MyHomePage();
           }
         } else {
           return LoginPage();
@@ -200,8 +200,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     _sitename = Provider.of<AuthProvider>(context, listen: false).sitename;
     final _tabs = [
-      ShopPage(),
       ShopPages(),
+
       ProductList(),
       ProfilePage(),
     ];
@@ -237,7 +237,7 @@ class _MyHomePageState extends State<MyHomePage> {
           index: widget.tabsIndex != null ? widget.tabsIndex! : _selectedIndex,
           items: <Widget>[
             Icon(Fryo.shop, size: 30, color: Colors.white),
-            Icon(Fryo.cart, size: 30, color: Colors.white),
+
             Icon(Icons.fastfood, size: 30, color: Colors.white),
             Icon(Fryo.user_1, size: 30, color: Colors.white),
           ],
@@ -248,13 +248,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Void? _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      if (index == 1) {
-        widget.tabsIndex = null;
-        widget.title = 'My Order';
-      } else if (index == 2) {
+       if (index == 1) {
         widget.tabsIndex = null;
         widget.title = 'My Product';
-      } else if (index == 3) {
+      } else if (index == 2) {
         widget.tabsIndex = null;
         widget.title = 'Profile';
       } else {

@@ -100,18 +100,7 @@ class _EditProfilePageState extends State<ShopAddPage> {
     if (form.validate()) {
       Map<String, String?> body = {
         "name": name,
-        "location_id": location_id != null ? location_id : '',
-        "area_id": area_id != null ? area_id : '',
-        "delivery_charge": delivery_charge != null ? delivery_charge : '',
-        "lat": lat != null ? lat : '',
-        "long": long != null ? long : '',
-        "opening_time": opening_time != null ? opening_time : '',
-        "closing_time": closing_time != null ? closing_time : '',
-        "status": status != null ? status : '5',
-        "current_status": current_status != null ? current_status : '5',
-        "shopaddress": address != null ? address : '',
-        "description": description != null ? description : '',
-        "image": base64Image != null ? base64Image : '',
+
         "fileName": fileName != null ? fileName : '',
       };
       final url = "$api/shop";

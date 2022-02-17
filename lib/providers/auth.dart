@@ -117,16 +117,16 @@ class AuthProvider with ChangeNotifier {
       print(apiResponse);
       _token = apiResponse!['token'];
       _user = apiResponse['data']['name'];
-      if (apiResponse['shop'] != null) {
-
-        _shopID = '${apiResponse['shop']['id']}';
-        _shopName = apiResponse['shop']['name'].toString();
-        _openingTime = apiResponse['shop']['opening_time'].toString();
-        _closingTime = apiResponse['shop']['closing_time'].toString();
-        _deliveryCharge = apiResponse['shop']['delivery_charge'].toString();
-        _shopAddress = apiResponse['shop']['address'].toString();
-        _shopImg = apiResponse['shop']['image'].toString();
-      }
+      // if (apiResponse['shop'] != null) {
+      //
+      //   _shopID = '${apiResponse['shop']['id'].toString()}';
+      //   _shopName = apiResponse['shop']['name'].toString();
+      //   _openingTime = apiResponse['shop']['opening_time'].toString();
+      //   _closingTime = apiResponse['shop']['closing_time'].toString();
+      //   _deliveryCharge = apiResponse['shop']['delivery_charge'].toString();
+      //   _shopAddress = apiResponse['shop']['address'].toString();
+      //   _shopImg = apiResponse['shop']['image'].toString();
+      // }
       await storeUserData(apiResponse);
       notifyListeners();
       return true;
@@ -415,21 +415,21 @@ class AuthProvider with ChangeNotifier {
   storeUserData(apiResponse) async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     await storage.setString('token', apiResponse['token']);
-    if (apiResponse['shop'] != null) {
-      await storage.setString('shop', apiResponse['shop']['id'].toString());
-      await storage.setString(
-          'shopName', apiResponse['shop']['name'].toString());
-      await storage.setString(
-          'shopImg', apiResponse['shop']['image'].toString());
-      await storage.setString(
-          'openingTime', apiResponse['shop']['opening_time'].toString());
-      await storage.setString(
-          'closingTime', apiResponse['shop']['closing_time'].toString());
-      await storage.setString(
-          'deliveryCharge', apiResponse['shop']['delivery_charge'].toString());
-      await storage.setString(
-          'shopAddress', apiResponse['shop']['address'].toString());
-    }
+    // if (apiResponse['shop'] != null) {
+    //   await storage.setString('shop', apiResponse['shop']['id'].toString());
+    //   await storage.setString(
+    //       'shopName', apiResponse['shop']['name'].toString());
+    //   await storage.setString(
+    //       'shopImg', apiResponse['shop']['image'].toString());
+    //   await storage.setString(
+    //       'openingTime', apiResponse['shop']['opening_time'].toString());
+    //   await storage.setString(
+    //       'closingTime', apiResponse['shop']['closing_time'].toString());
+    //   await storage.setString(
+    //       'deliveryCharge', apiResponse['shop']['delivery_charge'].toString());
+    //   await storage.setString(
+    //       'shopAddress', apiResponse['shop']['address'].toString());
+    // }
   }
 
   storeSettingData(apiResponse) async {

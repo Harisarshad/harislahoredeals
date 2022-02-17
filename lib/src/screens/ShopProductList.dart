@@ -40,16 +40,20 @@ class _ProductAllState extends State<ProductList> {
   String? shopID;
 
   Future<String> getProducts(String? shopID) async {
-    final url = "$api/shop-product/$shopID/shop/product";
+    final url = "$api/shop-product/1/shop/product";
+    print (url);
     var response = await http.get(Uri.parse(url), headers: {
       HttpHeaders.acceptHeader: "application/json",
       HttpHeaders.authorizationHeader: 'Bearer $token'
     });
+    print(token);
     var resBody = json.decode(response.body);
     if (response.statusCode == 200) {
       setState(() {
         print(resBody);
         _listProduct = resBody['data'];
+
+        print(_listProduct);
         _listProduct!.forEach((element) {
           _products.add(Product(
               variations: element['variations'],
