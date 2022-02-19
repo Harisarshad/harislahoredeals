@@ -126,9 +126,10 @@ class _ShopPageState extends State<ShopPages> {
       setState(() {
         _areas = resBody['data']['areas'];
          original = resBody['data']['areas'];
+         print(original) ;
          persons = resBody['data']['areas'];
         _shops.clear();
-        _shops = resBody['data']['shops'];
+       // _shops = resBody['data']['shops'];
         print(url);
         setState(() {});
         print("harisurlgetArea");
@@ -140,24 +141,31 @@ class _ShopPageState extends State<ShopPages> {
     return "Success";
   }
 
-  Future<String> getShops(String areaID, latitude, longitude) async {
+  Future<String> getShops(String areaID,String slug, String order  ) async {
 
     final url = areaID != null ? "$api/areasproduct?id=$areaID" : '$api/areas';
-    print("getShops");
-    print(url);
+
 
 
     var response = await http.get(Uri.parse(url), headers: {
-      "X-FOOD-LAT": "$latitude",
-      "X-FOOD-LONG": "$longitude",
+      "X-FOOD-LAT": "$slug",
+      "X-FOOD-LONG": "$order",
       "Accept": "application/json"
     });
+    print("getShopsharis");
+    print(url);
+    print(slug);
+    print(order);
     var resBody = json.decode(response.body);
     print(resBody);
     if (response.statusCode == 200) {
       setState(() {
         _shops.clear();
+
+
         _shops = resBody['data'];
+        print(_shops);
+        print("shopsdata");
       });
     } else {
       throw Exception('Failed to data');
@@ -165,24 +173,24 @@ class _ShopPageState extends State<ShopPages> {
     return "Success";
   }
 
-  void searchShop(value, latitude, longitude) async {
-    final url = "$api/search/shops/$value";
-    var response = await http.get(Uri.parse(url), headers: {
-      "X-FOOD-LAT": "$latitude",
-      "X-FOOD-LONG": "$longitude",
-      "Accept": "application/json"
-    });
-    var resBody = json.decode(response.body);
-    if (response.statusCode == 200) {
-      setState(() {
-        _shops.clear();
-        _shops = resBody['data'];
-      });
-    } else {
-      throw Exception('Failed to data');
-    }
-    return;
-  }
+  // void searchShop(value, latitude, longitude) async {
+  //   final url = "$api/search/shops/$value";
+  //   var response = await http.get(Uri.parse(url), headers: {
+  //     "X-FOOD-LAT": "$latitude",
+  //     "X-FOOD-LONG": "$longitude",
+  //     "Accept": "application/json"
+  //   });
+  //   var resBody = json.decode(response.body);
+  //   if (response.statusCode == 200) {
+  //     setState(() {
+  //       _shops.clear();
+  //       _shops = resBody['data'];
+  //     });
+  //   } else {
+  //     throw Exception('Failed to data');
+  //   }
+  //   return;
+  // }
 
   Future<Null> refreshList(area) async {
     setState(() {
@@ -190,12 +198,13 @@ class _ShopPageState extends State<ShopPages> {
       this.setting();
       this.getShops(
           area,
-          _currentPosition != null ? _currentPosition.latitude : '',
-          _currentPosition != null ? _currentPosition.longitude : '');
+          '',
+          ''
+         );
       this.getLocations(
           _currentPosition != null ? _currentPosition.latitude : '',
           _currentPosition != null ? _currentPosition.longitude : '');
-      _getCurrentLocation();
+     // _getCurrentLocation();
     });
   }
 
@@ -215,7 +224,7 @@ class _ShopPageState extends State<ShopPages> {
     super.initState();
     _checkPermission();
     getArea();
-    _getCurrentLocation();
+   // _getCurrentLocation();
     this.setting();
     initAuthProvider(context);
   }
@@ -260,8 +269,9 @@ class _ShopPageState extends State<ShopPages> {
 
         this.getShops(
             _selectedArea!,
-            _currentPosition != null ? _currentPosition.latitude : '',
-            _currentPosition != null ? _currentPosition.longitude : '');
+            '',
+            ''
+            );
       });
     }).catchError((e) {
       print(e);
@@ -271,8 +281,9 @@ class _ShopPageState extends State<ShopPages> {
 
       this.getShops(
           _selectedArea!,
-          _currentPosition != null ? _currentPosition.latitude : '',
-          _currentPosition != null ? _currentPosition.longitude : '');
+          '',
+          ''
+          );
       _checkPermission();
     });
   }
@@ -586,15 +597,15 @@ class _ShopPageState extends State<ShopPages> {
                           width: MediaQuery.of(context).size.width / 2,
                           padding: EdgeInsets.only(left: 10.0, right: 10.0),
                           child: new GridView.count(
-                            crossAxisCount: 2,
+                            crossAxisCount: 1,
                             shrinkWrap: true,
                             childAspectRatio:
                                 MediaQuery.of(context).size.width /
-                                    (MediaQuery.of(context).size.height / 1.6),
+                                    (MediaQuery.of(context).size.height / 10),
                             primary: false,
                             children: _shops.map((shop) {
                               return _buildCard(shop['name'], shop['image'],
-                                  shop['address'], shop['id']);
+                                  shop['name']!   , shop['id']!);
                             }).toList(),
                           )),
                 ],
@@ -614,8 +625,18 @@ class _ShopPageState extends State<ShopPages> {
             var person = persons[index];
             return ListTile(
               onTap: () {
+                print(person['id']);
                 print(person['slug']);
+                print(person['name']);
+                print(person['order']);
+                print("ontaplocation");
                 setState(() {});
+                this.getShops(
+                    person['id'].toString(),
+                    person['slug'],
+                    person['order'].toString()
+
+                );
                 haris=false;
               },
               leading: CircleAvatar(
@@ -667,7 +688,7 @@ class _ShopPageState extends State<ShopPages> {
       },
       child: Container(
         margin: EdgeInsets.all(4),
-        padding: EdgeInsets.all(14),
+        padding: EdgeInsets.all(6),
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -681,18 +702,8 @@ class _ShopPageState extends State<ShopPages> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Container(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(5.0),
-                child: Image.network(
-                  imgPath != null ? imgPath : '',
-                  fit: BoxFit.cover,
-                  height: 100,
-                  width: double.infinity,
-                ),
-              ),
-            ),
-            SizedBox(height: 7),
+
+            SizedBox(height: 2),
             Flexible(
               child: Text(
                 name != null ? name : '',
@@ -706,6 +717,29 @@ class _ShopPageState extends State<ShopPages> {
               ),
             ),
             SizedBox(height: 2),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Icon(
+                  Icons.location_on,
+                  size: 16.0,
+                  color: Colors.amber.shade500,
+                ),
+                Flexible(
+                  child: Text(
+                    address != null ? address : '',
+                    style: TextStyle(
+                        color: Color(0xFF575E67),
+                        fontFamily: 'Varela',
+                        fontSize: 11.0),
+                    softWrap: true,
+                    maxLines: 2,
+                    overflow: TextOverflow.fade,
+                  ),
+                )
+              ],
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,

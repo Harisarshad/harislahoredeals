@@ -67,9 +67,15 @@ class _ProductPostState extends State<ProductPost> {
   String? product_type;
   String? productID;
   String? price;
+  String? size;
+  String? plot;
+  String? combilename;
   String? phase;
+  String? phasename = '';
   String? society = '0';
+  String? societyname = '';
   String? block = '0';
+  String? blockname = '';
 
   String discount_price = '0';
   String? quantity;
@@ -309,9 +315,11 @@ class _ProductPostState extends State<ProductPost> {
       Map<String, String?> body = {
         "product_type":  '5',
         "product_id": productID != null ? productID : '1',
+        "name":  '$societyname' ' + $phasename +' ' $blockname',
         "unit_price": price != null ? price : '',
         "p_city":  '1',
-        "plot_no": price != null ? price : '',
+        "plot_no": plot != null ? plot : '',
+        "plot_size": size != null ? size : '',
         "p_society": society != null ? society : '',
         "p_phase": phase != null ? phase : '',
         "p_block": block != null ? block : '',
@@ -377,109 +385,110 @@ class _ProductPostState extends State<ProductPost> {
     );
   }
 
-  _displayDialog(BuildContext context, type) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-              title: type == '1'
-                  ? Text('Product Variations')
-                  : Text('Product Options'),
-              content: SingleChildScrollView(
-                child: type == '1'
-                    ? Form(
-                        key: _variationFormKey,
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                              child: _variationNameWidget(),
-                            ),
-                            SizedBox(
-                              height: 20.0,
-                            ),
-                            Container(
-                              child: _variationPriceWidget(),
-                            ),
-                            SizedBox(
-                              height: 20.0,
-                            ),
-                            Container(
-                              child: _variationQuantityWidget(),
-                            ),
-                            SizedBox(
-                              height: 24,
-                            ),
-                            SizedBox(
-                              height: 20.0,
-                            ),
-                            Container(
-                              child: _variationDiscountWidget(),
-                            ),
-                            SizedBox(
-                              height: 24,
-                            ),
-                            Container(
-                              width: double.infinity,
-                              child: StyledFlatButton(
-                                'Variation Add',
-                                onPressed: () {
-                                  final form = _variationFormKey.currentState!;
-                                  if (form.validate()) {
-                                    setState(() {
-                                      _variations.add(Variation(
-                                          name: variationName,
-                                          price: variationPrice,
-                                          discount_price: variationDiscount,
-                                          quantity: variationQuantity));
-                                      Navigator.of(context).pop();
-                                    });
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : Form(
-                        key: _variationFormKey,
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                              child: _variationNameWidget(),
-                            ),
-                            SizedBox(
-                              height: 20.0,
-                            ),
-                            Container(
-                              child: _variationPriceWidget(),
-                            ),
-                            SizedBox(
-                              height: 24,
-                            ),
-                            Container(
-                              width: double.infinity,
-                              child: StyledFlatButton(
-                                'Add',
-                                onPressed: () {
-                                  final form = _variationFormKey.currentState!;
-                                  if (form.validate()) {
-                                    setState(() {
-                                      _options.add(Options(
-                                        name: variationName,
-                                        price: variationPrice,
-                                      ));
-                                      Navigator.of(context).pop();
-                                    });
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-              ));
-        });
-  }
+  // _displayDialog(BuildContext context, type) async {
+  //   return showDialog(
+  //       context: context,
+  //       builder: (context) {
+  //         return AlertDialog(
+  //             title: type == '1'
+  //                 ? Text('Product Variations')
+  //                 : Text('Product Options'),
+  //             content: SingleChildScrollView(
+  //               child: type == '1'
+  //                   ? Form(
+  //                       key: _variationFormKey,
+  //                       child: Column(
+  //                         children: <Widget>[
+  //                           Container(
+  //                             child: _variationNameWidget(),
+  //                           ),
+  //                           SizedBox(
+  //                             height: 20.0,
+  //                           ),
+  //                           Container(
+  //                             child: _variationPriceWidget(),
+  //                           ),
+  //
+  //                           SizedBox(
+  //                             height: 20.0,
+  //                           ),
+  //                           Container(
+  //                             child: _variationQuantityWidget(),
+  //                           ),
+  //                           SizedBox(
+  //                             height: 24,
+  //                           ),
+  //                           SizedBox(
+  //                             height: 20.0,
+  //                           ),
+  //                           Container(
+  //                             child: _variationDiscountWidget(),
+  //                           ),
+  //                           SizedBox(
+  //                             height: 24,
+  //                           ),
+  //                           Container(
+  //                             width: double.infinity,
+  //                             child: StyledFlatButton(
+  //                               'Variation Add',
+  //                               onPressed: () {
+  //                                 final form = _variationFormKey.currentState!;
+  //                                 if (form.validate()) {
+  //                                   setState(() {
+  //                                     _variations.add(Variation(
+  //                                         name: variationName,
+  //                                         price: variationPrice,
+  //                                         discount_price: variationDiscount,
+  //                                         quantity: variationQuantity));
+  //                                     Navigator.of(context).pop();
+  //                                   });
+  //                                 }
+  //                               },
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     )
+  //                   : Form(
+  //                       key: _variationFormKey,
+  //                       child: Column(
+  //                         children: <Widget>[
+  //                           Container(
+  //                             child: _variationNameWidget(),
+  //                           ),
+  //                           SizedBox(
+  //                             height: 20.0,
+  //                           ),
+  //                           Container(
+  //                             child: _variationPriceWidget(),
+  //                           ),
+  //                           SizedBox(
+  //                             height: 24,
+  //                           ),
+  //                           Container(
+  //                             width: double.infinity,
+  //                             child: StyledFlatButton(
+  //                               'Add',
+  //                               onPressed: () {
+  //                                 final form = _variationFormKey.currentState!;
+  //                                 if (form.validate()) {
+  //                                   setState(() {
+  //                                     _options.add(Options(
+  //                                       name: variationName,
+  //                                       price: variationPrice,
+  //                                     ));
+  //                                     Navigator.of(context).pop();
+  //                                   });
+  //                                 }
+  //                               },
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //             ));
+  //       });
+  // }
 
   @override
   void initState() {
@@ -540,14 +549,22 @@ class _ProductPostState extends State<ProductPost> {
                         child: _priceWidget(),
                         margin: EdgeInsets.only(left: 12, right: 12, top: 12),
                       ),
-                      Container(
-                        child: _QuantityWidget(),
-                        margin: EdgeInsets.only(left: 12, right: 12, top: 12),
-                      ),
-                      Container(
-                        child: _discountPriceWidget(),
-                        margin: EdgeInsets.only(left: 12, right: 12, top: 12),
-                      ),
+                       Container(
+                         child: _sizeWidget(),
+                         margin: EdgeInsets.only(left: 12, right: 12, top: 12),
+                       ),
+                       Container(
+                         child: _plotWidget(),
+                         margin: EdgeInsets.only(left: 12, right: 12, top: 12),
+                       ),
+                      // Container(
+                      //   child: _QuantityWidget(),
+                      //   margin: EdgeInsets.only(left: 12, right: 12, top: 12),
+                      // ),
+                      // Container(
+                      //   child: _discountPriceWidget(),
+                      //   margin: EdgeInsets.only(left: 12, right: 12, top: 12),
+                      // ),
                       SizedBox(
                         height: 24,
                       ),
@@ -912,6 +929,7 @@ class _ProductPostState extends State<ProductPost> {
                 setState(() {
                   harissoc=false;
                   society = person['soc_id'].toString();
+                  societyname = person['soc_title'].toString();
 
                   txtQuerysoc.text = person['soc_title'];
                   harissoc=false;
@@ -945,6 +963,7 @@ class _ProductPostState extends State<ProductPost> {
                 setState(() {});
                 harisphase=false;
                 phase = person['phase_id'].toString();
+                phasename = person['phase_title'].toString();
 
                 txtQueryphase.text = person['phase_title'];
                 harisphase=false;
@@ -971,6 +990,7 @@ class _ProductPostState extends State<ProductPost> {
                 setState(() {});
                 harisblock=false;
                 block = person['block_id'].toString();
+                blockname = person['block_title'].toString();
                 txtQueryblock.text = person['block_title'];
                 harisblock=false;
 
@@ -1228,7 +1248,70 @@ class _ProductPostState extends State<ProductPost> {
       ],
     );
   }
-
+  Widget _plotWidget() {
+    return Column(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Plot No *',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              TextFormField(
+                  obscureText: false,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      fillColor: Color(0xfff3f3f4),
+                      filled: true),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    plot = value!.trim();
+                    return Validate.requiredField(value, 'Plot No is required.');
+                  })
+            ],
+          ),
+        )
+      ],
+    );
+  }
+  Widget _sizeWidget() {
+    return Column(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Plot size *',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              TextFormField(
+                  obscureText: false,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      fillColor: Color(0xfff3f3f4),
+                      filled: true),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    size = value!.trim();
+                    return Validate.requiredField(value, 'Plot size required.');
+                  })
+            ],
+          ),
+        )
+      ],
+    );
+  }
   Widget _discountPriceWidget() {
     return Column(
       children: <Widget>[

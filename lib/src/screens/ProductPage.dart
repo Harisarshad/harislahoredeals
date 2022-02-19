@@ -82,7 +82,7 @@ class _ProductPageState extends State<ProductPage> {
   };
 
   Future<String> getProduct(String? shopID, String ProductID) async {
-    final url = "$api/shops/$shopID/products/$ProductID";
+    final url = "$api/shops/1/products/$ProductID";
     var response =
         await http.get(Uri.parse(url), headers: {"Accept": "application/json"});
     var resBody = json.decode(response.body);

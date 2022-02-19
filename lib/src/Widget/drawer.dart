@@ -99,84 +99,84 @@ class AppDrawer extends StatelessWidget {
               ));
             },
           ),
-          new ListTile(
-            leading: Icon(Icons.shopping_basket),
-            title: new Text("My Order"),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MyHomePage(
-                            title: 'Order',
-                            tabsIndex: 1,
-                          )));
-            },
-          ),
-          new ListTile(
-            leading: Icon(Icons.shopping_cart),
-            title: new Text("My Shop"),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => ShopDetailsWidget(),
-              ));
-            },
-          ),
+          // new ListTile(
+          //   leading: Icon(Icons.shopping_basket),
+          //   title: new Text("My Order"),
+          //   onTap: () {
+          //     Navigator.of(context).pop();
+          //     Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //             builder: (context) => MyHomePage(
+          //                   title: 'Order',
+          //                   tabsIndex: 1,
+          //                 )));
+          //   },
+          // ),
+          // new ListTile(
+          //   leading: Icon(Icons.shopping_cart),
+          //   title: new Text("My Shop"),
+          //   onTap: () {
+          //     Navigator.of(context).pop();
+          //     Navigator.of(context).push(MaterialPageRoute(
+          //       builder: (context) => ShopDetailsWidget(),
+          //     ));
+          //   },
+          // ),
           new ListTile(
             leading: Icon(Icons.receipt),
-            title: new Text("My Product"),
+            title: new Text("My Properties"),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => MyHomePage(
-                            title: 'My Product',
+                            title: 'My Properties',
                             tabsIndex: 2,
                           )));
             },
           ),
-          new ListTile(
-            leading: Icon(Icons.fastfood),
-            title: new Text("Product Request"),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => ProductRequestList(),
-              ));
-            },
-          ),
-          new ListTile(
-            leading: Icon(Icons.playlist_play),
-            title: new Text("Transaction"),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => Transaction(),
-              ));
-            },
-          ),
-          new ListTile(
-            leading: Icon(Icons.attach_money),
-            title: new Text("Request Withdraw"),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => RequestWithdrawList(),
-              ));
-            },
-          ),
-          new ListTile(
-            leading: Icon(Icons.library_books),
-            title: new Text("Sales Report"),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => SalesReport(),
-              ));
-            },
-          ),
+          // new ListTile(
+          //   leading: Icon(Icons.fastfood),
+          //   title: new Text("Product Request"),
+          //   onTap: () {
+          //     Navigator.of(context).pop();
+          //     Navigator.of(context).push(MaterialPageRoute(
+          //       builder: (context) => ProductRequestList(),
+          //     ));
+          //   },
+          // ),
+          // new ListTile(
+          //   leading: Icon(Icons.playlist_play),
+          //   title: new Text("Transaction"),
+          //   onTap: () {
+          //     Navigator.of(context).pop();
+          //     Navigator.of(context).push(MaterialPageRoute(
+          //       builder: (context) => Transaction(),
+          //     ));
+          //   },
+          // ),
+          // new ListTile(
+          //   leading: Icon(Icons.attach_money),
+          //   title: new Text("Request Withdraw"),
+          //   onTap: () {
+          //     Navigator.of(context).pop();
+          //     Navigator.of(context).push(MaterialPageRoute(
+          //       builder: (context) => RequestWithdrawList(),
+          //     ));
+          //   },
+          // ),
+          // new ListTile(
+          //   leading: Icon(Icons.library_books),
+          //   title: new Text("Sales Report"),
+          //   onTap: () {
+          //     Navigator.of(context).pop();
+          //     Navigator.of(context).push(MaterialPageRoute(
+          //       builder: (context) => SalesReport(),
+          //     ));
+          //   },
+          // ),
           new ListTile(
             leading: Icon(Icons.contact_mail),
             title: new Text("Profile"),

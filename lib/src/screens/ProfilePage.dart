@@ -220,11 +220,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         icon: Icons.phone,
                         onPressed: () async {},
                       ),
-                      InfoCard(
-                        text: result['address'] != '' ? result['address'] : '',
-                        icon: Icons.location_on,
-                        onPressed: () {},
-                      ),
+                      // InfoCard(
+                      //   text: result['address'] != '' ? result['address'] : '',
+                      //   icon: Icons.location_on,
+                      //   onPressed: () {},
+                      // ),
                       createPasswordItem(),
                       createEditItem(),
                       SizedBox(

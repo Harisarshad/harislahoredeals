@@ -58,11 +58,13 @@ class _ProductAllState extends State<ProductList> {
           _products.add(Product(
               variations: element['variations'],
               options: element['options'],
-              name: element['product']['name'],
-              id: element['product']['id'],
+              name: element['name'],
+              id: element['id'],
               productItemID: element['id'],
-              imgUrl: element['product']['image'],
-              quantity: element['quantity'],
+              imgUrl: element['image'],
+              quantity: element['p_society'],
+              plot_no: element['plot_no'].toString(),
+              size: element['size'].toString(),
               price: double.tryParse('${element['unit_price']}')!.toDouble(),
               discount:
                   double.tryParse('${element['discount_price']}')!.toDouble()));
@@ -287,7 +289,13 @@ Widget _buildFoodCard(context, currency, Product food, onTapped) {
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                       Text(
-                        'Quantity - ' + food.quantity.toString(),
+                        'Plot Size - ' + food.size.toString(),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                      Text(
+                        'Plot no - ' + food.plot_no.toString(),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: Theme.of(context).textTheme.caption,
@@ -302,7 +310,7 @@ Widget _buildFoodCard(context, currency, Product food, onTapped) {
                       child: RichText(
                           text: TextSpan(children: [
                         new TextSpan(
-                          text: ' $currency' +
+                          text: ' Rs' +
                               (food.price! - food.discount!).toString(),
                           style: TextStyle(
                               fontFamily: 'Google Sans',

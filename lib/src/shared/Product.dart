@@ -11,12 +11,14 @@ class Product {
   int? stock_count;
   bool? in_stock;
   int? quantity;
+  String? plot_no;
+  String? size;
   double? avgRating;
   int? productItemID;
   List? variations;
   List? options;
 
-  Product({this.options,this.variations,this.in_stock,this.avgRating,this.stock_count,this.id, this.name,this.productItemID,this.discount, this.price, this.categories,this.categoriesID,this.description,this.qty,this.quantity, this.imgUrl});
+  Product({this.options,this.variations,this.in_stock,this.avgRating,this.stock_count,this.id, this.name,this.productItemID,this.discount, this.price, this.categories,this.categoriesID,this.description,this.qty,this.quantity,this.plot_no,this.size, this.imgUrl});
 }
 
 class OrderProduct {
