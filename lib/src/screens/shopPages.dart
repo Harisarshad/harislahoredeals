@@ -1,3 +1,5 @@
+import 'package:eBazaarMerchant/src/screens/ProductPage.dart';
+import 'package:eBazaarMerchant/src/shared/Product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:eBazaarMerchant/config/api.dart';
@@ -86,7 +88,7 @@ class _ShopPageState extends State<ShopPages> {
   List _shops = [];
   String? selectedValueSingleDialog;
   bool haris = true;
-
+  List<Product> _products = [];
 
   final items = List<String>.generate(10000, (i) => "Item $i");
 
@@ -165,6 +167,22 @@ class _ShopPageState extends State<ShopPages> {
 
         _shops = resBody['data'];
         print(_shops);
+
+        _shops.forEach((element) {
+          _products.add(Product(
+              variations: element['variations'],
+              options: element['options'],
+              name: element['name'],
+              id: element['id'],
+              productItemID: element['id'],
+              imgUrl: element['image'],
+              quantity: element['p_society'],
+              plot_no: element['plot_no'].toString(),
+              size: element['size'].toString(),
+              price: double.tryParse('${element['unit_price']}')!.toDouble(),
+              discount:
+              double.tryParse('${element['discount_price']}')!.toDouble()));
+        });
         print("shopsdata");
       });
     } else {
@@ -585,29 +603,164 @@ class _ShopPageState extends State<ShopPages> {
                   //     ),
                   //   ),
                   // ),
-                  SizedBox(height: 15.0),
+                  //SizedBox(height: 15.0),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.green.withOpacity(0.9),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Theme.of(context).focusColor.withOpacity(0.1),
+                            blurRadius: 5,
+                            offset: Offset(0, 2)),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+
+                        SizedBox(width: 15),
+                        Flexible(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      "Phase",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: Theme.of(context).textTheme.bodyText1,
+                                    ),
+
+
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      "Block",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: Theme.of(context).textTheme.bodyText1,
+                                    ),
+
+
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      "Plot",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: Theme.of(context).textTheme.bodyText1,
+                                    ),
+
+
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      "Size",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: Theme.of(context).textTheme.bodyText1,
+                                    ),
+
+
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: RichText(
+                                        text: TextSpan(children: [
+                                          new TextSpan(
+                                            text: ' Price' ,
+
+                                            style: TextStyle(
+                                                fontFamily: 'Google Sans',
+                                                color: Color(0xFFF75A4C),
+                                                fontSize: 14.0),
+                                          ),
+                                        ])),
+                                    flex: -1,
+                                  ),
+                                  SizedBox(width: 15),
+
+                                ],
+                              ),
+
+//                Row(
+//                  children: <Widget>[
+//                    Text('$currency' + food.price.toString(), style: TextStyle(fontFamily: 'Google Sans', fontSize: 18.0,fontWeight: FontWeight.bold, color: Colors.black87,),),
+//                    Text('$currency' + food.price.toString(), style: TextStyle( fontFamily: 'Google Sans',fontSize: 15.0,  color: Colors.black54,),),
+//                  ],
+//                ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                   _shops.isEmpty
                       ? CircularLoadingWidget(
                           height: 200,
                           subtitleText: 'No Shops Found ',
                           img: 'assets/shopping3.png',
                         )
-                      : Container(
-                          height: MediaQuery.of(context).size.height / 1.5,
-                          width: MediaQuery.of(context).size.width / 2,
-                          padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                          child: new GridView.count(
-                            crossAxisCount: 1,
-                            shrinkWrap: true,
-                            childAspectRatio:
-                                MediaQuery.of(context).size.width /
-                                    (MediaQuery.of(context).size.height / 10),
-                            primary: false,
-                            children: _shops.map((shop) {
-                              return _buildCard(shop['name'], shop['image'],
-                                  shop['name']!   , shop['id']!);
-                            }).toList(),
-                          )),
+                      : ListView.separated(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    primary: false,
+                    itemCount: _products.length,
+                    separatorBuilder: (context, index) {
+                      return SizedBox(height: 10);
+                    },
+                    itemBuilder: (context, index) {
+
+                       return Container(
+                          height: 40,
+                          color: Colors.white,
+                          child: _buildFoodCard(
+                            context,
+
+                            _products[index],
+                                () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) {
+                                  return new ProductPage(
+                                      currency: "Rs",
+                                      productData: _products[index]);
+                                }),
+                              );
+                            },
+                          ),
+
+                      );
+                    },
+                  ),
                 ],
               );
             },
@@ -617,6 +770,237 @@ class _ShopPageState extends State<ShopPages> {
     );
   }
 
+  Widget _buildFoodCard(context,  Product food, onTapped) {
+    return InkWell(
+      splashColor: Theme.of(context).colorScheme.secondary,
+      focusColor: Theme.of(context).colorScheme.secondary,
+      highlightColor: Theme.of(context).primaryColor,
+      onTap: onTapped,
+      child:    Container(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.9),
+          boxShadow: [
+            BoxShadow(
+                color: Theme.of(context).focusColor.withOpacity(0.1),
+                blurRadius: 5,
+                offset: Offset(0, 2)),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+
+            SizedBox(width: 15),
+            Flexible(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Phase",
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+
+
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Block",
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+
+
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Plot",
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+
+
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Size",
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+
+
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: RichText(
+                            text: TextSpan(children: [
+                              new TextSpan(
+                                text: ' Price' ,
+
+                                style: TextStyle(
+                                    fontFamily: 'Google Sans',
+                                    color: Color(0xFFF75A4C),
+                                    fontSize: 14.0),
+                              ),
+                            ])),
+                        flex: -1,
+                      ),
+                      SizedBox(width: 15),
+
+                    ],
+                  ),
+
+//                Row(
+//                  children: <Widget>[
+//                    Text('$currency' + food.price.toString(), style: TextStyle(fontFamily: 'Google Sans', fontSize: 18.0,fontWeight: FontWeight.bold, color: Colors.black87,),),
+//                    Text('$currency' + food.price.toString(), style: TextStyle( fontFamily: 'Google Sans',fontSize: 15.0,  color: Colors.black54,),),
+//                  ],
+//                ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+
+
+//       Container(
+//         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+//         decoration: BoxDecoration(
+//           color: Colors.white.withOpacity(0.9),
+//           boxShadow: [
+//             BoxShadow(
+//                 color: Theme.of(context).focusColor.withOpacity(0.1),
+//                 blurRadius: 5,
+//                 offset: Offset(0, 2)),
+//           ],
+//         ),
+//         child: Row(
+//           mainAxisAlignment: MainAxisAlignment.start,
+//           children: <Widget>[
+//
+//             SizedBox(width: 15),
+//             Flexible(
+//               child: Row(
+//                 crossAxisAlignment: CrossAxisAlignment.center,
+//                 children: <Widget>[
+//                   Expanded(
+//                     child: Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       mainAxisAlignment: MainAxisAlignment.center,
+//                       children: <Widget>[
+//                         Text(
+//                           food.size.toString(),
+//                           overflow: TextOverflow.ellipsis,
+//                           maxLines: 3,
+//                           style: Theme.of(context).textTheme.bodyText1,
+//                         ),
+//
+//                         Text( food.plot_no.toString(),
+//                           overflow: TextOverflow.ellipsis,
+//                           maxLines: 2,
+//                           style: Theme.of(context).textTheme.caption,
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//
+//                   Expanded(
+//                     child: Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       mainAxisAlignment: MainAxisAlignment.center,
+//                       children: <Widget>[
+//                         Text(
+//                           food.name!,
+//                           overflow: TextOverflow.ellipsis,
+//                           maxLines: 2,
+//                           style: Theme.of(context).textTheme.bodyText1,
+//                         ),
+//
+//                       ],
+//                     ),
+//                   ),
+//                   SizedBox(width: 5),
+//                   Row(
+//                     children: <Widget>[
+//                       Expanded(
+//                         child: RichText(
+//                             text: TextSpan(children: [
+//                               new TextSpan(
+//                                 text: ' Rs' +
+//                                     (food.price! - food.discount!).toString(),
+//                                 style: TextStyle(
+//                                     fontFamily: 'Google Sans',
+//                                     color: Color(0xFFF75A4C),
+//                                     fontSize: 14.0),
+//                               ),
+//                             ])),
+//                         flex: -1,
+//                       ),
+//                       SizedBox(width: 15),
+//                       food.discount != 0
+//                           ? RichText(
+//                           text: TextSpan(children: [
+//                             new TextSpan(
+//                               text: 'Rs' + food.price.toString(),
+//                               style: new TextStyle(
+//                                 color: Colors.grey,
+//                                 fontSize: 14.0,
+//                                 fontFamily: 'Google Sans',
+//                                 decoration: TextDecoration.lineThrough,
+//                               ),
+//                             ),
+//                           ]))
+//                           : Container(),
+//                     ],
+//                   ),
+//
+// //                Row(
+// //                  children: <Widget>[
+// //                    Text('$currency' + food.price.toString(), style: TextStyle(fontFamily: 'Google Sans', fontSize: 18.0,fontWeight: FontWeight.bold, color: Colors.black87,),),
+// //                    Text('$currency' + food.price.toString(), style: TextStyle( fontFamily: 'Google Sans',fontSize: 15.0,  color: Colors.black54,),),
+// //                  ],
+// //                ),
+//                 ],
+//               ),
+//             )
+//           ],
+//         ),
+//       ),
+    );
+  }
   Widget _listView(persons) {
     return Expanded(
       child: ListView.builder(

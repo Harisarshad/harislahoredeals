@@ -105,7 +105,7 @@ class _ProductPostState extends State<ProductPost> {
   String? _selectedAreaPhase = '1';
   String? _selectedLocation = '1';
   bool harissoc = false;
-  bool harisphase = false;
+  bool harisphase = true;
   bool harisblock = false;
   List originalsoc = [];
   List personssoc = [];
@@ -138,7 +138,7 @@ class _ProductPostState extends State<ProductPost> {
     print(query);
     List result = [];
     personssoc.forEach((p) {
-      var name = p["soc_title"].toString().toLowerCase();
+      var name = p["name"].toString().toLowerCase();
       if (name.contains(query)) {
         result.add(p);
       }
@@ -532,14 +532,14 @@ class _ProductPostState extends State<ProductPost> {
                 child: _productSocietyWidget(),
                 margin: EdgeInsets.only(left: 12, right: 12, top: 12),
               ),
-              originalphase.isNotEmpty ? Container(
-                child: _productPhaseWidget(),
-                margin: EdgeInsets.only(left: 12, right: 12, top: 12),
-              ):Container(),
-              originalblock.isNotEmpty ? Container(
-                child: _productBlockWidget(),
-                margin: EdgeInsets.only(left: 12, right: 12, top: 12),
-              ):Container(),
+              // originalphase.isNotEmpty ? Container(
+              //   child: _productPhaseWidget(),
+              //   margin: EdgeInsets.only(left: 12, right: 12, top: 12),
+              // ):Container(),
+              // originalblock.isNotEmpty ? Container(
+              //   child: _productBlockWidget(),
+              //   margin: EdgeInsets.only(left: 12, right: 12, top: 12),
+              // ):Container(),
               // Container(
               //   child: _productWidget(),
               //   margin: EdgeInsets.only(left: 12, right: 12, top: 12),
@@ -848,15 +848,15 @@ class _ProductPostState extends State<ProductPost> {
                       hintText: "Search",
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.0)),
                       focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-                      prefixIcon: Icon(Icons.search),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.clear),
-                        onPressed: () {
-                          txtQuerysoc.text = '';
-                          searchsoc(txtQuerysoc.text);
-                          //haris =true;
-                        },
-                      ),
+                      // prefixIcon: Icon(Icons.search),
+                      // suffixIcon: IconButton(
+                      //   icon: Icon(Icons.clear),
+                      //   onPressed: () {
+                      //     txtQuerysoc.text = '';
+                      //     searchsoc(txtQuerysoc.text);
+                      //     //haris =true;
+                      //   },
+                      // ),
                     ),
                   ),
                     harissoc ? _listViewsoc(personssoc) : Container()
@@ -928,12 +928,12 @@ class _ProductPostState extends State<ProductPost> {
                 print(person['slug']);
                 setState(() {
                   harissoc=false;
-                  society = person['soc_id'].toString();
-                  societyname = person['soc_title'].toString();
+                  society = person['id'].toString();
+                  societyname = person['name'].toString();
 
-                  txtQuerysoc.text = person['soc_title'];
+                  txtQuerysoc.text = person['name'];
                   harissoc=false;
-                  getPhase(person['soc_id'].toString() );
+                  getPhase(person['id'].toString() );
 
                 });
 
@@ -943,9 +943,9 @@ class _ProductPostState extends State<ProductPost> {
                 // getPhase(person['soc_id'].toString() );
               },
               leading: CircleAvatar(
-                child: Text(person['soc_title'][0]),
+                child: Text(person['name'][0]),
               ),
-              title: Text(person['soc_title']),
+              title: Text(person['name']),
               // subtitle: Text("City: " + person['id']),
             );
           }),

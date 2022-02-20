@@ -82,7 +82,8 @@ class _ProductPageState extends State<ProductPage> {
   };
 
   Future<String> getProduct(String? shopID, String ProductID) async {
-    final url = "$api/shops/1/products/$ProductID";
+    final urls = "$api/shops/1/products/$ProductID";
+    final url = "$api/shops/1/products/1";
     var response =
         await http.get(Uri.parse(url), headers: {"Accept": "application/json"});
     var resBody = json.decode(response.body);
@@ -196,60 +197,7 @@ class _ProductPageState extends State<ProductPage> {
           widget.productData!.name!,
           style: TextStyle(color: Colors.white),
         ),
-        actions: <Widget>[
-          new Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: new Container(
-              height: 150.0,
-              width: 30.0,
-              child: new GestureDetector(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CartPage()));
-                },
-                child: Stack(
-                  children: <Widget>[
-                    new IconButton(
-                        icon: new Icon(
-                          Icons.shopping_cart,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CartPage(),
-                            ),
-                          );
-                        }),
-                    new Positioned(
-                        child: new Stack(
-                      children: <Widget>[
-                        new Icon(Icons.brightness_1,
-                            size: 20.0, color: Colors.orange.shade500),
-                        new Positioned(
-                            top: 4.0,
-                            right: 5.5,
-                            child: new Center(
-                              child: new Text(
-                                ScopedModel.of<CartModel>(context,
-                                        rebuildOnChange: true)
-                                    .totalQunty
-                                    .toString(),
-                                style: new TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11.0,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            )),
-                      ],
-                    )),
-                  ],
-                ),
-              ),
-            ),
-          )
-        ],
+
       ),
       body: SafeArea(
         child: ProductShow['name'] == ''
@@ -692,94 +640,94 @@ class _ProductPageState extends State<ProductPage> {
                                           child: Text(_quantity.toString(),
                                               style: h3),
                                         ),
-                                        Container(
-                                          width: 55,
-                                          height: 40,
-                                          child: OutlineButton(
-                                            onPressed: () {
-                                              int index = model.cart.indexWhere(
-                                                  (i) =>
-                                                      i.id ==
-                                                      ProductShow['id']);
-                                              var value = 0;
-                                              if (index != -1) {
-                                                value =
-                                                    (model.cart[index].qty! +
-                                                        _quantity);
-                                              } else {
-                                                value = _quantity;
-                                              }
-                                              setState(() {
-                                                if (ProductShow['in_stock']) {
-                                                  if (ProductShow[
-                                                              'stock_count'] >=
-                                                          value &&
-                                                      (ProductShow[
-                                                                  'stock_count'] -
-                                                              value) !=
-                                                          0) {
-                                                    _quantity += 1;
-                                                  } else {
-                                                    _showAlert(context);
-                                                  }
-                                                }
-                                              });
-                                            },
-                                            child: Icon(Icons.add),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            width: 180,
-                                            height: 45,
-                                            margin: EdgeInsets.only(
-                                              left: 20,
-                                            ),
-                                            child:
-                                                froyoFlatBtn('Add to Cart', () {
-                                              int index = model.cart.indexWhere(
-                                                  (i) =>
-                                                      i.id ==
-                                                      ProductShow['id']);
-                                              var value = 0;
-                                              if (index != -1) {
-                                                value =
-                                                    (model.cart[index].qty! +
-                                                        _quantity);
-                                              } else {
-                                                value = _quantity;
-                                              }
-
-                                              if (ProductShow['stock_count'] >=
-                                                  value) {
-                                                double total = 0;
-                                                selecteOptions.forEach(
-                                                    (element) => total =
-                                                        (total +
-                                                            double.parse(element
-                                                                .price)));
-                                                model.addProduct(
-                                                    ProductShow['stock_count'],
-                                                    ProductShow['id'],
-                                                    ProductShow['name'],
-                                                    (total +
-                                                            double.parse(
-                                                                ProductShow[
-                                                                    'unit_price']))
-                                                        .toDouble(),
-                                                    _quantity,
-                                                    widget.productData!.imgUrl,
-                                                    _currVariation,
-                                                    selecteOptions,
-                                                    shopID,
-                                                    deliveryCharge);
-                                                _quantity = 1;
-                                              } else {
-                                                _showAlert(context);
-                                              }
-                                            }),
-                                          ),
-                                        ),
+                                        // Container(
+                                        //   width: 55,
+                                        //   height: 40,
+                                        //   child: OutlineButton(
+                                        //     onPressed: () {
+                                        //       int index = model.cart.indexWhere(
+                                        //           (i) =>
+                                        //               i.id ==
+                                        //               ProductShow['id']);
+                                        //       var value = 0;
+                                        //       if (index != -1) {
+                                        //         value =
+                                        //             (model.cart[index].qty! +
+                                        //                 _quantity);
+                                        //       } else {
+                                        //         value = _quantity;
+                                        //       }
+                                        //       setState(() {
+                                        //         if (ProductShow['in_stock']) {
+                                        //           if (ProductShow[
+                                        //                       'stock_count'] >=
+                                        //                   value &&
+                                        //               (ProductShow[
+                                        //                           'stock_count'] -
+                                        //                       value) !=
+                                        //                   0) {
+                                        //             _quantity += 1;
+                                        //           } else {
+                                        //             _showAlert(context);
+                                        //           }
+                                        //         }
+                                        //       });
+                                        //     },
+                                        //     child: Icon(Icons.add),
+                                        //   ),
+                                        // ),
+                                        // Expanded(
+                                        //   child: Container(
+                                        //     width: 180,
+                                        //     height: 45,
+                                        //     margin: EdgeInsets.only(
+                                        //       left: 20,
+                                        //     ),
+                                        //     child:
+                                        //         froyoFlatBtn('Add to Cart', () {
+                                        //       int index = model.cart.indexWhere(
+                                        //           (i) =>
+                                        //               i.id ==
+                                        //               ProductShow['id']);
+                                        //       var value = 0;
+                                        //       if (index != -1) {
+                                        //         value =
+                                        //             (model.cart[index].qty! +
+                                        //                 _quantity);
+                                        //       } else {
+                                        //         value = _quantity;
+                                        //       }
+                                        //
+                                        //       if (ProductShow['stock_count'] >=
+                                        //           value) {
+                                        //         double total = 0;
+                                        //         selecteOptions.forEach(
+                                        //             (element) => total =
+                                        //                 (total +
+                                        //                     double.parse(element
+                                        //                         .price)));
+                                        //         model.addProduct(
+                                        //             ProductShow['stock_count'],
+                                        //             ProductShow['id'],
+                                        //             ProductShow['name'],
+                                        //             (total +
+                                        //                     double.parse(
+                                        //                         ProductShow[
+                                        //                             'unit_price']))
+                                        //                 .toDouble(),
+                                        //             _quantity,
+                                        //             widget.productData!.imgUrl,
+                                        //             _currVariation,
+                                        //             selecteOptions,
+                                        //             shopID,
+                                        //             deliveryCharge);
+                                        //         _quantity = 1;
+                                        //       } else {
+                                        //         _showAlert(context);
+                                        //       }
+                                        //     }),
+                                        //   ),
+                                        // ),
                                       ],
                                     ),
                                   )),

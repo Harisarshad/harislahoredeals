@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
           model: CartModel(),
           child: OverlaySupport.global(
               child: MaterialApp(
-            title: 'eBazaarMerchant',
+            title: 'LahoreDealz',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
                 primarySwatch: Colors.green, primaryColor: primaryColor),

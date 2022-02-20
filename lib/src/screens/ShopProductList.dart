@@ -173,19 +173,21 @@ class _ProductAllState extends State<ProductList> {
                               motion: const DrawerMotion(),
                               extentRatio: 0.25,
                               children: [
-                                SlidableAction(
-                                  label: 'Edit',
-                                  backgroundColor: Colors.black45,
-                                  icon: Icons.edit,
-                                  onPressed: (context) {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                      builder: (context) => ProductEdit(
-                                        product: _products[index],
-                                      ),
-                                    ));
-                                  },
-                                ),
+
+                                //haris arshad
+                                // SlidableAction(
+                                //   label: 'Edit',
+                                //   backgroundColor: Colors.black45,
+                                //   icon: Icons.edit,
+                                //   onPressed: (context) {
+                                //     Navigator.of(context)
+                                //         .push(MaterialPageRoute(
+                                //       builder: (context) => ProductEdit(
+                                //         product: _products[index],
+                                //       ),
+                                //     ));
+                                //   },
+                                // ),
                                 SlidableAction(
                                   label: 'Delete',
                                   backgroundColor: Colors.red,
