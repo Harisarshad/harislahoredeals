@@ -46,6 +46,7 @@ class _ProductAllState extends State<ProductList> {
       HttpHeaders.acceptHeader: "application/json",
       HttpHeaders.authorizationHeader: 'Bearer $token'
     });
+
     print(token);
     var resBody = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -133,6 +134,7 @@ class _ProductAllState extends State<ProductList> {
   @override
   Widget build(BuildContext context) {
     final currency = Provider.of<AuthProvider>(context).currency;
+    print("Bearer $token");
 
     return Scaffold(
         backgroundColor: Colors.indigo[50],
