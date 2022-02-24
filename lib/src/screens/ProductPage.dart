@@ -17,6 +17,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'cartpage.dart';
+class Hourly {
+  int? time;
+  String? icon;
+  String? temp;
+
+  Hourly({this.time, this.icon, this.temp});
+}
 
 class GroupModelOptions {
   String? id;
@@ -59,7 +66,14 @@ class _ProductPageState extends State<ProductPage> {
   List? _variations = [];
   List? _options = [];
   List? reviews = [];
-
+String? unit_price;
+String? plot_no;
+String? p_city;
+String? size;
+String? p_societys;
+String? socname;
+String? phasename;
+String? blockname;
   List imageList = [AssetImage('assets/images/icon.png')];
 
   int _quantity = 1;
@@ -73,54 +87,73 @@ class _ProductPageState extends State<ProductPage> {
   List<GroupModelVariations> _groupVariations = [];
   List<GroupModelOptions> _groupOptions = [];
   Map<String, dynamic> ProductShow = {
-    "id": '',
+   // "id": '',
     "name": '',
-    "unit_price": '',
-    "stock_count": '',
-    "in_stock": '',
-    "description": '',
+    "first_name": '',
+    "last_name": '',
+    "email": '',
+    "phone": '',
   };
 
-  Future<String> getProduct(String? shopID, String ProductID) async {
-    final urls = "$api/shops/1/products/$ProductID";
-    final url = "$api/shops/1/products/1";
+  Future<String> getProduct(String? shopID, String UserID) async {
+    //final url = "$api/shops/1/user/6";
+    final url = "$api/shops/1/user/$UserID";
+
+
     var response =
         await http.get(Uri.parse(url), headers: {"Accept": "application/json"});
     var resBody = json.decode(response.body);
     if (response.statusCode == 200) {
       setState(() {
-        ProductShow['id'] = resBody['data']['id'];
+        unit_price = widget.productData!.price.toString();
+        plot_no = widget.productData!.plot_no.toString();
+        p_city = widget.productData!.id.toString();
+        size = widget.productData!.size.toString();
+        p_societys= widget.productData!.id.toString();
+        socname= widget.productData!.socname.toString();
+        phasename= widget.productData!.phasename.toString();
+        blockname= widget.productData!.blockname.toString();
+       print(resBody['data']) ;
+      // print(resBody['data']['name']) ;
+       print('${resBody['data']['name'].toString()}') ;
         ProductShow['name'] = resBody['data']['name'];
-        ProductShow['unit_price'] =
-            (double.tryParse('${resBody['data']['unit_price']}')! -
-                    double.tryParse('${resBody['data']['discount_price']}')!)
-                .toString();
-        ProductShow['discount_price'] =
-            resBody['data']['discount_price'].toString();
-        ProductShow['stock_count'] = resBody['data']['stock_count'];
-        ProductShow['in_stock'] = resBody['data']['in_stock'];
-        ProductShow['description'] = resBody['data']['description'];
-        ProductShow['avgRating'] = resBody['data']['ratings']['avgRating'];
-        reviews = resBody['data']['ratings']['reviews'];
-        _listImage = resBody['data']['image'];
-        _variations = resBody['data']['variations'];
-        _options = resBody['data']['options'];
-        imageList.clear();
-        _listImage!.forEach((f) => imageList.add(NetworkImage(f)));
-        _variations!
-            .forEach((variation) => _groupVariations.add(GroupModelVariations(
-                  id: variation['id'].toString(),
-                  name: variation['name'],
-                  stock_count: int.tryParse('${variation['stock_count']}'),
-                  in_stock: variation['in_stock'],
-                  price: variation['unit_price'].toString(),
-                  discount: variation['discount_price'].toString(),
-                )));
-        _options!.forEach((option) => _groupOptions.add(GroupModelOptions(
-              id: option['id'].toString(),
-              name: option['name'],
-              price: option['unit_price'].toString(),
-            )));
+        ProductShow['first_name'] = resBody['data']['first_name'];
+        ProductShow['last_name'] = resBody['data']['last_name'];
+
+        ProductShow['email'] = resBody['data']['email'];
+        ProductShow['phone'] = resBody['data']['phone'];
+        ProductShow['address'] = resBody['data']['address'];
+        ProductShow['username'] = resBody['data']['username'];
+        // ProductShow['unit_price'] =
+        //     (double.tryParse('${resBody['data']['unit_price']}')! -
+        //             double.tryParse('${resBody['data']['discount_price']}')!)
+        //         .toString();
+        // ProductShow['discount_price'] =
+        //     resBody['data']['discount_price'].toString();
+        // ProductShow['stock_count'] = resBody['data']['stock_count'];
+        // ProductShow['in_stock'] = resBody['data']['in_stock'];
+        // ProductShow['description'] = resBody['data']['description'];
+        // ProductShow['avgRating'] = resBody['data']['ratings']['avgRating'];
+        // reviews = resBody['data']['ratings']['reviews'];
+        // _listImage = resBody['data']['image'];
+        // _variations = resBody['data']['variations'];
+        // _options = resBody['data']['options'];
+        // imageList.clear();
+        // _listImage!.forEach((f) => imageList.add(NetworkImage(f)));
+        // _variations!
+        //     .forEach((variation) => _groupVariations.add(GroupModelVariations(
+        //           id: variation['id'].toString(),
+        //           name: variation['name'],
+        //           stock_count: int.tryParse('${variation['stock_count']}'),
+        //           in_stock: variation['in_stock'],
+        //           price: variation['unit_price'].toString(),
+        //           discount: variation['discount_price'].toString(),
+        //         )));
+        // _options!.forEach((option) => _groupOptions.add(GroupModelOptions(
+        //       id: option['id'].toString(),
+        //       name: option['name'],
+        //       price: option['unit_price'].toString(),
+        //     )));
       });
     } else {
       throw Exception('Failed to');
@@ -154,6 +187,7 @@ class _ProductPageState extends State<ProductPage> {
         Provider.of<AuthProvider>(context, listen: false).deliveryCharge;
 
     getProduct(shopID, (widget.productData!.id).toString());
+
     widget.productData!.qty = _quantity;
   }
 
@@ -162,25 +196,7 @@ class _ProductPageState extends State<ProductPage> {
     final authenticated = Provider.of<AuthProvider>(context).status;
     final currency = Provider.of<AuthProvider>(context).currency;
 
-    Future<void> _showAlert(BuildContext context) {
-      return showDialog<void>(
-        context: context,
-        useRootNavigator: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Product Stock Out'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Dismiss'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
+
 
     myCarousel();
 
@@ -194,25 +210,25 @@ class _ProductPageState extends State<ProductPage> {
           color: Colors.white,
         ),
         title: Text(
-          widget.productData!.name!,
+          '${widget.productData!.socname} ' + '${widget.productData!.phasename!} '+ '${widget.productData!.blockname!}',
           style: TextStyle(color: Colors.white),
         ),
 
       ),
       body: SafeArea(
-        child: ProductShow['name'] == ''
+        child: phasename == ''
             ? CircularLoadingWidget(
                 height: 400,
                 subtitleText: 'Products No Found',
                 img: 'assets/shopping1.png')
-            : ScopedModelDescendant<CartModel>(
-                builder: (context, child, model) {
-                  return Column(
+            :
+
+                   Column(
                     children: <Widget>[
                       Expanded(
                         child: Container(
                             child: ListView(children: <Widget>[
-                          myCarousel(),
+                         // myCarousel(),
                           Padding(
                             padding: const EdgeInsets.only(
                                 right: 20, left: 20, bottom: 10, top: 25),
@@ -220,14 +236,14 @@ class _ProductPageState extends State<ProductPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Expanded(
-                                  child: Text(
-                                    ProductShow['name'],
+                                  child: Text('Society' + ' '+
+                                    socname.toString(),
                                     overflow: TextOverflow.fade,
                                     softWrap: true,
                                     maxLines: 2,
                                     style: CustomTextStyle.textFormFieldMedium
                                         .copyWith(
-                                            color: Colors.black54,
+                                            color: Colors.black,
                                             fontSize: 22,
                                             fontWeight: FontWeight.bold),
                                   ),
@@ -235,7 +251,51 @@ class _ProductPageState extends State<ProductPage> {
                               ],
                             ),
                           ),
-                          Padding(
+                              phasename == '' ? Container(): Padding(
+                                padding: const EdgeInsets.only(
+                                    right: 20, left: 20, bottom: 10, top: 25),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Text('Phase' + ' ' +
+                                        phasename.toString(),
+                                        overflow: TextOverflow.fade,
+                                        softWrap: true,
+                                        maxLines: 2,
+                                        style: CustomTextStyle.textFormFieldMedium
+                                            .copyWith(
+                                            color: Colors.black,
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              blockname == '' ? Container(): Padding(
+                                padding: const EdgeInsets.only(
+                                    right: 20, left: 20, bottom: 10, top: 25),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Text('Block' + ' '+
+                                        blockname.toString(),
+                                        overflow: TextOverflow.fade,
+                                        softWrap: true,
+                                        maxLines: 2,
+                                        style: CustomTextStyle.textFormFieldMedium
+                                            .copyWith(
+                                            color: Colors.black,
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              plot_no == ''? Container () :Padding(
                             padding: const EdgeInsets.only(
                                 right: 20, left: 20, bottom: 10, top: 5),
                             child: Row(
@@ -243,15 +303,15 @@ class _ProductPageState extends State<ProductPage> {
                               children: <Widget>[
                                 Expanded(
                                   child: Text(
-                                    'Price ' +
-                                        currency! +
-                                        ProductShow['unit_price'].toString(),
+                                    'Plot no  ' +
+                                        ' '+
+                                        plot_no.toString(),
                                     overflow: TextOverflow.fade,
                                     softWrap: true,
                                     maxLines: 2,
                                     style: CustomTextStyle.textFormFieldMedium
                                         .copyWith(
-                                            color: Colors.amberAccent,
+                                            color: Colors.red,
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold),
                                   ),
@@ -259,41 +319,37 @@ class _ProductPageState extends State<ProductPage> {
                               ],
                             ),
                           ),
-                          reviews!.isEmpty
-                              ? Container()
-                              : Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 0),
-                                  child: RatingBar.builder(
-                                    initialRating: ProductShow['avgRating'] !=
-                                            ''
-                                        ? double.tryParse(
-                                                '${ProductShow['avgRating']}')!
-                                            .toDouble()
-                                        : 0,
-                                    itemSize: 25.0,
-                                    glowColor: Colors.amberAccent,
-                                    minRating: 1,
-                                    direction: Axis.horizontal,
-                                    allowHalfRating: true,
-                                    itemCount: 5,
-                                    itemPadding:
-                                        EdgeInsets.symmetric(horizontal: 4.0),
-                                    itemBuilder: (context, _) => Icon(
-                                      Icons.star,
-                                      color: Colors.amber,
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    right: 20, left: 20, bottom: 10, top: 5),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Text(
+                                        'Price ' +
+                                            currency! + ' '+
+                                            unit_price.toString(),
+                                        overflow: TextOverflow.fade,
+                                        softWrap: true,
+                                        maxLines: 2,
+                                        style: CustomTextStyle.textFormFieldMedium
+                                            .copyWith(
+                                            color: Colors.red,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
-                                    onRatingUpdate: (rating) {
-                                      print(rating);
-                                    },
-                                  ),
+                                  ],
                                 ),
+                              ),
+
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 5),
                             child: Text(
-                              ProductShow['description'] != null
-                                  ? ProductShow['description']
+                              ProductShow['name'] != null
+                                  ? ProductShow['name']
                                   : '',
                               overflow: TextOverflow.fade,
                               style: CustomTextStyle.textFormFieldMedium
@@ -303,191 +359,25 @@ class _ProductPageState extends State<ProductPage> {
                                       fontWeight: FontWeight.bold),
                             ),
                           ),
-                          _groupVariations.isEmpty
-                              ? Container()
-                              : Column(children: <Widget>[
-                                  Container(
-                                    child: ListTile(
-                                      title: Text(
-                                        'Variation',
-                                        overflow: TextOverflow.fade,
-                                        softWrap: true,
-                                        maxLines: 2,
-                                        style: CustomTextStyle
-                                            .textFormFieldMedium
-                                            .copyWith(
-                                                color: Colors.black,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                      child: Container(
-                                    child: Column(
-                                      children: _groupVariations
-                                          .map((t) => t.in_stock == true
-                                              ? RadioListTile(
-                                                  value: t.id,
-                                                  groupValue: _currVariation,
-                                                  title: Text(
-                                                    "${t.name}",
-                                                    overflow: TextOverflow.fade,
-                                                    softWrap: true,
-                                                    maxLines: 1,
-                                                    style: CustomTextStyle
-                                                        .textFormFieldMedium
-                                                        .copyWith(
-                                                            color: Colors.black,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal),
-                                                  ),
-                                                  onChanged: (dynamic val) {
-                                                    setState(() {
-                                                      _currVariation = val;
-                                                      ProductShow[
-                                                          'unit_price'] = (double
-                                                                  .tryParse(
-                                                                      '${t.price}')! -
-                                                              double.tryParse(
-                                                                  '${t.discount}')!)
-                                                          .toString();
-                                                      ProductShow[
-                                                              'stock_count'] =
-                                                          t.stock_count;
-                                                      ProductShow['in_stock'] =
-                                                          t.in_stock;
-                                                      int index = model.cart
-                                                          .indexWhere((i) =>
-                                                              i.id ==
-                                                              ProductShow[
-                                                                  'id']);
-                                                      if (index != -1) {
-                                                        model.removeProduct(
-                                                            model.cart[index]
-                                                                .id);
-                                                      }
-                                                    });
-                                                  },
-                                                  activeColor: Colors.red,
-                                                  secondary: OutlineButton(
-                                                    child: Text(currency +
-                                                        (double.tryParse(
-                                                                    '${t.price}')! -
-                                                                double.tryParse(
-                                                                    '${t.discount}')!)
-                                                            .toString()),
-                                                    onPressed: () {},
-                                                  ),
-                                                )
-                                              : Container())
-                                          .toList(),
-                                    ),
-                                  )),
-                                ]),
-                          _groupVariations.isEmpty
-                              ? Container()
-                              : SizedBox(
-                                  height: 5,
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 5),
+                                child: Text(
+                                  ProductShow['first_name'] != null
+                                      ? ProductShow['first_name']
+                                      : '',
+                                  overflow: TextOverflow.fade,
+                                  style: CustomTextStyle.textFormFieldMedium
+                                      .copyWith(
+                                      color: Colors.black54,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                          _groupOptions.isEmpty
-                              ? Container()
-                              : Column(
-                                  children: <Widget>[
-                                    Container(
-                                      child: ListTile(
-                                        title: Text(
-                                          'Options',
-                                          overflow: TextOverflow.fade,
-                                          softWrap: true,
-                                          maxLines: 2,
-                                          style: CustomTextStyle
-                                              .textFormFieldMedium
-                                              .copyWith(
-                                                  color: Colors.black,
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 15,
-                                        ),
-                                        child: Container(
-                                          child: ListView.builder(
-                                              shrinkWrap: true,
-                                              primary: false,
-                                              itemCount: _groupOptions.length,
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
-                                                return CheckboxListTile(
-                                                  title: Text(
-                                                    _groupOptions[index].name!,
-                                                    overflow: TextOverflow.fade,
-                                                    softWrap: true,
-                                                    maxLines: 2,
-                                                    style: CustomTextStyle
-                                                        .textFormFieldMedium
-                                                        .copyWith(
-                                                            color: Colors.black,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal),
-                                                  ),
-                                                  subtitle: Text(
-                                                    '\$' +
-                                                        _groupOptions[index]
-                                                            .price!,
-                                                    overflow: TextOverflow.fade,
-                                                    softWrap: true,
-                                                    maxLines: 2,
-                                                    style: CustomTextStyle
-                                                        .textFormFieldMedium
-                                                        .copyWith(
-                                                            color: Colors.black,
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal),
-                                                  ),
-                                                  value: _selecteCategorys
-                                                      .contains(
-                                                          _groupOptions[index]
-                                                              .id),
-                                                  onChanged: (bool? selected) {
-                                                    _onCategorySelected(
-                                                        selected,
-                                                        _groupOptions[index].id,
-                                                        _groupOptions[index]);
-                                                  },
-                                                );
-                                              }),
-                                        )),
-                                  ],
-                                ),
-                          Divider(),
-                          reviews!.isEmpty
-                              ? Container()
-                              : Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 15.0, bottom: 16.0),
-                                  child: Align(
-                                      alignment: Alignment(-1, 0),
-                                      child: Text(
-                                        'Recent Reviews',
-                                        style: CustomTextStyle
-                                            .textFormFieldMedium
-                                            .copyWith(
-                                                color: Colors.black,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold),
-                                      )),
-                                ),
+                              ),
+
+
+
+
                           reviews!.isEmpty
                               ? Container()
                               : Column(
@@ -605,139 +495,12 @@ class _ProductPageState extends State<ProductPage> {
                         ])),
                         flex: 90,
                       ),
-                      Expanded(
-                        child: Container(
-                            width: double.infinity,
-                            margin: EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 12),
-                            child: ProductShow['in_stock'] == false
-                                ? Container()
-                                : Container(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Container(
-                                          width: 55,
-                                          height: 40,
-                                          child: OutlineButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                if (ProductShow['in_stock']) {
-                                                  if (_quantity == 1) return;
-                                                  _quantity -= 1;
-                                                }
-                                              });
-                                            },
-                                            child: Icon(Icons.remove),
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                              left: 20, right: 20),
-                                          child: Text(_quantity.toString(),
-                                              style: h3),
-                                        ),
-                                        // Container(
-                                        //   width: 55,
-                                        //   height: 40,
-                                        //   child: OutlineButton(
-                                        //     onPressed: () {
-                                        //       int index = model.cart.indexWhere(
-                                        //           (i) =>
-                                        //               i.id ==
-                                        //               ProductShow['id']);
-                                        //       var value = 0;
-                                        //       if (index != -1) {
-                                        //         value =
-                                        //             (model.cart[index].qty! +
-                                        //                 _quantity);
-                                        //       } else {
-                                        //         value = _quantity;
-                                        //       }
-                                        //       setState(() {
-                                        //         if (ProductShow['in_stock']) {
-                                        //           if (ProductShow[
-                                        //                       'stock_count'] >=
-                                        //                   value &&
-                                        //               (ProductShow[
-                                        //                           'stock_count'] -
-                                        //                       value) !=
-                                        //                   0) {
-                                        //             _quantity += 1;
-                                        //           } else {
-                                        //             _showAlert(context);
-                                        //           }
-                                        //         }
-                                        //       });
-                                        //     },
-                                        //     child: Icon(Icons.add),
-                                        //   ),
-                                        // ),
-                                        // Expanded(
-                                        //   child: Container(
-                                        //     width: 180,
-                                        //     height: 45,
-                                        //     margin: EdgeInsets.only(
-                                        //       left: 20,
-                                        //     ),
-                                        //     child:
-                                        //         froyoFlatBtn('Add to Cart', () {
-                                        //       int index = model.cart.indexWhere(
-                                        //           (i) =>
-                                        //               i.id ==
-                                        //               ProductShow['id']);
-                                        //       var value = 0;
-                                        //       if (index != -1) {
-                                        //         value =
-                                        //             (model.cart[index].qty! +
-                                        //                 _quantity);
-                                        //       } else {
-                                        //         value = _quantity;
-                                        //       }
-                                        //
-                                        //       if (ProductShow['stock_count'] >=
-                                        //           value) {
-                                        //         double total = 0;
-                                        //         selecteOptions.forEach(
-                                        //             (element) => total =
-                                        //                 (total +
-                                        //                     double.parse(element
-                                        //                         .price)));
-                                        //         model.addProduct(
-                                        //             ProductShow['stock_count'],
-                                        //             ProductShow['id'],
-                                        //             ProductShow['name'],
-                                        //             (total +
-                                        //                     double.parse(
-                                        //                         ProductShow[
-                                        //                             'unit_price']))
-                                        //                 .toDouble(),
-                                        //             _quantity,
-                                        //             widget.productData!.imgUrl,
-                                        //             _currVariation,
-                                        //             selecteOptions,
-                                        //             shopID,
-                                        //             deliveryCharge);
-                                        //         _quantity = 1;
-                                        //       } else {
-                                        //         _showAlert(context);
-                                        //       }
-                                        //     }),
-                                        //   ),
-                                        // ),
-                                      ],
-                                    ),
-                                  )),
-                        flex: 10,
-                      )
+
                     ],
-                  );
-                },
+                  )
+
               ),
-      ),
+
     );
   }
 
