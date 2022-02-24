@@ -7,6 +7,7 @@ import 'package:eBazaarMerchant/providers/auth.dart';
 import 'package:eBazaarMerchant/src/Widget/drawer.dart';
 import 'package:eBazaarMerchant/src/Widget/loading.dart';
 import 'package:eBazaarMerchant/src/screens/ProfilePage.dart';
+import 'package:eBazaarMerchant/src/screens/SearchPage.dart';
 import 'package:eBazaarMerchant/src/screens/ShopAddPage.dart';
 import 'package:eBazaarMerchant/src/screens/ShopProductList.dart';
 import 'package:eBazaarMerchant/src/screens/cartpage.dart';
@@ -200,7 +201,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     _sitename = Provider.of<AuthProvider>(context, listen: false).sitename;
     final _tabs = [
-      ShopPages(),
+      //ShopPages(),
+      SearchPage(),
 
       ProductList(),
       ProfilePage(),
