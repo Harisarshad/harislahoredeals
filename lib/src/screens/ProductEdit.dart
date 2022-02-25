@@ -1117,6 +1117,7 @@ class _ProductEditState extends State<ProductEdit> {
                     SizedBox(width: 10),
                     Expanded(
                       child: DropdownButton(
+
                         isExpanded: true,
                         underline: SizedBox(
                           width: 20,
