@@ -13,8 +13,11 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:search_choices/search_choices.dart';
-
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+
+
+
 class Animal {
   final int? id;
   final String? name;
@@ -52,42 +55,50 @@ class _ShopPageState extends State<SearchPage> {
   String api = FoodApi.baseApi;
   String? _selectedLocation = '1';
   String? _selectedArea = '1';
+  List _selectedAnimals4 = [];
+
   List _locations = [];
   List _areas = [];
   List _shops = [];
+  String? _selectedProductType = 'Single';
+  String? _selectedPriceType = 'Single';
+  String? product_type;
   String? selectedValueSingleDialog;
   bool haris = true;
   List<Product> _products = [];
+  List<DropdownMenuItem> itemss = [];
+  List<int> selectedItemsMultiDialog = [];
+  bool asTabs = false;
+  String? selectedValueSingleDoneButtonDialog;
+  String? selectedValueSingleMenu;
+  String? selectedValueSingleDialogCustomKeyboard;
+  String? selectedValueSingleDialogOverflow;
+  String? selectedValueSingleDialogEditableItems;
+  String? selectedValueSingleMenuEditableItems;
+  String? selectedValueSingleDialogDarkMode;
+  String? selectedValueSingleDialogEllipsis;
+  String? selectedValueSingleDialogRightToLeft;
+  String? selectedValueUpdateFromOutsideThePlugin;
+  dynamic selectedValueSingleDialogPaged;
+  dynamic selectedValueSingleDialogPagedFuture;
+  dynamic selectedValueSingleDialogFuture;
+  List<Animal> _selectedAnimals2 = [];
 
+
+  List<int> selectedItemsMultiCustomDisplayDialog = [];
+  List<int> selectedItemsMultiSelect3Dialog = [];
+  List<int> selectedItemsMultiMenu = [];
+  List<int> selectedItemsMultiMenuSelectAllNone = [];
+  List<int> selectedItemsMultiDialogSelectAllNoneWoClear = [];
+  List<int> editableSelectedItems = [];
+  List<DropdownMenuItem> itemsss = [];
+  List<DropdownMenuItem> editableItems = [];
+  List<DropdownMenuItem> futureItems = [];
   final items = List<String>.generate(10000, (i) => "Item $i");
   static List<Animal> _animals = [
-    Animal(id: 1, name: "Lion"),
-    Animal(id: 2, name: "Flamingo"),
-    Animal(id: 3, name: "Hippo"),
-    Animal(id: 4, name: "Horse"),
-    Animal(id: 5, name: "Tiger"),
-    Animal(id: 6, name: "Penguin"),
-    Animal(id: 7, name: "Spider"),
-    Animal(id: 8, name: "Snake"),
-    Animal(id: 9, name: "Bear"),
-    Animal(id: 10, name: "Beaver"),
-    Animal(id: 11, name: "Cat"),
-    Animal(id: 12, name: "Fish"),
-    Animal(id: 13, name: "Rabbit"),
-    Animal(id: 14, name: "Mouse"),
-    Animal(id: 15, name: "Dog"),
-    Animal(id: 16, name: "Zebra"),
-    Animal(id: 17, name: "Cow"),
-    Animal(id: 18, name: "Frog"),
-    Animal(id: 19, name: "Blue Jay"),
-    Animal(id: 20, name: "Moose"),
-    Animal(id: 21, name: "Gecko"),
-    Animal(id: 22, name: "Kangaroo"),
-    Animal(id: 23, name: "Shark"),
-    Animal(id: 24, name: "Crocodile"),
-    Animal(id: 25, name: "Owl"),
-    Animal(id: 26, name: "Dragonfly"),
-    Animal(id: 27, name: "Dolphin"),
+    Animal(id: 1, name: "Residential"),
+    Animal(id: 2, name: "Commercial"),
+
   ];
   final _items = _animals
       .map((animal) => MultiSelectItem<Animal>(animal, animal.name!))
@@ -127,6 +138,8 @@ class _ShopPageState extends State<SearchPage> {
     if (response.statusCode == 200) {
       setState(() {
         _areas = resBody['data']['areas'];
+
+
          original = resBody['data']['areas'];
          print(original) ;
          persons = resBody['data']['areas'];
@@ -244,6 +257,11 @@ class _ShopPageState extends State<SearchPage> {
 
   @override
   void initState() {
+    _selectedProductType =
+    'Marla';
+    _selectedPriceType =
+    'PKR';
+    product_type =  '1';
     super.initState();
     _checkPermission();
     getArea();
@@ -325,21 +343,125 @@ class _ShopPageState extends State<SearchPage> {
             builder: (BuildContext context, BoxConstraints constraints) {
               return ListView(
                 children: <Widget>[
-                  SizedBox(height: 50.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      MultiSelectDialogField(
-                        items: _items,
-                        listType: MultiSelectListType.CHIP,
+                  SizedBox(height: 20.0),
+                  Column(
 
-                        onConfirm: (e) {
-                          //_selectedAnimals = values;
-                          //_selectedAnimals = values;
-                          print(e);
-                        },
+                    children: <Widget>[
+                      //SizedBox(width: 900),
+                    Container (
+                      width: MediaQuery.of(context).size.width,
+
+                      child:
+
+
+                      //SizedBox(height: 40),
+                      //################################################################################################
+                      // Rounded blue MultiSelectDialogField
+                      //################################################################################################
+                       SearchChoices.multiple(
+///decoration of list
+                         // displayItem: (item, selected) {
+                         //   return (Row(children: [
+                         //     selected
+                         //         ? Icon(
+                         //       Icons.radio_button_checked,
+                         //       color: Colors.grey,
+                         //     )
+                         //         : Icon(
+                         //       Icons.radio_button_unchecked,
+                         //       color: Colors.grey,
+                         //     ),
+                         //     SizedBox(width: 7),
+                         //     Container(
+                         //
+                         //       child: item,
+                         //     ),
+                         //   ]));},
+                          items: _areas.map((area) {
+                    return DropdownMenuItem(
+                      child: new Text(
+                        area['name'],
+                        overflow: TextOverflow.fade,
+                        maxLines: 1,
+                       // softWrap: false,
                       ),
+                      value: area['name'].toString(),
+                    );
+                  }).toList(),
+                        selectedItems: selectedItemsMultiDialog,
+                        hint: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text("Select any"),
+                        ),
+                        searchHint: "Select any",
+                        onChanged: (area) {
+                          setState(() {
+                            selectedItemsMultiDialog = area;
+                            //selectedItemsMultiDialog = _areas[area]['id'];
+                          print(selectedItemsMultiDialog);
+
+
+                           // print(area);
+                          //  print(_areas[area]['id']);
+                          });
+                        },
+
+                         validator: (selectedItemsForValidator) {
+                           if (selectedItemsForValidator.length > 4) {
+                             return ("Max 4 Area Allowed");
+                           }
+                           return (null);
+                         },
+
+                         clearIcon: Icon(Icons.cancel),
+                         icon: Icon(Icons.arrow_drop_down_circle),
+                         iconDisabledColor: Colors.brown,
+                         iconEnabledColor: Colors.indigo,
+                        closeButton: (selectedItems) {
+
+                         print(selectedItems
+                        );
+                          print(selectedItems.isNotEmpty ? _areas[selectedItems[0]]['id'].toString(): "kuch b nai") ;
+                          print(selectedItems.length>1  ? _areas[selectedItems[1]]['id'].toString(): "kuch b nai index == 1") ;
+                          print(selectedItems.length>2 ? _areas[selectedItems[2]]['id'].toString(): "kuch b nai index == 2") ;
+                          print(selectedItems.length>3  ? _areas[selectedItems[3]]['id'].toString(): "kuch b nai index == 3") ;
+                          final index1 = _areas.indexWhere((element) => element["id"] == "1");
+                          if (index1 != -1) {
+                           // print("Index $index1: ${_areas[index1]}");
+                          }
+                          return (selectedItems.isNotEmpty
+                              ? "Save ${selectedItems.length == 1 ? '"' + _areas[selectedItems.first]['id'].toString() + '"' : '(' + selectedItems.length.toString() + ')'}"
+                              : "Save without selection"
+
+                          );
+                        },
+                         isExpanded: true,
+                      ),)
+
+                      //     MultiSelectDialogField(
+                  //       items:_areas.map((animal) {
+                  //   return MultiSelectItem<Animal>(
+                  //       animal, animal.name!
+                  //     // child: new Text(
+                  //     //   area['name'],
+                  //     //   overflow: TextOverflow.fade,
+                  //     //   maxLines: 1,
+                  //     //   softWrap: false,
+                  //     // ),
+                  //   //  value: area['id'].toString(),
+                  //   );
+                  // }).toList(),
+                  //       // items: _areas
+                  //       //     .map((animal) => MultiSelectItem<Animal>(animal, animal.name!))
+                  //       //     .toList(),
+                  //       listType: MultiSelectListType.CHIP,
+                  //
+                  //       onConfirm: (e) {
+                  //         //_selectedAnimals = values;
+                  //         //_selectedAnimals = values;
+                  //         print(e);
+                  //       },
+                  //     ),
                       // Padding(
                       //   padding:
                       //       EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
@@ -504,161 +626,314 @@ class _ShopPageState extends State<SearchPage> {
                       // )
                     ],
                   ),
-                  // Padding(
-                  //   padding:
-                  //       EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0),
-                  //   child: Container(
-                  //     decoration: BoxDecoration(
-                  //         color: Colors.white,
-                  //         borderRadius: BorderRadius.only(
-                  //           bottomRight: Radius.circular(10.0),
-                  //           bottomLeft: Radius.circular(10.0),
-                  //           topLeft: Radius.circular(10.0),
-                  //           topRight: Radius.circular(10.0),
-                  //         )),
-                  //     child: TextField(
-                  //       textInputAction: TextInputAction.search,
-                  //       onSubmitted: (value) {
-                  //         searchShop(
-                  //             value != null ? value : null,
-                  //             _currentPosition != null
-                  //                 ? _currentPosition.latitude
-                  //                 : '',
-                  //             _currentPosition != null
-                  //                 ? _currentPosition.longitude
-                  //                 : '');
-                  //       },
-                  //       controller: editingController,
-                  //       decoration: InputDecoration(
-                  //         border: InputBorder.none,
-                  //         contentPadding: EdgeInsets.only(top: 14.0),
-                  //         hintText: 'Search for shops',
-                  //         hintStyle: TextStyle(
-                  //             fontFamily: 'Montserrat', fontSize: 14.0),
-                  //         prefixIcon: Icon(Icons.search, color: Colors.grey),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  //SizedBox(height: 15.0),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.9),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Theme.of(context).focusColor.withOpacity(0.1),
-                            blurRadius: 5,
-                            offset: Offset(0, 2)),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-
-                        SizedBox(width: 15),
-                        Flexible(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      "Phase",
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                      style: Theme.of(context).textTheme.bodyText1,
-                                    ),
+                  SizedBox(height: 20.0),
+                  Row(
+                    children: <Widget>[
+                      SizedBox(height: 10.0),
+                      SizedBox(width: 10.0),
+                      Expanded(
 
 
-                                  ],
+                        child:Icon(Icons.square_foot)
+                                )
+                      ,Expanded(
+                          flex: 5,
+
+                        child:
+                        Text('Area Range')
                                 ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      "Block",
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                      style: Theme.of(context).textTheme.bodyText1,
-                                    ),
+                      SizedBox(width: 10.0),
 
+                      // Expanded(
+                      //   child: SearchChoices.single(
+                      //
+                      //     isExpanded: true,
+                      //     underline: SizedBox(
+                      //       width: 20,
+                      //     ),
+                      //
+                      //     icon: SvgPicture.asset("assets/icons/dropdown.svg"),
+                      //     hint: Text(
+                      //       'choose a Type',
+                      //       overflow: TextOverflow.fade,
+                      //       maxLines: 1,
+                      //       softWrap: false,
+                      //     ), // Not necessary for Option 1
+                      //     value: _selectedProductType != null
+                      //         ? _selectedProductType
+                      //         : 'Marla',
+                      //     onChanged: (dynamic value) {
+                      //       setState(() {
+                      //         if ('Marla' == value) {
+                      //           product_type = '1';
+                      //           //_variations.clear();
+                      //         } else {
+                      //           product_type = '2';
+                      //         }
+                      //         _selectedProductType = value;
+                      //       });
+                      //     },
+                      //       displayItem: (item, selected) {
+                      //       return (Row(children: [
+                      //       selected
+                      //       ? Icon(
+                      //       Icons.radio_button_checked,
+                      //       color: Colors.grey,
+                      //       )
+                      //           : Icon(
+                      //       Icons.radio_button_unchecked,
+                      //       color: Colors.grey,
+                      //       ),
+                      //       SizedBox(width: 7),
+                      //       Expanded(
+                      //       child: item,
+                      //       ),
+                      //       ]));},
+                      //     items:
+                      //     <String>['Marla', 'Kanal'].map((String value) {
+                      //       return new DropdownMenuItem<String>(
+                      //         value: value,
+                      //         child: new Text(value),
+                      //       );
+                      //     }).toList(),
+                      //   ),
+                      // ),
+                      Expanded(
+                        flex: 2,
+                        child: DropdownButton(
 
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      "Plot",
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                      style: Theme.of(context).textTheme.bodyText1,
-                                    ),
-
-
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      "Size",
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                      style: Theme.of(context).textTheme.bodyText1,
-                                    ),
-
-
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 5),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: RichText(
-                                        text: TextSpan(children: [
-                                          new TextSpan(
-                                            text: ' Price' ,
-
-                                            style: TextStyle(
-                                                fontFamily: 'Google Sans',
-                                                color: Color(0xFFF75A4C),
-                                                fontSize: 14.0),
-                                          ),
-                                        ])),
-                                    flex: -1,
-                                  ),
-                                  SizedBox(width: 15),
-
-                                ],
-                              ),
-
-//                Row(
-//                  children: <Widget>[
-//                    Text('$currency' + food.price.toString(), style: TextStyle(fontFamily: 'Google Sans', fontSize: 18.0,fontWeight: FontWeight.bold, color: Colors.black87,),),
-//                    Text('$currency' + food.price.toString(), style: TextStyle( fontFamily: 'Google Sans',fontSize: 15.0,  color: Colors.black54,),),
-//                  ],
-//                ),
-                            ],
+                          isExpanded: true,
+                          underline: SizedBox(
+                            width: 20,
                           ),
-                        )
-                      ],
-                    ),
+                          icon: SvgPicture.asset("assets/icons/dropdown.svg"),
+                          hint: Text(
+                            'choose a Type',
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            softWrap: false,
+                          ), // Not necessary for Option 1
+                          value: _selectedProductType != null
+                              ? _selectedProductType
+                              : 'Marla',
+                          onChanged: (dynamic value) {
+                            setState(() {
+                              if ('Marla' == value) {
+                                product_type = '1';
+
+                              } else {
+                                product_type = '1';
+                              }
+                              _selectedProductType = value;
+                            });
+                          },
+                          items:
+                          <String>['Marla', 'Kanal'].map((String value) {
+                            return new DropdownMenuItem<String>(
+                              value: value,
+                              child: new Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      SizedBox(width: 10.0),
+
+                      //  OtherWidget(),
+                    ],
                   ),
+                  Row(
+                    children: <Widget>[
+                      SizedBox(width: 10.0),
+
+                      Expanded(
+                        flex: 5,
+                      child:
+                      TextField(
+                        keyboardType: TextInputType.number,
+
+                        decoration: InputDecoration(
+
+                          labelText:"Minimum Area",
+                          labelStyle: TextStyle(
+                              //color: Colors.white,
+                              fontSize: 13
+                          ),
+
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(2.0)),
+                          enabledBorder: myinputborder(), //enabled border
+                          focusedBorder: myfocusborder(),
+                        ),
+                      ),),
+                      SizedBox(width: 10.0),
+                      Expanded(
+
+
+                      child:Container(
+                        width: 23,
+
+                      child: new
+                      Text("To",style:TextStyle(
+                        fontFamily: "Roboto",
+                        fontSize: 20.0)))),
+
+                      SizedBox(width: 10.0),
+
+                      Expanded(flex:5,
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+
+                          decoration: InputDecoration(
+                          labelText:"Maximum Area",
+                          labelStyle: TextStyle(
+                         // color: Colors.white,
+                            fontSize: 13
+                          ),
+
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(2.0)),
+                          enabledBorder: myinputborder(), //enabled border
+                          focusedBorder: myfocusborder(),
+                        ),
+                      ),),
+                      SizedBox(width: 10.0),
+
+                    //  OtherWidget(),
+                    ],
+                  ),
+                  SizedBox(height: 10.0),
+
+                  Row(
+                    children: <Widget>[
+                      SizedBox(width: 10.0),
+                      Expanded(
+
+
+                        child:Icon(Icons.local_offer)
+                                )
+                      ,Expanded(
+                          flex: 5,
+
+                        child:
+                        Text('Price Range')
+                                ),
+                      SizedBox(width: 10.0),
+
+
+                      Expanded(
+                        flex: 2,
+                        child: DropdownButton(
+
+                          isExpanded: true,
+                          underline: SizedBox(
+                            width: 20,
+                          ),
+                          icon: SvgPicture.asset("assets/icons/dropdown.svg"),
+                          hint: Text(
+                            'choose a Type',
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            softWrap: false,
+                          ), // Not necessary for Option 1
+                          value: _selectedPriceType != null
+                              ? _selectedPriceType
+                              : 'PKR',
+                          onChanged: (dynamic value) {
+                            setState(() {
+                              if ('PKR' == value) {
+                                //product_type = '1';
+
+                              } else {
+                              //  product_type = '1';
+                              }
+                              _selectedPriceType = value;
+                            });
+                          },
+                          items:
+                          <String>['PKR',].map((String value) {
+                            return new DropdownMenuItem<String>(
+                              value: value,
+                              child: new Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      SizedBox(width: 5.0),
+
+                      //  OtherWidget(),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      SizedBox(width: 10.0),
+
+                      Expanded(
+                        flex: 5,
+                      child:
+                      TextField(
+                      keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText:"Minimum Price",
+                          labelStyle: TextStyle(
+                              //color: Colors.white,
+                              fontSize: 13
+                          ),
+
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(2.0)),
+                          enabledBorder: myinputborder(), //enabled border
+                          focusedBorder: myfocusborder(),
+                        ),
+                      ),),
+                      SizedBox(width: 10.0),
+                      Expanded(
+
+
+                      child:Container(
+                        width: 23,
+
+                      child: new
+                      Text("To",style:TextStyle(
+                        fontFamily: "Roboto",
+                        fontSize: 20.0)))),
+
+                      SizedBox(width: 10.0),
+
+                      Expanded(flex:5,
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+
+                          decoration: InputDecoration(
+                          labelText:"Maximum Price",
+                          labelStyle: TextStyle(
+                         // color: Colors.white,
+                            fontSize: 13
+                          ),
+
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(2.0)),
+                          enabledBorder: myinputborder(), //enabled border
+                          focusedBorder: myfocusborder(),
+                        ),
+                      ),),
+                      SizedBox(width: 10.0),
+
+                    //  OtherWidget(),
+                    ],
+                  ),
+                  SizedBox(height: 20.0),
+                  MultiSelectChipField(
+                    items: _items,
+
+                    title: Text("Property Type"),
+                    headerColor: Colors.blue.withOpacity(0.5),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.blue, width: 1.8),
+                    ),
+                    selectedChipColor: Colors.yellow.withOpacity(0.5),
+                    selectedTextStyle: TextStyle(color: Colors.red[800]),
+                    onTap: (item) {
+                     _selectedAnimals4 = item;
+                    },
+                  ),
+
+
                   // _shops.isEmpty
                   //     ? CircularLoadingWidget(
                   //         height: 200,
@@ -1090,4 +1365,23 @@ class _ShopPageState extends State<SearchPage> {
       ),
     );
   }
+}
+OutlineInputBorder myinputborder(){ //return type is OutlineInputBorder
+  return OutlineInputBorder( //Outline border type for TextFeild
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      borderSide: BorderSide(
+        color:Colors.redAccent,
+        width: 1,
+      )
+  );
+}
+
+OutlineInputBorder myfocusborder(){
+  return OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      borderSide: BorderSide(
+        color:Colors.greenAccent,
+        width: 1,
+      )
+  );
 }

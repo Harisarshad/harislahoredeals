@@ -332,6 +332,7 @@ class _LoginPageState extends State<LoginPage> {
                     email = value!.trim();
                     return Validate.requiredField(value, 'Email is required.');
                   })
+
             ],
           ),
         )
