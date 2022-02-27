@@ -14,45 +14,18 @@ import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:search_choices/search_choices.dart';
 
-class ExampleNumber {
-  int number;
-
-  static final Map<int, String> map = {
-    0: "zero",
-    1: "one",
-    2: "two",
-    3: "three",
-    4: "four",
-    5: "five",
-    6: "six",
-    7: "seven",
-    8: "eight",
-    9: "nine",
-    10: "ten",
-    11: "eleven",
-    12: "twelve",
-    13: "thirteen",
-    14: "fourteen",
-    15: "fifteen",
-  };
-
-  String get numberString {
-    return ((map.containsKey(number) ? map[number] : "unknown") ?? "unknown");
-  }
-
-  ExampleNumber(this.number);
-
-  String toString() {
-    return ("$number $numberString");
-  }
-
-  static List<ExampleNumber> get list {
-    return (map.keys.map((num) {
-      return (ExampleNumber(num));
-    })).toList();
-  }
-}
 class ShopPages extends StatefulWidget {
+  final String?  locationone;
+  final String? locationonetype;
+  final String? areamin;
+  final String? areamax;
+  final String? area_type;
+  final String? pricemin;
+  final String? pricemax;
+  final  String? properttype;
+ // final shop;
+  ShopPages({Key? key, this.locationone, this.locationonetype,this.areamin,this.areamax,this.area_type,this.pricemin,this.pricemax,this.properttype,})
+      : super(key: key);
   @override
   _ShopPageState createState() {
     return new _ShopPageState();
@@ -74,11 +47,7 @@ class _ShopPageState extends State<ShopPages> {
       await Geolocator.openLocationSettings();
     }
   }
-  ExampleNumber? selectedNumber;
-  List<DropdownMenuItem<ExampleNumber>> numberItems =
-  ExampleNumber.list.map((exNum) {
-    return (DropdownMenuItem(child: Text(exNum.numberString), value: exNum));
-  }).toList();
+
   String location = '1';
   String api = FoodApi.baseApi;
   String? _selectedLocation = '1';
@@ -87,10 +56,16 @@ class _ShopPageState extends State<ShopPages> {
   List _areas = [];
   List _shops = [];
   String? selectedValueSingleDialog;
-  bool haris = true;
+  bool haris = false;
   List<Product> _products = [];
-
-  final items = List<String>.generate(10000, (i) => "Item $i");
+   String? locationonep;
+   String? locationonetypep;
+   String? areaminp;
+   String? areamaxp;
+   String? area_typep;
+   String? priceminp;
+   String? pricemaxp;
+   String? properttypep;
 
   Future<void> setting() async {
     await Provider.of<AuthProvider>(context, listen: false).setting();
@@ -150,10 +125,13 @@ class _ShopPageState extends State<ShopPages> {
 
 
     var response = await http.get(Uri.parse(url), headers: {
-      "X-FOOD-LAT": "$slug",
-      "X-FOOD-LONG": "$order",
+      "X-FOOD-LAT": "$order",
+      "X-FOOD-LONG": "$slug",
       "Accept": "application/json"
     });
+
+    print(response);
+    print(response);
     print("getShopsharis");
     print(url);
     print(slug);
@@ -196,24 +174,7 @@ class _ShopPageState extends State<ShopPages> {
     return "Success";
   }
 
-  // void searchShop(value, latitude, longitude) async {
-  //   final url = "$api/search/shops/$value";
-  //   var response = await http.get(Uri.parse(url), headers: {
-  //     "X-FOOD-LAT": "$latitude",
-  //     "X-FOOD-LONG": "$longitude",
-  //     "Accept": "application/json"
-  //   });
-  //   var resBody = json.decode(response.body);
-  //   if (response.statusCode == 200) {
-  //     setState(() {
-  //       _shops.clear();
-  //       _shops = resBody['data'];
-  //     });
-  //   } else {
-  //     throw Exception('Failed to data');
-  //   }
-  //   return;
-  // }
+
 
   Future<Null> refreshList(area) async {
     setState(() {
@@ -245,9 +206,25 @@ class _ShopPageState extends State<ShopPages> {
   @override
   void initState() {
     super.initState();
-    _checkPermission();
-    getArea();
+    //_checkPermission();
+   // getArea();
+    locationonep = widget.locationone;
+     locationonetypep = widget.locationonetype;
+     areaminp = widget.areamin;
+     areamaxp = widget.areamax;
+     area_typep = widget.area_type;
+     priceminp = widget.pricemin;
+     pricemaxp = widget.pricemax;
+     properttypep = widget.properttype;
    // _getCurrentLocation();
+    this.getShops(
+        _selectedArea!,
+      widget.locationone.toString(),
+      widget.locationonetype!,
+    );
+    print('parameterfromold');
+    print(widget.locationone);
+    print(widget.locationonetype);
     this.setting();
     initAuthProvider(context);
   }
@@ -264,7 +241,7 @@ class _ShopPageState extends State<ShopPages> {
       setState(() {});
       return;
     }
-    haris =true;
+    haris =false;
     query = query.toLowerCase();
     print(query);
     List result = [];
@@ -314,7 +291,33 @@ class _ShopPageState extends State<ShopPages> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(000),
+      appBar: AppBar(
+        backgroundColor: Color(0xfffada36),
+        centerTitle: true,
+        
+        leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
+        
+        title: Text(
+          "Search Result",
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: <Widget>[Padding(
+      padding: EdgeInsets.only(right: 20.0),
+      child: GestureDetector(
+        onTap: () { Navigator.pop(context);},
+        child: Icon(
+          Icons.filter_list_outlined,
+          size: 26.0,
+        ),
+      ))],
+      ),
       body: SafeArea(
         child: RefreshIndicator(
           key: refreshKey,
@@ -326,252 +329,252 @@ class _ShopPageState extends State<ShopPages> {
               return ListView(
                 children: <Widget>[
                   SizedBox(height: 10.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      // Expanded(
-                      //   child: Padding(
-                      //     padding: EdgeInsets.only(
-                      //         top: 10.0, left: 10.0, right: 10.0),
-                      //     child: Container(
-                      //       height: MediaQuery.of(context).size.height / 13.5,
-                      //       width: MediaQuery.of(context).size.width / 2.2,
-                      //       padding: EdgeInsets.all(2.0),
-                      //       decoration: BoxDecoration(
-                      //         color: Colors.white,
-                      //         borderRadius: BorderRadius.only(
-                      //           bottomRight: Radius.circular(10.0),
-                      //           bottomLeft: Radius.circular(10.0),
-                      //           topLeft: Radius.circular(10.0),
-                      //           topRight: Radius.circular(10.0),
-                      //         ),
-                      //       ),
-                      //       child: Row(
-                      //         children: <Widget>[
-                      //           // SvgPicture.asset(
-                      //           //     "assets/icons/maps-and-flags.svg"),
-                      //           SizedBox(width: 10),
-                      //           // Expanded(
-                      //           //   child: DropdownButton(
-                      //           //     isExpanded: true,
-                      //           //     underline: SizedBox(
-                      //           //       width: 20,
-                      //           //     ),
-                      //           //     icon: SvgPicture.asset(
-                      //           //         "assets/icons/dropdown.svg"),
-                      //           //     hint: Text(
-                      //           //       'choose a location',
-                      //           //       overflow: TextOverflow.fade,
-                      //           //       maxLines: 1,
-                      //           //       softWrap: false,
-                      //           //     ),
-                      //           //     // Not necessary for Option 1
-                      //           //     value: _selectedLocation != null
-                      //           //         ? _selectedLocation
-                      //           //         : null,
-                      //           //     onChanged: (location) {
-                      //           //       setState(() {
-                      //           //         _selectedLocation = location as String?;
-                      //           //         _shops.clear();
-                      //           //         _areas.clear();
-                      //           //         _selectedArea = null;
-                      //           //         this.getArea(
-                      //           //             location!,
-                      //           //             _currentPosition != null
-                      //           //                 ? _currentPosition.latitude
-                      //           //                 : '',
-                      //           //             _currentPosition != null
-                      //           //                 ? _currentPosition.longitude
-                      //           //                 : '');
-                      //           //       });
-                      //           //     },
-                      //           //     items: _locations.length > 0
-                      //           //         ? _locations.map((location) {
-                      //           //             return DropdownMenuItem(
-                      //           //               child: new Text(
-                      //           //                 location['name'] != null
-                      //           //                     ? location['name']
-                      //           //                     : '',
-                      //           //                 overflow: TextOverflow.fade,
-                      //           //                 maxLines: 1,
-                      //           //                 softWrap: false,
-                      //           //               ),
-                      //           //               value: location['id'].toString(),
-                      //           //             );
-                      //           //           }).toList()
-                      //           //         : null,
-                      //           //   ),
-                      //           // ),
-                      //         ],
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      Padding(
-                        padding:
-                            EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
-                        child: Container(
-                          height: haris ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.height * .12 ,
-                          width: MediaQuery.of(context).size.width * .80,
-                          padding: EdgeInsets.all(3.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(10.0),
-                              bottomLeft: Radius.circular(10.0),
-                              topLeft: Radius.circular(10.0),
-                              topRight: Radius.circular(10.0),
-                            ),
-                          ),
-                          child: Column(
-                            children: <Widget>[
-
-                              Container(
-                                margin: EdgeInsets.all(10),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-
-                                    TextFormField(
-                                      controller: txtQuery,
-                                      onChanged: search,
-                                      decoration: InputDecoration(
-                                        hintText: "Search",
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.0)),
-                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-                                        prefixIcon: Icon(Icons.search),
-                                        suffixIcon: IconButton(
-                                          icon: Icon(Icons.clear),
-                                          onPressed: () {
-                                            txtQuery.text = '';
-                                            search(txtQuery.text);
-                                            //haris =true;
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                               haris ? _listView(persons) : Container()
-                              // SvgPicture.asset(
-                              //   "assets/icons/maps-and-flags.svg",
-                              // // ),
-                              // Padding(
-                              //   padding: const EdgeInsets.all(12.0),
-                              //   child: TextField(
-                              //     //controller: _textController,
-                              //     decoration: InputDecoration(
-                              //       hintText: 'Search Here...',
-                              //     ),
-                              //     onChanged: onItemChanged,
-                              //   ),
-                              // ),
-                              // Expanded(
-                              //   child:  ListView.builder(
-                              //     itemCount: _areas.length,
-                              //     itemBuilder: (context, index) => Card(
-                              //       key: ValueKey(_areas[index]["id"]),
-                              //       color: Colors.amberAccent,
-                              //       elevation: 4,
-                              //       margin: const EdgeInsets.symmetric(vertical: 10),
-                              //       child:
-                              //
-                              //       ListTile(
-                              //         leading: Text(
-                              //           _areas[index]["id"].toString(),
-                              //           style: const TextStyle(fontSize: 24),
-                              //         ),
-                              //           onTap: ()=> print(_areas[index]['name']),
-                              //         title: Text(_areas[index]['name']),
-                              //         subtitle: Text(
-                              //             '${_areas[index]["slug"].toString()} '),
-                              //       ),
-                              //     ),
-                              //   )
-                              // ),
-                              // SizedBox(width:10),
-                              // Expanded(child:
-                              //
-                              //
-                              // TextFormField(
-                              //     readOnly: true,
-                              //     onTap: () {
-                              //       showDialog(
-                              //           context: context,
-                              //           builder: (BuildContext context) {
-                              //             return AlertDialog(
-                              //               title: Text('Country List'),
-                              //               content: setupAlertDialoadContainer(),
-                              //             );
-                              //           });
-                              //     },
-                              //   controller: editingController,
-                              //   decoration: InputDecoration(
-                              //       labelText: "Search",
-                              //       hintText: "Search",
-                              //       prefixIcon: Icon(Icons.search),
-                              //       border: OutlineInputBorder(
-                              //           borderRadius: BorderRadius.all(Radius.circular(25.0)))),
-                              // ),
-                              //
-                              //
-                              // ),
-
-                              // Expanded(
-                              //   child: DropdownButton(
-                              //     isExpanded: true,
-                              //     // underline: SizedBox(
-                              //     //   width: 80,
-                              //     // ),
-                              //     icon: SvgPicture.asset(
-                              //         "assets/icons/dropdown.svg"),
-                              //     hint: Text(
-                              //       'choose a Area',
-                              //       overflow: TextOverflow.fade,
-                              //       maxLines: 1,
-                              //       softWrap: false,
-                              //     ),
-                              //     // Not necessary for Option 1
-                              //     value: _selectedArea != null
-                              //         ? _selectedArea
-                              //         : null,
-                              //     onChanged: (area) {
-                              //       setState(() {
-                              //         //selectedValueSingleDialog = area as String?;
-                              //         _selectedArea = area as String?;
-                              //         _shops.clear();
-                              //         getShops(
-                              //             area!,
-                              //             _currentPosition != null
-                              //                 ? _currentPosition.latitude
-                              //                 : '',
-                              //             _currentPosition != null
-                              //                 ? _currentPosition.longitude
-                              //                 : '');
-                              //       });
-                              //     },
-                              //     items: _areas.map((area) {
-                              //       return DropdownMenuItem(
-                              //         child: new Text(
-                              //           area['name'],
-                              //           overflow: TextOverflow.fade,
-                              //           maxLines: 1,
-                              //           softWrap: false,
-                              //         ),
-                              //         value: area['id'].toString(),
-                              //       );
-                              //     }).toList(),
-                              //   ),
-                              // ),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: <Widget>[
+                  //     // Expanded(
+                  //     //   child: Padding(
+                  //     //     padding: EdgeInsets.only(
+                  //     //         top: 10.0, left: 10.0, right: 10.0),
+                  //     //     child: Container(
+                  //     //       height: MediaQuery.of(context).size.height / 13.5,
+                  //     //       width: MediaQuery.of(context).size.width / 2.2,
+                  //     //       padding: EdgeInsets.all(2.0),
+                  //     //       decoration: BoxDecoration(
+                  //     //         color: Colors.white,
+                  //     //         borderRadius: BorderRadius.only(
+                  //     //           bottomRight: Radius.circular(10.0),
+                  //     //           bottomLeft: Radius.circular(10.0),
+                  //     //           topLeft: Radius.circular(10.0),
+                  //     //           topRight: Radius.circular(10.0),
+                  //     //         ),
+                  //     //       ),
+                  //     //       child: Row(
+                  //     //         children: <Widget>[
+                  //     //           // SvgPicture.asset(
+                  //     //           //     "assets/icons/maps-and-flags.svg"),
+                  //     //           SizedBox(width: 10),
+                  //     //           // Expanded(
+                  //     //           //   child: DropdownButton(
+                  //     //           //     isExpanded: true,
+                  //     //           //     underline: SizedBox(
+                  //     //           //       width: 20,
+                  //     //           //     ),
+                  //     //           //     icon: SvgPicture.asset(
+                  //     //           //         "assets/icons/dropdown.svg"),
+                  //     //           //     hint: Text(
+                  //     //           //       'choose a location',
+                  //     //           //       overflow: TextOverflow.fade,
+                  //     //           //       maxLines: 1,
+                  //     //           //       softWrap: false,
+                  //     //           //     ),
+                  //     //           //     // Not necessary for Option 1
+                  //     //           //     value: _selectedLocation != null
+                  //     //           //         ? _selectedLocation
+                  //     //           //         : null,
+                  //     //           //     onChanged: (location) {
+                  //     //           //       setState(() {
+                  //     //           //         _selectedLocation = location as String?;
+                  //     //           //         _shops.clear();
+                  //     //           //         _areas.clear();
+                  //     //           //         _selectedArea = null;
+                  //     //           //         this.getArea(
+                  //     //           //             location!,
+                  //     //           //             _currentPosition != null
+                  //     //           //                 ? _currentPosition.latitude
+                  //     //           //                 : '',
+                  //     //           //             _currentPosition != null
+                  //     //           //                 ? _currentPosition.longitude
+                  //     //           //                 : '');
+                  //     //           //       });
+                  //     //           //     },
+                  //     //           //     items: _locations.length > 0
+                  //     //           //         ? _locations.map((location) {
+                  //     //           //             return DropdownMenuItem(
+                  //     //           //               child: new Text(
+                  //     //           //                 location['name'] != null
+                  //     //           //                     ? location['name']
+                  //     //           //                     : '',
+                  //     //           //                 overflow: TextOverflow.fade,
+                  //     //           //                 maxLines: 1,
+                  //     //           //                 softWrap: false,
+                  //     //           //               ),
+                  //     //           //               value: location['id'].toString(),
+                  //     //           //             );
+                  //     //           //           }).toList()
+                  //     //           //         : null,
+                  //     //           //   ),
+                  //     //           // ),
+                  //     //         ],
+                  //     //       ),
+                  //     //     ),
+                  //     //   ),
+                  //     // ),
+                  //     Padding(
+                  //       padding:
+                  //           EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+                  //       child: Container(
+                  //         height: haris ? MediaQuery.of(context).size.height : MediaQuery.of(context).size.height * .12 ,
+                  //         width: MediaQuery.of(context).size.width * .80,
+                  //         padding: EdgeInsets.all(3.0),
+                  //         decoration: BoxDecoration(
+                  //           color: Colors.white,
+                  //           borderRadius: BorderRadius.only(
+                  //             bottomRight: Radius.circular(10.0),
+                  //             bottomLeft: Radius.circular(10.0),
+                  //             topLeft: Radius.circular(10.0),
+                  //             topRight: Radius.circular(10.0),
+                  //           ),
+                  //         ),
+                  //         child: Column(
+                  //           children: <Widget>[
+                  //
+                  //             // Container(
+                  //             //   margin: EdgeInsets.all(10),
+                  //             //   child: Column(
+                  //             //     mainAxisAlignment: MainAxisAlignment.start,
+                  //             //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //             //     children: [
+                  //             //
+                  //             //       TextFormField(
+                  //             //         controller: txtQuery,
+                  //             //         onChanged: search,
+                  //             //         decoration: InputDecoration(
+                  //             //           hintText: "Search",
+                  //             //           border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.0)),
+                  //             //           focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+                  //             //           prefixIcon: Icon(Icons.search),
+                  //             //           suffixIcon: IconButton(
+                  //             //             icon: Icon(Icons.clear),
+                  //             //             onPressed: () {
+                  //             //               txtQuery.text = '';
+                  //             //               search(txtQuery.text);
+                  //             //               //haris =true;
+                  //             //             },
+                  //             //           ),
+                  //             //         ),
+                  //             //       ),
+                  //             //     ],
+                  //             //   ),
+                  //             // ),
+                  //              haris ? _listView(persons) : Container()
+                  //             // SvgPicture.asset(
+                  //             //   "assets/icons/maps-and-flags.svg",
+                  //             // // ),
+                  //             // Padding(
+                  //             //   padding: const EdgeInsets.all(12.0),
+                  //             //   child: TextField(
+                  //             //     //controller: _textController,
+                  //             //     decoration: InputDecoration(
+                  //             //       hintText: 'Search Here...',
+                  //             //     ),
+                  //             //     onChanged: onItemChanged,
+                  //             //   ),
+                  //             // ),
+                  //             // Expanded(
+                  //             //   child:  ListView.builder(
+                  //             //     itemCount: _areas.length,
+                  //             //     itemBuilder: (context, index) => Card(
+                  //             //       key: ValueKey(_areas[index]["id"]),
+                  //             //       color: Colors.amberAccent,
+                  //             //       elevation: 4,
+                  //             //       margin: const EdgeInsets.symmetric(vertical: 10),
+                  //             //       child:
+                  //             //
+                  //             //       ListTile(
+                  //             //         leading: Text(
+                  //             //           _areas[index]["id"].toString(),
+                  //             //           style: const TextStyle(fontSize: 24),
+                  //             //         ),
+                  //             //           onTap: ()=> print(_areas[index]['name']),
+                  //             //         title: Text(_areas[index]['name']),
+                  //             //         subtitle: Text(
+                  //             //             '${_areas[index]["slug"].toString()} '),
+                  //             //       ),
+                  //             //     ),
+                  //             //   )
+                  //             // ),
+                  //             // SizedBox(width:10),
+                  //             // Expanded(child:
+                  //             //
+                  //             //
+                  //             // TextFormField(
+                  //             //     readOnly: true,
+                  //             //     onTap: () {
+                  //             //       showDialog(
+                  //             //           context: context,
+                  //             //           builder: (BuildContext context) {
+                  //             //             return AlertDialog(
+                  //             //               title: Text('Country List'),
+                  //             //               content: setupAlertDialoadContainer(),
+                  //             //             );
+                  //             //           });
+                  //             //     },
+                  //             //   controller: editingController,
+                  //             //   decoration: InputDecoration(
+                  //             //       labelText: "Search",
+                  //             //       hintText: "Search",
+                  //             //       prefixIcon: Icon(Icons.search),
+                  //             //       border: OutlineInputBorder(
+                  //             //           borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+                  //             // ),
+                  //             //
+                  //             //
+                  //             // ),
+                  //
+                  //             // Expanded(
+                  //             //   child: DropdownButton(
+                  //             //     isExpanded: true,
+                  //             //     // underline: SizedBox(
+                  //             //     //   width: 80,
+                  //             //     // ),
+                  //             //     icon: SvgPicture.asset(
+                  //             //         "assets/icons/dropdown.svg"),
+                  //             //     hint: Text(
+                  //             //       'choose a Area',
+                  //             //       overflow: TextOverflow.fade,
+                  //             //       maxLines: 1,
+                  //             //       softWrap: false,
+                  //             //     ),
+                  //             //     // Not necessary for Option 1
+                  //             //     value: _selectedArea != null
+                  //             //         ? _selectedArea
+                  //             //         : null,
+                  //             //     onChanged: (area) {
+                  //             //       setState(() {
+                  //             //         //selectedValueSingleDialog = area as String?;
+                  //             //         _selectedArea = area as String?;
+                  //             //         _shops.clear();
+                  //             //         getShops(
+                  //             //             area!,
+                  //             //             _currentPosition != null
+                  //             //                 ? _currentPosition.latitude
+                  //             //                 : '',
+                  //             //             _currentPosition != null
+                  //             //                 ? _currentPosition.longitude
+                  //             //                 : '');
+                  //             //       });
+                  //             //     },
+                  //             //     items: _areas.map((area) {
+                  //             //       return DropdownMenuItem(
+                  //             //         child: new Text(
+                  //             //           area['name'],
+                  //             //           overflow: TextOverflow.fade,
+                  //             //           maxLines: 1,
+                  //             //           softWrap: false,
+                  //             //         ),
+                  //             //         value: area['id'].toString(),
+                  //             //       );
+                  //             //     }).toList(),
+                  //             //   ),
+                  //             // ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     )
+                  //   ],
+                  // ),
                   // Padding(
                   //   padding:
                   //       EdgeInsets.only(top: 15.0, left: 15.0, right: 15.0),
@@ -752,7 +755,9 @@ class _ShopPageState extends State<ShopPages> {
 
                             _products[index],
                                 () {
-                              Navigator.push(
+                                 // Navigator.pop(context);
+
+                                  Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) {
                                   return new ProductPage(

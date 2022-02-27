@@ -1,4 +1,5 @@
 import 'package:eBazaarMerchant/src/screens/ProductPage.dart';
+import 'package:eBazaarMerchant/src/screens/shopPages.dart';
 import 'package:eBazaarMerchant/src/shared/Product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +14,8 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:search_choices/search_choices.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:eBazaarMerchant/src/Widget/styled_flat_button.dart';
 
 
 
@@ -56,13 +57,14 @@ class _ShopPageState extends State<SearchPage> {
   String? _selectedLocation = '1';
   String? _selectedArea = '1';
   List _selectedAnimals4 = [];
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  List<Animal> _selectedAnimals = [];
   List _locations = [];
   List _areas = [];
   List _shops = [];
   String? _selectedProductType = 'Single';
   String? _selectedPriceType = 'Single';
-  String? product_type;
+
   String? selectedValueSingleDialog;
   bool haris = true;
   List<Product> _products = [];
@@ -83,7 +85,14 @@ class _ShopPageState extends State<SearchPage> {
   dynamic selectedValueSingleDialogPagedFuture;
   dynamic selectedValueSingleDialogFuture;
   List<Animal> _selectedAnimals2 = [];
-
+String? locationone;
+String? locationonetype;
+String? areamin;
+String? areamax;
+String? area_type;
+String? pricemin;
+String? pricemax;
+String? properttype;
 
   List<int> selectedItemsMultiCustomDisplayDialog = [];
   List<int> selectedItemsMultiSelect3Dialog = [];
@@ -94,6 +103,8 @@ class _ShopPageState extends State<SearchPage> {
   List<DropdownMenuItem> itemsss = [];
   List<DropdownMenuItem> editableItems = [];
   List<DropdownMenuItem> futureItems = [];
+  final _multiSelectKey = GlobalKey<FormFieldState>();
+
   final items = List<String>.generate(10000, (i) => "Item $i");
   static List<Animal> _animals = [
     Animal(id: 1, name: "Residential"),
@@ -261,7 +272,7 @@ class _ShopPageState extends State<SearchPage> {
     'Marla';
     _selectedPriceType =
     'PKR';
-    product_type =  '1';
+    area_type =  '1';
     super.initState();
     _checkPermission();
     getArea();
@@ -407,8 +418,8 @@ class _ShopPageState extends State<SearchPage> {
                         },
 
                          validator: (selectedItemsForValidator) {
-                           if (selectedItemsForValidator.length > 4) {
-                             return ("Max 4 Area Allowed");
+                           if (selectedItemsForValidator.length > 1) {
+                             return ("Max 1 Area Allowed");
                            }
                            return (null);
                          },
@@ -422,7 +433,10 @@ class _ShopPageState extends State<SearchPage> {
                          print(selectedItems
                         );
                           print(selectedItems.isNotEmpty ? _areas[selectedItems[0]]['id'].toString(): "kuch b nai") ;
-                          print(selectedItems.length>1  ? _areas[selectedItems[1]]['id'].toString(): "kuch b nai index == 1") ;
+                         selectedItems.isNotEmpty ? locationone =_areas[selectedItems[0]]['order'].toString(): "1" ;
+                         selectedItems.isNotEmpty ? locationonetype =_areas[selectedItems[0]]['slug'].toString(): "society" ;
+
+                         print(selectedItems.length>1  ? _areas[selectedItems[1]]['id'].toString(): "kuch b nai index == 1") ;
                           print(selectedItems.length>2 ? _areas[selectedItems[2]]['id'].toString(): "kuch b nai index == 2") ;
                           print(selectedItems.length>3  ? _areas[selectedItems[3]]['id'].toString(): "kuch b nai index == 3") ;
                           final index1 = _areas.indexWhere((element) => element["id"] == "1");
@@ -719,10 +733,10 @@ class _ShopPageState extends State<SearchPage> {
                           onChanged: (dynamic value) {
                             setState(() {
                               if ('Marla' == value) {
-                                product_type = '1';
+                                area_type = '1';
 
                               } else {
-                                product_type = '1';
+                                area_type = '2';
                               }
                               _selectedProductType = value;
                             });
@@ -750,7 +764,9 @@ class _ShopPageState extends State<SearchPage> {
                       child:
                       TextField(
                         keyboardType: TextInputType.number,
-
+                        onChanged: (text) {
+                          areamin = text;
+                        },
                         decoration: InputDecoration(
 
                           labelText:"Minimum Area",
@@ -780,6 +796,9 @@ class _ShopPageState extends State<SearchPage> {
 
                       Expanded(flex:5,
                         child: TextField(
+                          onChanged: (text) {
+                            areamax = text;
+                          },
                           keyboardType: TextInputType.number,
 
                           decoration: InputDecoration(
@@ -869,6 +888,9 @@ class _ShopPageState extends State<SearchPage> {
                         flex: 5,
                       child:
                       TextField(
+                        onChanged: (text) {
+                          pricemin = text;
+                        },
                       keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           labelText:"Minimum Price",
@@ -898,6 +920,9 @@ class _ShopPageState extends State<SearchPage> {
 
                       Expanded(flex:5,
                         child: TextField(
+                          onChanged: (text) {
+                            pricemax = text;
+                          },
                           keyboardType: TextInputType.number,
 
                           decoration: InputDecoration(
@@ -917,20 +942,58 @@ class _ShopPageState extends State<SearchPage> {
                     //  OtherWidget(),
                     ],
                   ),
-                  SizedBox(height: 20.0),
-                  MultiSelectChipField(
-                    items: _items,
+                  SizedBox(height: 20.0),Container(
 
-                    title: Text("Property Type"),
-                    headerColor: Colors.blue.withOpacity(0.5),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blue, width: 1.8),
+                    margin: EdgeInsets.only(left: 40, right: 40),
+                  child: DropdownButton(
+
+                    isExpanded: true,
+                    underline: SizedBox(
+                      width: 20,
                     ),
-                    selectedChipColor: Colors.yellow.withOpacity(0.5),
-                    selectedTextStyle: TextStyle(color: Colors.red[800]),
-                    onTap: (item) {
-                     _selectedAnimals4 = item;
+                    icon: SvgPicture.asset("assets/icons/dropdown.svg"),
+                    hint: Text(
+                      'choose a Type',
+                      overflow: TextOverflow.fade,
+                      maxLines: 1,
+                      softWrap: false,
+                    ), // Not necessary for Option 1
+                    value: properttype != null
+                        ? properttype
+                        : 'Residential',
+                    onChanged: (dynamic value) {
+                      setState(() {
+                        if ('Residential' == value) {
+                          properttype ='1';
+
+                        } else {
+                          //  product_type = '1';
+                          properttype ='2';
+                        }
+                        properttype = value;
+                      });
                     },
+                    items:
+                    <String>['Commercial','Residential'].map((String value) {
+                      return new DropdownMenuItem<String>(
+                        value: value,
+                        child: new Text(value),
+                      );
+                    }).toList(),
+                  ),),
+
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Container(
+                    width: double.infinity / 2,
+                    margin: EdgeInsets.only(left: 40, right: 40),
+                    child:
+
+                    StyledFlatButton(
+                      'Search',
+                      onPressed: submit,
+                    ),
                   ),
 
 
@@ -981,6 +1044,13 @@ class _ShopPageState extends State<SearchPage> {
       ),
     );
   }
+  Future<void> submit() async {
+
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => ShopPages(locationone: locationone, locationonetype: locationonetype, areamin: areamin,areamax: areamax,area_type: area_type,pricemin: pricemin,pricemax: pricemax,properttype: properttype,
+
+            )));
+    }
 
   Widget _buildFoodCard(context,  Product food, onTapped) {
     return InkWell(
