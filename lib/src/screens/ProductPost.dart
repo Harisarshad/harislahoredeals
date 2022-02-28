@@ -302,16 +302,15 @@ class _ProductPostState extends State<ProductPost> {
   }
 
   Future<void> submit() async {
-    if (sizetype=='1')
-    {
+
+
       int mrl = 225;
-      size = (mrl *  int.parse(size!)).toString() ;
+      int kana = 225*20;
+
+      String? sizesq = sizetype == '1' ? (   (int.parse(size!) * 225 )).toString() : (4500 *  (int.parse(size!))).toString();
       print(size);
-    }
 
-    else{
 
-    }
     final form = _formKey.currentState!;
     if (form.validate()) {
       List<Map> itemsVariation = [];
@@ -332,9 +331,9 @@ class _ProductPostState extends State<ProductPost> {
         "unit_price": price != null ? price : '',
         "p_city":  '1',
         "plot_no": plot != null ? plot : '',
-        "plot_size": size != null ? size : '',
-        "p_society": society != null ? society : '',
-        "p_phase": phase != null ? phase : '',
+        "plot_size": sizesq != null ? sizesq : '',
+        "p_society": '1',
+        "p_phase": '1',
         "p_block": block != null ? block : '',
         "discount_price": discount_price != null
             ? discount_price != ''
@@ -374,7 +373,7 @@ class _ProductPostState extends State<ProductPost> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Product Add'),
+          title: Text('Add Property'),
           content: Text(mes),
           actions: <Widget>[
             TextButton(
@@ -382,13 +381,13 @@ class _ProductPostState extends State<ProductPost> {
               onPressed: () {
                 if (bool) {
                   Navigator.of(context).pop();
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MyHomePage(
-                                tabsIndex: 2,
-                                title: 'My Product',
-                              ))).then((_) => _formKey.currentState!.reset());
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => MyHomePage(
+                  //               tabsIndex: 2,
+                  //               title: 'My Product',
+                  //             ))).then((_) => _formKey.currentState!.reset());
                 } else {
                   Navigator.of(context).pop();
                 }
@@ -701,7 +700,7 @@ class _ProductPostState extends State<ProductPost> {
           width: double.infinity,
           margin: EdgeInsets.only(left: 48, right: 48),
           child: StyledFlatButton(
-            'Product Add',
+            'Add Property',
             onPressed: () {
               submit();
             },
@@ -1383,7 +1382,7 @@ class _ProductPostState extends State<ProductPost> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Plot size *',
+                'Plot Size *',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
 
