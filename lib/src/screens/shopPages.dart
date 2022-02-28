@@ -121,17 +121,23 @@ class _ShopPageState extends State<ShopPages> {
   Future<String> getShops(String areaID,String slug, String order  ) async {
 
     final url = areaID != null ? "$api/areasproduct?id=$areaID" : '$api/areas';
-
-
+print("pricerang");
+print(widget.pricemax);
+print(widget.pricemin);
 
     var response = await http.get(Uri.parse(url), headers: {
       "X-FOOD-LAT": "$order",
       "X-FOOD-LONG": "$slug",
+      "AREA-MAX": '${widget.areamax}',
+      "AREA-MIN": '${widget.areamin}',
+      "PRICE-MIN": '${widget.pricemin}',
+      "PRICE-MAX": '${widget.pricemax}',
+      //"property-type": "${widget.properttype}",
+
       "Accept": "application/json"
     });
 
-    print(response);
-    print(response);
+
     print("getShopsharis");
     print(url);
     print(slug);

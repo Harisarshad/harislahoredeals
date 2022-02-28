@@ -71,20 +71,8 @@ class _ShopPageState extends State<SearchPage> {
   List<DropdownMenuItem> itemss = [];
   List<int> selectedItemsMultiDialog = [];
   bool asTabs = false;
-  String? selectedValueSingleDoneButtonDialog;
-  String? selectedValueSingleMenu;
-  String? selectedValueSingleDialogCustomKeyboard;
-  String? selectedValueSingleDialogOverflow;
-  String? selectedValueSingleDialogEditableItems;
-  String? selectedValueSingleMenuEditableItems;
-  String? selectedValueSingleDialogDarkMode;
-  String? selectedValueSingleDialogEllipsis;
-  String? selectedValueSingleDialogRightToLeft;
-  String? selectedValueUpdateFromOutsideThePlugin;
-  dynamic selectedValueSingleDialogPaged;
-  dynamic selectedValueSingleDialogPagedFuture;
-  dynamic selectedValueSingleDialogFuture;
-  List<Animal> _selectedAnimals2 = [];
+
+
 String? locationone;
 String? locationonetype;
 String? areamin;
@@ -93,6 +81,10 @@ String? area_type;
 String? pricemin;
 String? pricemax;
 String? properttype;
+  final textController_areamin = TextEditingController();
+  final textController_areamax = TextEditingController();
+  final textController_pricemin = TextEditingController();
+  final textController_pricemax = TextEditingController();
 
   List<int> selectedItemsMultiCustomDisplayDialog = [];
   List<int> selectedItemsMultiSelect3Dialog = [];
@@ -429,10 +421,12 @@ String? properttype;
                          iconDisabledColor: Colors.brown,
                          iconEnabledColor: Colors.indigo,
                         closeButton: (selectedItems) {
+                          selectedItemsMultiDialog = selectedItems;
+                          print(selectedItemsMultiDialog);
 
-                         print(selectedItems
+                          print(selectedItems
                         );
-                          print(selectedItems.isNotEmpty ? _areas[selectedItems[0]]['id'].toString(): "kuch b nai") ;
+                          print(selectedItems.isNotEmpty ? selectedItems : "kuch b nai list") ;
                          selectedItems.isNotEmpty ? locationone =_areas[selectedItems[0]]['order'].toString(): "1" ;
                          selectedItems.isNotEmpty ? locationonetype =_areas[selectedItems[0]]['slug'].toString(): "society" ;
 
@@ -658,60 +652,7 @@ String? properttype;
                                 ),
                       SizedBox(width: 10.0),
 
-                      // Expanded(
-                      //   child: SearchChoices.single(
-                      //
-                      //     isExpanded: true,
-                      //     underline: SizedBox(
-                      //       width: 20,
-                      //     ),
-                      //
-                      //     icon: SvgPicture.asset("assets/icons/dropdown.svg"),
-                      //     hint: Text(
-                      //       'choose a Type',
-                      //       overflow: TextOverflow.fade,
-                      //       maxLines: 1,
-                      //       softWrap: false,
-                      //     ), // Not necessary for Option 1
-                      //     value: _selectedProductType != null
-                      //         ? _selectedProductType
-                      //         : 'Marla',
-                      //     onChanged: (dynamic value) {
-                      //       setState(() {
-                      //         if ('Marla' == value) {
-                      //           product_type = '1';
-                      //           //_variations.clear();
-                      //         } else {
-                      //           product_type = '2';
-                      //         }
-                      //         _selectedProductType = value;
-                      //       });
-                      //     },
-                      //       displayItem: (item, selected) {
-                      //       return (Row(children: [
-                      //       selected
-                      //       ? Icon(
-                      //       Icons.radio_button_checked,
-                      //       color: Colors.grey,
-                      //       )
-                      //           : Icon(
-                      //       Icons.radio_button_unchecked,
-                      //       color: Colors.grey,
-                      //       ),
-                      //       SizedBox(width: 7),
-                      //       Expanded(
-                      //       child: item,
-                      //       ),
-                      //       ]));},
-                      //     items:
-                      //     <String>['Marla', 'Kanal'].map((String value) {
-                      //       return new DropdownMenuItem<String>(
-                      //         value: value,
-                      //         child: new Text(value),
-                      //       );
-                      //     }).toList(),
-                      //   ),
-                      // ),
+
                       Expanded(
                         flex: 2,
                         child: DropdownButton(
@@ -764,9 +705,10 @@ String? properttype;
                       child:
                       TextField(
                         keyboardType: TextInputType.number,
-                        onChanged: (text) {
-                          areamin = text;
-                        },
+                        // onChanged: (text) {
+                        //   areamin = text;
+                        // },
+                        controller: textController_areamin,
                         decoration: InputDecoration(
 
                           labelText:"Minimum Area",
@@ -796,9 +738,11 @@ String? properttype;
 
                       Expanded(flex:5,
                         child: TextField(
-                          onChanged: (text) {
-                            areamax = text;
-                          },
+
+                          // onChanged: (text) {
+                          //   areamax = text;
+                          // },
+                          controller: textController_areamax,
                           keyboardType: TextInputType.number,
 
                           decoration: InputDecoration(
@@ -888,9 +832,10 @@ String? properttype;
                         flex: 5,
                       child:
                       TextField(
-                        onChanged: (text) {
-                          pricemin = text;
-                        },
+                        // controller: textController_pricemin,
+                        // onChanged: (text) {
+                        //   pricemin = text;
+                        // },
                       keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           labelText:"Minimum Price",
@@ -920,9 +865,10 @@ String? properttype;
 
                       Expanded(flex:5,
                         child: TextField(
-                          onChanged: (text) {
-                            pricemax = text;
-                          },
+                          controller: textController_pricemax,
+                          // onChanged: (text) {
+                          //   pricemax = text;
+                          // },
                           keyboardType: TextInputType.number,
 
                           decoration: InputDecoration(
@@ -942,7 +888,8 @@ String? properttype;
                     //  OtherWidget(),
                     ],
                   ),
-                  SizedBox(height: 20.0),Container(
+                  SizedBox(height: 20.0),
+                  Container(
 
                     margin: EdgeInsets.only(left: 40, right: 40),
                   child: DropdownButton(
@@ -1045,6 +992,11 @@ String? properttype;
     );
   }
   Future<void> submit() async {
+    areamin = textController_areamin.text.isNotEmpty ?  textController_areamin.text : '1' ;
+    areamax = textController_areamax.text.isNotEmpty ?  textController_areamax.text : '9999999999' ;
+    pricemin = textController_pricemin.text.isNotEmpty ?  textController_pricemin.text : '1' ;
+    pricemax = textController_pricemax.text.isNotEmpty ?  textController_pricemax.text : '9999999999' ;
+
 
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => ShopPages(locationone: locationone, locationonetype: locationonetype, areamin: areamin,areamax: areamax,area_type: area_type,pricemin: pricemin,pricemax: pricemax,properttype: properttype,

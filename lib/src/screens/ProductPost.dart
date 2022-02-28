@@ -67,6 +67,9 @@ class _ProductPostState extends State<ProductPost> {
   String? product_type;
   String? productID;
   String? price;
+  String? properttype;
+  String? sizetype;
+
   String? size;
   String? plot;
   String? combilename;
@@ -299,6 +302,16 @@ class _ProductPostState extends State<ProductPost> {
   }
 
   Future<void> submit() async {
+    if (sizetype=='1')
+    {
+      int mrl = 225;
+      size = (mrl *  int.parse(size!)).toString() ;
+      print(size);
+    }
+
+    else{
+
+    }
     final form = _formKey.currentState!;
     if (form.validate()) {
       List<Map> itemsVariation = [];
@@ -333,6 +346,8 @@ class _ProductPostState extends State<ProductPost> {
         "options": json.encode(itemsOption),
       };
       print(body);
+
+
       final url = "$api/shop-product/$shopID/shop/product";
       final response = await http.post(Uri.parse(url), body: body, headers: {
         HttpHeaders.acceptHeader: "application/json",
@@ -532,6 +547,7 @@ class _ProductPostState extends State<ProductPost> {
                 child: _productSocietyWidget(),
                 margin: EdgeInsets.only(left: 12, right: 12, top: 12),
               ),
+
               // originalphase.isNotEmpty ? Container(
               //   child: _productPhaseWidget(),
               //   margin: EdgeInsets.only(left: 12, right: 12, top: 12),
@@ -549,7 +565,11 @@ class _ProductPostState extends State<ProductPost> {
                         child: _priceWidget(),
                         margin: EdgeInsets.only(left: 12, right: 12, top: 12),
                       ),
+
                        Container(
+                         child: _PropertyType(),
+                         margin: EdgeInsets.only(left: 12, right: 12, top: 12),
+                       ),Container(
                          child: _sizeWidget(),
                          margin: EdgeInsets.only(left: 12, right: 12, top: 12),
                        ),
@@ -557,6 +577,7 @@ class _ProductPostState extends State<ProductPost> {
                          child: _plotWidget(),
                          margin: EdgeInsets.only(left: 12, right: 12, top: 12),
                        ),
+
                       // Container(
                       //   child: _QuantityWidget(),
                       //   margin: EdgeInsets.only(left: 12, right: 12, top: 12),
@@ -728,7 +749,7 @@ class _ProductPostState extends State<ProductPost> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Price *',
+          'Price * (PKR)',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
         ),
         SizedBox(
@@ -817,7 +838,7 @@ class _ProductPostState extends State<ProductPost> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Select Society *',
+                'Select Location *',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
               SizedBox(
@@ -845,7 +866,7 @@ class _ProductPostState extends State<ProductPost> {
                     onChanged: searchsoc,
                     decoration: InputDecoration(
 
-                      hintText: "Search",
+                      hintText: "Select Location",
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.0)),
                       focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
                       // prefixIcon: Icon(Icons.search),
@@ -1214,7 +1235,75 @@ class _ProductPostState extends State<ProductPost> {
       ],
     );
   }
+  Widget _PropertyType() {
+    return Column(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Property Type',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
 
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                decoration: BoxDecoration(
+                  color: Color(0xfff3f3f4),
+                  borderRadius: BorderRadius.circular(5.0),
+                  border: Border.all(
+                      color: Colors.black, style: BorderStyle.solid, width: 0.80),),
+                child: DropdownButton(
+                  dropdownColor:Color(0xfff3f3f4) ,
+
+
+                  isExpanded: true,
+                  underline: SizedBox(
+                    width: 20,
+                  ),
+                  icon: SvgPicture.asset("assets/icons/dropdown.svg"),
+                  hint: Text(
+                    'choose a Type',
+                    overflow: TextOverflow.fade,
+                    maxLines: 1,
+                    softWrap: false,
+                  ), // Not necessary for Option 1
+                  value: properttype != null
+                      ? properttype
+                      : 'Residential',
+                  onChanged: (dynamic value) {
+                    setState(() {
+                      if ('Residential' == value) {
+                        properttype ='1';
+
+                      } else {
+                        //  product_type = '1';
+                        properttype ='2';
+                      }
+                      properttype = value;
+                    });
+                  },
+                  items:
+                  <String>['Commercial','Residential'].map((String value) {
+                    return new DropdownMenuItem<String>(
+
+                      value: value,
+                      child: new Text(value),
+                    );
+                  }).toList(),
+                ),),
+
+            ],
+          ),
+        )
+      ],
+    );
+  }
 
   Widget _priceWidget() {
     return Column(
@@ -1225,16 +1314,19 @@ class _ProductPostState extends State<ProductPost> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Price *',
+                'Price * (PKR)',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
               SizedBox(
                 height: 15,
               ),
               TextFormField(
+
                   obscureText: false,
                   decoration: InputDecoration(
-                      border: InputBorder.none,
+                      hintText: "Enter Price",
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.0)),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
                       fillColor: Color(0xfff3f3f4),
                       filled: true),
                   keyboardType: TextInputType.number,
@@ -1266,7 +1358,9 @@ class _ProductPostState extends State<ProductPost> {
               TextFormField(
                   obscureText: false,
                   decoration: InputDecoration(
-                      border: InputBorder.none,
+                      hintText: "Enter Plot No.",
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.0)),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
                       fillColor: Color(0xfff3f3f4),
                       filled: true),
                   keyboardType: TextInputType.number,
@@ -1292,20 +1386,85 @@ class _ProductPostState extends State<ProductPost> {
                 'Plot size *',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
+
+
+
+            ],
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 5),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+
               SizedBox(
                 height: 15,
               ),
-              TextFormField(
+              Expanded(flex:6,child:TextFormField(
                   obscureText: false,
                   decoration: InputDecoration(
-                      border: InputBorder.none,
+                      hintText: "Enter Plot Size",
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(4.0)),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
                       fillColor: Color(0xfff3f3f4),
                       filled: true),
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     size = value!.trim();
                     return Validate.requiredField(value, 'Plot size required.');
-                  })
+                  })),
+              Expanded(flex: 1, child: Container(),),
+              Expanded(flex: 4,child:
+              Container(
+                height: 60,
+
+                padding: EdgeInsets.symmetric(horizontal: 5.0),
+                decoration: BoxDecoration(
+                  color: Color(0xfff3f3f4),
+                  borderRadius: BorderRadius.circular(5.0),
+                  border: Border.all(
+                      color: Colors.black, style: BorderStyle.solid, width: 0.80),),
+                child: DropdownButton(
+                  dropdownColor:Color(0xfff3f3f4) ,
+
+
+                  isExpanded: false,
+                  underline: SizedBox(
+                    height: 60,
+                  ),
+                  icon: SvgPicture.asset("assets/icons/dropdown.svg"),
+                  hint: Text(
+                    'choose a Type',
+                    overflow: TextOverflow.fade,
+                    maxLines: 1,
+                    softWrap: false,
+                  ), // Not necessary for Option 1
+                  value: sizetype != null
+                      ? sizetype
+                      : 'Marla',
+                  onChanged: (dynamic value) {
+                    setState(() {
+                      if ('Marla' == value) {
+                        sizetype ='1';
+
+                      } else {
+                        //  product_type = '1';
+                        sizetype ='2';
+                      }
+                      sizetype = value;
+                    });
+                  },
+                  items:
+                  <String>['Marla','Kanal'].map((String value) {
+                    return new DropdownMenuItem<String>(
+
+                      value: value,
+                      child: new Text(value),
+                    );
+                  }).toList(),
+                ),),)
+
             ],
           ),
         )
