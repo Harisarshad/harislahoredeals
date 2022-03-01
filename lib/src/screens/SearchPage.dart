@@ -86,12 +86,8 @@ String? properttype;
   final textController_pricemin = TextEditingController();
   final textController_pricemax = TextEditingController();
 
-  List<int> selectedItemsMultiCustomDisplayDialog = [];
-  List<int> selectedItemsMultiSelect3Dialog = [];
-  List<int> selectedItemsMultiMenu = [];
-  List<int> selectedItemsMultiMenuSelectAllNone = [];
-  List<int> selectedItemsMultiDialogSelectAllNoneWoClear = [];
-  List<int> editableSelectedItems = [];
+
+
   List<DropdownMenuItem> itemsss = [];
   List<DropdownMenuItem> editableItems = [];
   List<DropdownMenuItem> futureItems = [];

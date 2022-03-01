@@ -12,7 +12,7 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import '../../main.dart';
-
+import 'package:search_choices/search_choices.dart';
 class Variation {
   String? name;
   String? price;
@@ -68,9 +68,10 @@ class _ProductPostState extends State<ProductPost> {
   String? productID;
   String? price;
   String? properttype;
-  String? sizetype;
-
-  String? size;
+  double sizeValue = 225;
+  String? sizeName;
+String harisarshad= '';
+  String? Size;
   String? plot;
   String? combilename;
   String? phase;
@@ -108,6 +109,7 @@ class _ProductPostState extends State<ProductPost> {
   String? _selectedAreaPhase = '1';
   String? _selectedLocation = '1';
   bool harissoc = false;
+  double sizesq = 0;
   bool harisphase = true;
   bool harisblock = false;
   List originalsoc = [];
@@ -122,7 +124,7 @@ class _ProductPostState extends State<ProductPost> {
   void searchsoc(String query) {
     if (query.isEmpty) {
       personssoc = originalsoc;
-
+      harissoc =true;
       setState(() {});
       return;
     }
@@ -136,7 +138,7 @@ class _ProductPostState extends State<ProductPost> {
     setState(() {
 
     });
-    harissoc =true;
+
     query = query.toLowerCase();
     print(query);
     List result = [];
@@ -303,12 +305,10 @@ class _ProductPostState extends State<ProductPost> {
 
   Future<void> submit() async {
 
+print(sizesq*sizeValue);
+print('sizesq*sizeValue');
 
-      int mrl = 225;
-      int kana = 225*20;
 
-      String? sizesq = sizetype == '1' ? (   (int.parse(size!) * 225 )).toString() : (4500 *  (int.parse(size!))).toString();
-      print(size);
 
 
     final form = _formKey.currentState!;
@@ -331,8 +331,9 @@ class _ProductPostState extends State<ProductPost> {
         "unit_price": price != null ? price : '',
         "p_city":  '1',
         "plot_no": plot != null ? plot : '',
-        "plot_size": sizesq != null ? sizesq : '',
+        "plot_size": '${sizesq*sizeValue }',
         "p_society": '1',
+        "p_properttype": '$properttype',
         "p_phase": '1',
         "p_block": block != null ? block : '',
         "discount_price": discount_price != null
@@ -381,13 +382,13 @@ class _ProductPostState extends State<ProductPost> {
               onPressed: () {
                 if (bool) {
                   Navigator.of(context).pop();
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => MyHomePage(
-                  //               tabsIndex: 2,
-                  //               title: 'My Product',
-                  //             ))).then((_) => _formKey.currentState!.reset());
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyHomePage(
+                                tabsIndex: 2,
+                                title: 'My Product',
+                              ))).then((_) => _formKey.currentState!.reset());
                 } else {
                   Navigator.of(context).pop();
                 }
@@ -702,6 +703,7 @@ class _ProductPostState extends State<ProductPost> {
           child: StyledFlatButton(
             'Add Property',
             onPressed: () {
+
               submit();
             },
           ),
@@ -858,10 +860,50 @@ class _ProductPostState extends State<ProductPost> {
                 child: Column(
                   children: <Widget>[
                     SizedBox(width: 10),
+                // DropdownButton(
+                //                   isExpanded: true,
+                //                   // underline: SizedBox(
+                //                   //   width: 80,
+                //                   // ),
+                //                   icon: SvgPicture.asset(
+                //                       "assets/icons/dropdown.svg"),
+                //                   hint: Text(
+                //                     'choose a Area',
+                //                     overflow: TextOverflow.fade,
+                //                     maxLines: 1,
+                //                     softWrap: false,
+                //                   ),
+                //                   // Not necessary for Option 1
+                //                   value: _selectedArea != null
+                //                       ? _selectedArea
+                //                       : null,
+                //                   onChanged: (area) {
+                //                     setState(() {
+                //                       //selectedValueSingleDialog = area as String?;
+                //                       _selectedArea = area as String?;
+                //                       _shops.clear();
+                //
+                //                     });
+                //                   },
+                //                   items: _areas.map((area) {
+                //                     return DropdownMenuItem(
+                //                       child: new Text(
+                //                         area['name'],
+                //                         overflow: TextOverflow.fade,
+                //                         maxLines: 1,
+                //                         softWrap: false,
+                //                       ),
+                //                       value: area['id'].toString(),
+                //                     );
+                //                   }).toList(),
+                //                 ),
+
+
                  TextFormField(
 
 
                    controller: txtQuerysoc,
+
                     onChanged: searchsoc,
                     decoration: InputDecoration(
 
@@ -945,16 +987,17 @@ class _ProductPostState extends State<ProductPost> {
             var person = personssoc[index];
             return ListTile(
               onTap: () {
-                print(person['slug']);
+                //print(person['slug']);
                 setState(() {
-                  harissoc=false;
-                  society = person['id'].toString();
+                  //
+                  block = person['order'].toString();
                   societyname = person['name'].toString();
-
+print(person['order'].toString());
+print(person['name'].toString());
                   txtQuerysoc.text = person['name'];
-                  harissoc=false;
-                  getPhase(person['id'].toString() );
 
+                //  getPhase(person['id'].toString() );
+                  harissoc=false;
                 });
 
 
@@ -1409,8 +1452,17 @@ class _ProductPostState extends State<ProductPost> {
                       fillColor: Color(0xfff3f3f4),
                       filled: true),
                   keyboardType: TextInputType.number,
+                  onChanged: (value){
+
+                    sizesq = double.parse(value);
+
+                    print(sizesq);
+
+
+
+                  },
                   validator: (value) {
-                    size = value!.trim();
+                    Size = value!.trim();
                     return Validate.requiredField(value, 'Plot size required.');
                   })),
               Expanded(flex: 1, child: Container(),),
@@ -1439,19 +1491,19 @@ class _ProductPostState extends State<ProductPost> {
                     maxLines: 1,
                     softWrap: false,
                   ), // Not necessary for Option 1
-                  value: sizetype != null
-                      ? sizetype
+                  value: sizeName != null
+                      ? sizeName
                       : 'Marla',
                   onChanged: (dynamic value) {
                     setState(() {
                       if ('Marla' == value) {
-                        sizetype ='1';
+                        sizeValue =225;
 
                       } else {
                         //  product_type = '1';
-                        sizetype ='2';
+                        sizeValue =4500;
                       }
-                      sizetype = value;
+
                     });
                   },
                   items:

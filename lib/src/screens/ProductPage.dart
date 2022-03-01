@@ -188,7 +188,7 @@ String? blockname;
 
     getProduct(shopID, (widget.productData!.id).toString());
 
-    widget.productData!.qty = _quantity;
+   // widget.productData!.qty = _quantity;
   }
 
   @override
@@ -210,7 +210,7 @@ String? blockname;
           color: Colors.white,
         ),
         title: Text(
-          '${widget.productData!.socname} ' + '${widget.productData!.phasename!} '+ '${widget.productData!.blockname!}',
+          '${widget.productData!.socname} ',
           style: TextStyle(color: Colors.white),
         ),
 
