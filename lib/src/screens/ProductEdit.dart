@@ -195,7 +195,7 @@ class _ProductEditState extends State<ProductEdit> {
                       MaterialPageRoute(
                           builder: (context) => MyHomePage(
                                 tabsIndex: 2,
-                                title: ' My Product',
+                                title: ' My Properties',
                               )));
                 } else {
                   Navigator.of(context).pop();

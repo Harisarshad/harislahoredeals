@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:eBazaarMerchant/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:eBazaarMerchant/config/api.dart';
@@ -60,12 +61,21 @@ class _ProductAllState extends State<ProductList> {
               variations: element['variations'],
               options: element['options'],
               name: element['name'],
+              user_id: element['user_id'].toString(),
+
               id: element['id'],
               productItemID: element['id'],
-              imgUrl: element['image'],
+             imgUrl: element['image'],
               quantity: element['p_society'],
+              socname: element['socname'],
+              phasename: element['phasename'],
+              blockname: element['blockname'],
               plot_no: element['plot_no'].toString(),
+
               size: element['size'].toString(),
+              size_word: element['size_word'],
+              pricewords: element['unit_words'].toString(),
+
               price: double.tryParse('${element['unit_price']}')!.toDouble(),
               discount:
                   double.tryParse('${element['discount_price']}')!.toDouble()));
@@ -228,7 +238,7 @@ class _ProductAllState extends State<ProductList> {
                   bottom: 10,
                   right: 10,
                   child: FloatingActionButton.extended(
-                    backgroundColor: Color(0xfffada36),
+                    backgroundColor: primaryColor,
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => ProductPost(),
@@ -287,13 +297,13 @@ Widget _buildFoodCard(context, currency, Product food, onTapped) {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        food.name!,
+                        food.socname! + ' ' + food.phasename! + ' ' + food.blockname!,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                       Text(
-                        'Plot Size - ' + food.size.toString(),
+                        'Plot Size - ' + food.size_word.toString(),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: Theme.of(context).textTheme.caption,
@@ -314,8 +324,8 @@ Widget _buildFoodCard(context, currency, Product food, onTapped) {
                       child: RichText(
                           text: TextSpan(children: [
                         new TextSpan(
-                          text: ' Rs' +
-                              (food.price! - food.discount!).toString(),
+                          text:
+                              food.pricewords! +' Rs' ,
                           style: TextStyle(
                               fontFamily: 'Google Sans',
                               color: Color(0xFFF75A4C),
@@ -325,20 +335,7 @@ Widget _buildFoodCard(context, currency, Product food, onTapped) {
                       flex: -1,
                     ),
                     SizedBox(width: 15),
-                    food.discount != 0
-                        ? RichText(
-                            text: TextSpan(children: [
-                            new TextSpan(
-                              text: '$currency' + food.price.toString(),
-                              style: new TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14.0,
-                                fontFamily: 'Google Sans',
-                                decoration: TextDecoration.lineThrough,
-                              ),
-                            ),
-                          ]))
-                        : Container(),
+
                   ],
                 ),
 

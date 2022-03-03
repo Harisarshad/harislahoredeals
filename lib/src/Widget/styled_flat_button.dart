@@ -1,3 +1,4 @@
+import 'package:eBazaarMerchant/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 
 
@@ -12,8 +13,8 @@ class StyledFlatButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FlatButton(
-      color: Color(0xfffada36),
-      splashColor: Color(0xfffada36),
+      color: primaryColor,
+      splashColor: highlightColor,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 16,horizontal: 50),
         child: Text(
@@ -27,7 +28,7 @@ class StyledFlatButton extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius ?? 4.0),
         side: BorderSide(
-          color: Color(0xfffada36),
+          color: highlightColor,
           width: 4,
         ),
       ),

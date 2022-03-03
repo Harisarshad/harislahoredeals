@@ -5,6 +5,7 @@ import 'package:eBazaarMerchant/src/screens/Shopdetails.dart';
 import 'package:eBazaarMerchant/src/screens/Transaction.dart';
 import 'package:eBazaarMerchant/src/screens/salesReport.dart';
 import 'package:eBazaarMerchant/src/shared/colors.dart';
+import 'package:eBazaarMerchant/src/shared/fryo_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +32,7 @@ class AppDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           Container(
-              height: 220.0,
+              height: 180.0,
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -40,15 +41,17 @@ class AppDrawer extends StatelessWidget {
                         margin: EdgeInsets.all(10.0),
                         width: 100.0,
                         height: 100.0,
-                        decoration: new BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: new DecorationImage(
-                                fit: BoxFit.cover,
-                                image: (shopImg != null
-                                        ? NetworkImage(shopImg)
-                                        : ExactAssetImage(
-                                            'assets/images/profile.png'))
-                                    as ImageProvider<Object>))),
+                        // decoration: new BoxDecoration(
+                        //     shape: BoxShape.circle,
+                        //     image: new DecorationImage(
+                        //         fit: BoxFit.cover,
+                        //         image: (shopImg != null
+                        //                 ? NetworkImage(shopImg)
+                        //                 : ExactAssetImage(
+                        //                     'assets/images/profile.png'))
+                        //             as ImageProvider<Object>)
+                        // )
+                    ),
                     Container(
                       margin: EdgeInsets.only(left: 10),
                       child: Text(
@@ -64,29 +67,29 @@ class AppDrawer extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(left: 10, top: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Icon(
-                            Icons.location_on,
-                            size: 17.0,
-                            color: Color(0xffffffff),
-                          ),
-                          Text(
-                            address != null ? address.toString() : " ",
-                            style: TextStyle(
-                                color: Color(0xffffffff),
-                                fontFamily: 'Varela',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12.0),
-                            softWrap: false,
-                            overflow: TextOverflow.fade,
-                          ),
-                        ],
-                      ),
-                    )
+                    // Container(
+                    //   margin: EdgeInsets.only(left: 10, top: 10),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.start,
+                    //     children: <Widget>[
+                    //       Icon(
+                    //         Icons.location_on,
+                    //         size: 17.0,
+                    //         color: Color(0xffffffff),
+                    //       ),
+                    //       Text(
+                    //         address != null ? address.toString() : " ",
+                    //         style: TextStyle(
+                    //             color: Color(0xffffffff),
+                    //             fontFamily: 'Varela',
+                    //             fontWeight: FontWeight.bold,
+                    //             fontSize: 12.0),
+                    //         softWrap: false,
+                    //         overflow: TextOverflow.fade,
+                    //       ),
+                    //     ],
+                    //   ),
+                    // )
                   ]),
               decoration: BoxDecoration(color: primaryColor)),
           new ListTile(
@@ -124,15 +127,15 @@ class AppDrawer extends StatelessWidget {
           //   },
           // ),
           new ListTile(
-            leading: Icon(Icons.receipt),
-            title: new Text("My Properties"),
+            leading: Icon(Fryo.user_1),
+            title: new Text("Profile"),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => MyHomePage(
-                            title: 'My Properties',
+                            title: 'Profile',
                             tabsIndex: 2,
                           )));
             },

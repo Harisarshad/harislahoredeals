@@ -1,4 +1,4 @@
-package com.inilabs.foodshopapp
+package com.smartdeals.property
 
 import io.flutter.embedding.android.FlutterActivity
 

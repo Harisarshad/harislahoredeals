@@ -1,3 +1,4 @@
+import 'package:eBazaarMerchant/src/screens/dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:eBazaarMerchant/config/api.dart';
@@ -15,38 +16,14 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:io';
 
-import 'cartpage.dart';
-class Hourly {
-  int? time;
-  String? icon;
-  String? temp;
+import 'package:flutter/material.dart';
+import 'package:url_launcher/link.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-  Hourly({this.time, this.icon, this.temp});
-}
 
-class GroupModelOptions {
-  String? id;
-  String? name;
-  String? price;
-  GroupModelOptions({this.name, this.price, this.id});
-}
 
-class GroupModelVariations {
-  String? id;
-  String? name;
-  String? price;
-  String? discount;
-  int? stock_count;
-  bool? in_stock;
-  GroupModelVariations(
-      {this.name,
-      this.price,
-      this.discount,
-      this.stock_count,
-      this.in_stock,
-      this.id});
-}
 
 class ProductPage extends StatefulWidget {
   final String? pageTitle;
@@ -71,9 +48,13 @@ String? plot_no;
 String? p_city;
 String? size;
 String? p_societys;
+
 String? socname;
 String? phasename;
+String? size_word;
+String? priceWord;
 String? blockname;
+String? propType;
   List imageList = [AssetImage('assets/images/icon.png')];
 
   int _quantity = 1;
@@ -84,8 +65,7 @@ String? blockname;
   String? deliveryCharge;
   String? shopID;
 
-  List<GroupModelVariations> _groupVariations = [];
-  List<GroupModelOptions> _groupOptions = [];
+
   Map<String, dynamic> ProductShow = {
    // "id": '',
     "name": '',
@@ -96,7 +76,7 @@ String? blockname;
   };
 
   Future<String> getProduct(String? shopID, String UserID) async {
-    //final url = "$api/shops/1/user/6";
+   // final url = "$api/shops/1/user/2";
     final url = "$api/shops/1/user/$UserID";
 
 
@@ -106,15 +86,18 @@ String? blockname;
     if (response.statusCode == 200) {
       setState(() {
         unit_price = widget.productData!.price.toString();
+        priceWord = widget.productData!.pricewords.toString();
         plot_no = widget.productData!.plot_no.toString();
-        p_city = widget.productData!.id.toString();
+        p_city = widget.productData!.user_id.toString();
         size = widget.productData!.size.toString();
         p_societys= widget.productData!.id.toString();
         socname= widget.productData!.socname.toString();
+        propType= widget.productData!.propType.toString();
         phasename= widget.productData!.phasename.toString();
         blockname= widget.productData!.blockname.toString();
+        size_word= widget.productData!.size_word.toString();
        print(resBody['data']) ;
-      // print(resBody['data']['name']) ;
+      print(resBody['data']['name']) ;
        print('${resBody['data']['name'].toString()}') ;
         ProductShow['name'] = resBody['data']['name'];
         ProductShow['first_name'] = resBody['data']['first_name'];
@@ -186,7 +169,9 @@ String? blockname;
     deliveryCharge =
         Provider.of<AuthProvider>(context, listen: false).deliveryCharge;
 
-    getProduct(shopID, (widget.productData!.id).toString());
+    getProduct(shopID, (widget.productData!.user_id).toString());
+    print((widget.productData!.user_id).toString());
+    print('(widget.productData!.user_id).toString()');
 
    // widget.productData!.qty = _quantity;
   }
@@ -215,292 +200,645 @@ String? blockname;
         ),
 
       ),
-      body: SafeArea(
-        child: phasename == ''
-            ? CircularLoadingWidget(
-                height: 400,
-                subtitleText: 'Products No Found',
-                img: 'assets/shopping1.png')
-            :
+      body:Column(
+        children: <Widget>[
+        SizedBox(
+        height: 30,
+        child: Stack(
+          children: <Widget>[
 
-                   Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: Container(
-                            child: ListView(children: <Widget>[
-                         // myCarousel(),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                right: 20, left: 20, bottom: 10, top: 25),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Expanded(
-                                  child: Text('Society' + ' '+
-                                    socname.toString(),
-                                    overflow: TextOverflow.fade,
-                                    softWrap: true,
-                                    maxLines: 2,
-                                    style: CustomTextStyle.textFormFieldMedium
-                                        .copyWith(
-                                            color: Colors.black,
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ],
-                            ),
+
+            Positioned(
+              child: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)), color: Colors.green),
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back_ios, color: Colors.white,),
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              top: 32,
+              left: 32,
+            )
+          ],
+        ),
+      ),
+      Expanded(
+        child: SingleChildScrollView(
+          controller: ScrollController(),
+          child: Column(
+            //column for whole container
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(left: 32, right: 32, top: 16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+
+                      children: <Widget>[
+                        Container(
+                          width: 200,
+                          child: Text(socname.toString() +' ' + phasename.toString() +' '+ blockname.toString(),
+                            style: TextStyle(fontSize: 22, color: Colors.grey[800], fontWeight: FontWeight.bold),
                           ),
-                              phasename == '' ? Container(): Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 20, left: 20, bottom: 10, top: 25),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Text('Phase' + ' ' +
-                                        phasename.toString(),
-                                        overflow: TextOverflow.fade,
-                                        softWrap: true,
-                                        maxLines: 2,
-                                        style: CustomTextStyle.textFormFieldMedium
-                                            .copyWith(
-                                            color: Colors.black,
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              blockname == '' ? Container(): Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 20, left: 20, bottom: 10, top: 25),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Text('Block' + ' '+
-                                        blockname.toString(),
-                                        overflow: TextOverflow.fade,
-                                        softWrap: true,
-                                        maxLines: 2,
-                                        style: CustomTextStyle.textFormFieldMedium
-                                            .copyWith(
-                                            color: Colors.black,
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              plot_no == ''? Container () :Padding(
-                            padding: const EdgeInsets.only(
-                                right: 20, left: 20, bottom: 10, top: 5),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Expanded(
-                                  child: Text(
-                                    'Plot no  ' +
-                                        ' '+
-                                        plot_no.toString(),
-                                    overflow: TextOverflow.fade,
-                                    softWrap: true,
-                                    maxLines: 2,
-                                    style: CustomTextStyle.textFormFieldMedium
-                                        .copyWith(
-                                            color: Colors.red,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 20, left: 20, bottom: 10, top: 5),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Text(
-                                        'Price ' +
-                                            currency! + ' '+
-                                            unit_price.toString(),
-                                        overflow: TextOverflow.fade,
-                                        softWrap: true,
-                                        maxLines: 2,
-                                        style: CustomTextStyle.textFormFieldMedium
-                                            .copyWith(
-                                            color: Colors.red,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                        ),
 
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 5),
-                            child: Text(
-                              ProductShow['name'] != null
-                                  ? ProductShow['name']
-                                  : '',
-                              overflow: TextOverflow.fade,
-                              style: CustomTextStyle.textFormFieldMedium
-                                  .copyWith(
-                                      color: Colors.black54,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 5),
-                                child: Text(
-                                  ProductShow['first_name'] != null
-                                      ? ProductShow['first_name']
-                                      : '',
-                                  overflow: TextOverflow.fade,
-                                  style: CustomTextStyle.textFormFieldMedium
-                                      .copyWith(
-                                      color: Colors.black54,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
+                        SizedBox(height: 8,),
+                        // Text("Karachi, Bahria Town, A123-4",
+                        //     style: TextStyle(color: Colors.grey[500],), overflow: TextOverflow.ellipsis),
+                        SizedBox(height: 16,),
 
 
+                      ],
+                    ),
+
+                    // IconButton(
+                    //   icon: Icon(Icons.navigation),
+                    // )
+                  ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 32, right: 32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    //Text("Features", style: TextStyle(color: Colors.grey[800], fontSize: 18, fontWeight: FontWeight.w600), ),
+                    SizedBox(height: 16,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Icon(Icons.local_offer, color:  primaryColor,),
+                            SizedBox(width: 4,),
+                            Text("Price", style: TextStyle(color: Colors.grey[900],fontSize: 22, fontWeight: FontWeight.w500),)
+                          ],
+                        ),
 
 
-                          reviews!.isEmpty
-                              ? Container()
-                              : Column(
-                                  children:
-                                      List.generate(reviews!.length, (index) {
-                                    return reviews![index]['status'] == 5
-                                        ? Container(
-                                            margin: const EdgeInsets.symmetric(
-                                                vertical: 4.0),
-                                            padding: const EdgeInsets.all(8.0),
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(5.0))),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 16.0),
-                                                  child: CircleAvatar(
-                                                    maxRadius: 14,
-                                                    backgroundImage:
-                                                        NetworkImage(
-                                                            reviews![index]
-                                                                ['image']),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: <Widget>[
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: <Widget>[
-                                                          Text(
-                                                            reviews![index]
-                                                                    ['name']
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                          Text(
-                                                            reviews![index]
-                                                                    ['date']
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                                color:
-                                                                    Colors.grey,
-                                                                fontSize: 10.0),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                vertical: 8.0),
-                                                        child:
-                                                            RatingBar.builder(
-                                                          initialRating:
-                                                              double.tryParse(
-                                                                      '${reviews![index]['rating']}')!
-                                                                  .toDouble(),
-                                                          itemSize: 20.0,
-                                                          glowColor: Colors
-                                                              .amberAccent,
-                                                          minRating: 1,
-                                                          direction:
-                                                              Axis.horizontal,
-                                                          allowHalfRating: true,
-                                                          itemCount: 5,
-                                                          itemPadding: EdgeInsets
-                                                              .symmetric(
-                                                                  horizontal:
-                                                                      4.0),
-                                                          itemBuilder:
-                                                              (context, _) =>
-                                                                  Icon(
-                                                            Icons.star,
-                                                            color: Colors.amber,
-                                                          ),
-                                                          onRatingUpdate:
-                                                              (rating) {
-                                                            print(rating);
-                                                          },
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        reviews![index]
-                                                                ['review']
-                                                            .toString(),
-                                                        style: TextStyle(
-                                                          color: Colors.grey,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            ))
-                                        : Container();
-                                  }),
-                                )
-                        ])),
-                        flex: 90,
+                        Row(
+                          children: <Widget>[
+
+                            SizedBox(width: 4,),
+                            Text( ' Rs ' , style: TextStyle(color: Colors.grey[900],fontSize: 15, fontWeight: FontWeight.w600),),
+                            Text( priceWord.toString()  , style: TextStyle(color: Colors.grey[900],fontSize: 22, fontWeight: FontWeight.w500),)
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                           // Icon(Icons.videogame_asset, color:  Colors.green,),
+                            SizedBox(width: 50,),
+                          //  Text("T. Tennis", style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w500),)
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Icon(Icons.local_offer, color:  primaryColor,),
+                            SizedBox(width: 4,),
+                            Text("SIZE", style: TextStyle(color: Colors.grey[900],fontSize: 20, fontWeight: FontWeight.w500),)
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+
+                            SizedBox(width: 4,),
+                            Text(size_word.toString(), style: TextStyle(color: Colors.grey[900],fontSize: 20, fontWeight: FontWeight.w500),)
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            // Icon(Icons.videogame_asset, color:  Colors.green,),
+                            SizedBox(width:80,),
+                            //  Text("T. Tennis", style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w500),)
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Icon(Icons.local_offer, color:  primaryColor,),
+                            SizedBox(width: 4,),
+                            Text("Property Type", style: TextStyle(color: Colors.grey[900],fontSize: 15, fontWeight: FontWeight.w500),)
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+
+                            SizedBox(width: 4,),
+                            Text(propType.toString() != '0' ? 'Residential' :'Commercial', style: TextStyle(color: Colors.grey[900],fontSize: 15, fontWeight: FontWeight.w500),)
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            // Icon(Icons.videogame_asset, color:  Colors.green,),
+                            SizedBox(width:80,),
+                            //  Text("T. Tennis", style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w500),)
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8,),
+                    SizedBox(height: 15,),
+                  ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 32, right: 32, top: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(Icons.location_city, size: 20, color: Colors.grey[600],),
+                        SizedBox(width: 4,),
+                        Text("SOCIETY", style: TextStyle(color: Colors.grey[900],fontSize: 20, fontWeight: FontWeight.w500),)
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Icon(Icons.location_on_rounded, size: 12, color: Colors.grey[600],),
+                        SizedBox(width: 4,),
+                        Text("PHASE", style: TextStyle(color: Colors.grey[900], fontSize: 20,fontWeight: FontWeight.w500),)
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Icon(Icons.my_location_rounded, size: 20, color: Colors.grey[600],),
+                        SizedBox(width: 4,),
+                        Text("BLOCK", style: TextStyle(color: Colors.grey[900],fontSize: 20, fontWeight: FontWeight.w500),)
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 32, right: 32, top: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
+
+
+                      children: <Widget>[
+                     //  Icon(Icons.location_city, size: 20, color: Colors.grey[600],),
+                        SizedBox(width: 4,),
+                        Text(socname.toString(), style: TextStyle(color: Colors.black,fontSize: 20, fontWeight: FontWeight.w500),)
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                       // Icon(Icons.location_on_rounded, size: 12, color: Colors.grey[600],),
+                        SizedBox(width: 4,),
+                        Text(phasename.toString(), style: TextStyle(color: Colors.black, fontSize: 20,fontWeight: FontWeight.w500),)
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                      //  Icon(Icons.my_location_rounded, size: 20, color: Colors.grey[600],),
+                        SizedBox(width: 4,),
+                        Text(blockname.toString(), style: TextStyle(color: Colors.black,fontSize: 20, fontWeight: FontWeight.w500),)
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+
+              SizedBox(
+                height: 8,
+              ),
+
+              Divider(),
+
+              Container(
+                margin: EdgeInsets.only(left: 32, right: 32),
+                child: Row(
+                  children: <Widget>[
+                    CircleAvatar(
+                      child: ClipRRect(
+                       child: const Text('LD'),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
+                    ),
 
-                    ],
-                  )
+                    SizedBox(width: 16,),
+
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(ProductShow['first_name'] != null
+                                                            ? ProductShow['first_name']
+                                                            : '' + ' '+ ProductShow['last_name'] != null
+                              ? ProductShow['last_name']
+                              : '' , style: TextStyle(color: Colors.grey[800], fontSize : 18, fontWeight: FontWeight.w600),),
+                          Text(ProductShow['phone'] != null
+                              ? ProductShow['phone']
+                              : '' , style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w400),)
+                        ],
+                      ),
+                    ),
+
+                    ProductShow['phone'] != null ?
+
+                    Container(
+                        width: 60,
+                        height: 60,
+                    decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: primaryColor),
+
+                        child: IconButton(icon: new Icon(Icons.phone),
+                      onPressed: ()
+                      {
+                        setState(() {
+                          _makePhoneCall('tel:${ProductShow['phone']}');
+                        });
+                      },
+                    )) :Container(),
+                  ],
+                ),
+              ),
+
+              SizedBox(
+                height: 8,
+              ),
+
+              Divider(
 
               ),
 
+
+
+            ],
+          ),
+        ),
+      )
+
+
+
+
+
+      // SafeArea(
+      //   child: phasename == ''
+      //       ? CircularLoadingWidget(
+      //           height: 400,
+      //           subtitleText: 'Products No Found',
+      //           img: 'assets/shopping1.png')
+      //       :
+      //
+      //              Column(
+      //               children: <Widget>[
+      //                 Expanded(
+      //                   child: Container(
+      //                       child: ListView(children: <Widget>[
+      //                    // myCarousel(),
+      //                    //  Padding(
+      //                    //    padding: const EdgeInsets.only(
+      //                    //        right: 20, left: 20, bottom: 10, top: 25),
+      //                    //    child: Row(
+      //                    //      crossAxisAlignment: CrossAxisAlignment.start,
+      //                    //      children: <Widget>[
+      //                    //        Expanded(
+      //                    //          child: Text('Society' + ' '+
+      //                    //            socname.toString(),
+      //                    //            overflow: TextOverflow.fade,
+      //                    //            softWrap: true,
+      //                    //            maxLines: 2,
+      //                    //            style: CustomTextStyle.textFormFieldMedium
+      //                    //                .copyWith(
+      //                    //                    color: Colors.black,
+      //                    //                    fontSize: 22,
+      //                    //                    fontWeight: FontWeight.bold),
+      //                    //          ),
+      //                    //        ),
+      //                    //      ],
+      //                    //    ),
+      //                    //  ),
+      //
+      //                         phasename == '' ? Container(): Padding(
+      //                           padding: const EdgeInsets.only(
+      //                               right: 20, left: 20, bottom: 10, top: 25),
+      //                           child: Row(
+      //                             crossAxisAlignment: CrossAxisAlignment.start,
+      //                             children: <Widget>[
+      //                               Expanded(
+      //                                 child: Text('Phase' + ' ' +
+      //                                   phasename.toString(),
+      //                                   overflow: TextOverflow.fade,
+      //                                   softWrap: true,
+      //                                   maxLines: 2,
+      //                                   style: CustomTextStyle.textFormFieldMedium
+      //                                       .copyWith(
+      //                                       color: Colors.black,
+      //                                       fontSize: 22,
+      //                                       fontWeight: FontWeight.bold),
+      //                                 ),
+      //                               ),
+      //                             ],
+      //                           ),
+      //                         ),
+      //                         blockname == '' ? Container(): Padding(
+      //                           padding: const EdgeInsets.only(
+      //                               right: 20, left: 20, bottom: 10, top: 25),
+      //                           child: Row(
+      //                             crossAxisAlignment: CrossAxisAlignment.start,
+      //                             children: <Widget>[
+      //                               Expanded(
+      //                                 child: Text('Block' + ' '+
+      //                                   blockname.toString(),
+      //                                   overflow: TextOverflow.fade,
+      //                                   softWrap: true,
+      //                                   maxLines: 2,
+      //                                   style: CustomTextStyle.textFormFieldMedium
+      //                                       .copyWith(
+      //                                       color: Colors.black,
+      //                                       fontSize: 22,
+      //                                       fontWeight: FontWeight.bold),
+      //                                 ),
+      //                               ),
+      //                             ],
+      //                           ),
+      //                         ),
+      //                         plot_no == ''? Container () :Padding(
+      //                       padding: const EdgeInsets.only(
+      //                           right: 20, left: 20, bottom: 10, top: 5),
+      //                       child: Row(
+      //                         crossAxisAlignment: CrossAxisAlignment.start,
+      //                         children: <Widget>[
+      //                           Expanded(
+      //                             child: Text(
+      //                               'Plot no  ' +
+      //                                   ' '+
+      //                                   plot_no.toString(),
+      //                               overflow: TextOverflow.fade,
+      //                               softWrap: true,
+      //                               maxLines: 2,
+      //                               style: CustomTextStyle.textFormFieldMedium
+      //                                   .copyWith(
+      //                                       color: Colors.red,
+      //                                       fontSize: 18,
+      //                                       fontWeight: FontWeight.bold),
+      //                             ),
+      //                           ),
+      //                         ],
+      //                       ),
+      //                     ),
+      //                         Padding(
+      //                           padding: const EdgeInsets.only(
+      //                               right: 20, left: 20, bottom: 10, top: 5),
+      //                           child: Row(
+      //                             crossAxisAlignment: CrossAxisAlignment.start,
+      //                             children: <Widget>[
+      //                               Expanded(
+      //                                 child: Text(
+      //                                   'Price ' +
+      //                                       currency! + ' '+
+      //                                       unit_price.toString(),
+      //                                   overflow: TextOverflow.fade,
+      //                                   softWrap: true,
+      //                                   maxLines: 2,
+      //                                   style: CustomTextStyle.textFormFieldMedium
+      //                                       .copyWith(
+      //                                       color: Colors.red,
+      //                                       fontSize: 18,
+      //                                       fontWeight: FontWeight.bold),
+      //                                 ),
+      //                               ),
+      //                             ],
+      //                           ),
+      //                         ),
+      //
+      //                     Padding(
+      //                       padding: const EdgeInsets.symmetric(
+      //                           horizontal: 20, vertical: 5),
+      //                       child: Text(
+      //                         ProductShow['name'] != null
+      //                             ? ProductShow['name']
+      //                             : '',
+      //                         overflow: TextOverflow.fade,
+      //                         style: CustomTextStyle.textFormFieldMedium
+      //                             .copyWith(
+      //                                 color: Colors.black54,
+      //                                 fontSize: 14,
+      //                                 fontWeight: FontWeight.bold),
+      //                       ),
+      //                     ),
+      //                         Container(
+      //
+      //                           child: InkWell(
+      //                             onTap: () {
+      //                               // Navigator.push(
+      //                               //     context,
+      //                               //     MaterialPageRoute(
+      //                               //         builder: (BuildContext context) =>
+      //                               //             ShopScreen(
+      //                               //               shopId: product!.shopId,
+      //                               //             )));
+      //                             },
+      //                             child: Row(
+      //                               mainAxisSize: MainAxisSize.min,
+      //                               children: [
+      //                                 Container(
+      //                                   color: Colors.orange,
+      //                                   child: FlutterLogo(
+      //                                     size: 60.0,
+      //                                   ),
+      //                                 ),
+      //                                 Container(
+      //                                   color: Colors.blue,
+      //                                   child: FlutterLogo(
+      //                                     size: 60.0,
+      //                                   ),
+      //                                 ),
+      //                                 Container(
+      //                                   color: Colors.purple,
+      //                                   child: FlutterLogo(
+      //                                     size: 60.0,
+      //                                   ),
+      //                                 ),
+      //
+      //
+      //                               ],
+      //                             ),
+      //                           ),
+      //                         ),
+      //                         Padding(
+      //                           padding: const EdgeInsets.symmetric(
+      //                               horizontal: 20, vertical: 5),
+      //                           child: Text(
+      //                             ProductShow['first_name'] != null
+      //                                 ? ProductShow['first_name']
+      //                                 : '',
+      //                             overflow: TextOverflow.fade,
+      //                             style: CustomTextStyle.textFormFieldMedium
+      //                                 .copyWith(
+      //                                 color: Colors.black54,
+      //                                 fontSize: 14,
+      //                                 fontWeight: FontWeight.bold),
+      //                           ),
+      //                         ),
+      //                         Padding(
+      //                           padding: const EdgeInsets.symmetric(
+      //                               horizontal: 20, vertical: 5),
+      //                           child: Text(
+      //                             ProductShow['phone'] != null
+      //                                 ? ProductShow['phone']
+      //                                 : '',
+      //                             overflow: TextOverflow.fade,
+      //                             style: CustomTextStyle.textFormFieldMedium
+      //                                 .copyWith(
+      //                                 color: Colors.black54,
+      //                                 fontSize: 14,
+      //                                 fontWeight: FontWeight.bold),
+      //                           ),
+      //                         ),
+      //
+      //
+      //
+      //
+      //                     reviews!.isEmpty
+      //                         ? Container()
+      //                         : Column(
+      //                             children:
+      //                                 List.generate(reviews!.length, (index) {
+      //                               return reviews![index]['status'] == 5
+      //                                   ? Container(
+      //                                       margin: const EdgeInsets.symmetric(
+      //                                           vertical: 4.0),
+      //                                       padding: const EdgeInsets.all(8.0),
+      //                                       decoration: BoxDecoration(
+      //                                           color: Colors.white,
+      //                                           borderRadius: BorderRadius.all(
+      //                                               Radius.circular(5.0))),
+      //                                       child: Row(
+      //                                         crossAxisAlignment:
+      //                                             CrossAxisAlignment.start,
+      //                                         children: <Widget>[
+      //                                           Padding(
+      //                                             padding:
+      //                                                 const EdgeInsets.only(
+      //                                                     right: 16.0),
+      //                                             child: CircleAvatar(
+      //                                               maxRadius: 14,
+      //                                               backgroundImage:
+      //                                                   NetworkImage(
+      //                                                       reviews![index]
+      //                                                           ['image']),
+      //                                             ),
+      //                                           ),
+      //                                           Expanded(
+      //                                             child: Column(
+      //                                               mainAxisSize:
+      //                                                   MainAxisSize.min,
+      //                                               crossAxisAlignment:
+      //                                                   CrossAxisAlignment
+      //                                                       .start,
+      //                                               children: <Widget>[
+      //                                                 Row(
+      //                                                   mainAxisAlignment:
+      //                                                       MainAxisAlignment
+      //                                                           .spaceBetween,
+      //                                                   children: <Widget>[
+      //                                                     Text(
+      //                                                       reviews![index]
+      //                                                               ['name']
+      //                                                           .toString(),
+      //                                                       style: TextStyle(
+      //                                                           fontWeight:
+      //                                                               FontWeight
+      //                                                                   .bold),
+      //                                                     ),
+      //                                                     Text(
+      //                                                       reviews![index]
+      //                                                               ['date']
+      //                                                           .toString(),
+      //                                                       style: TextStyle(
+      //                                                           color:
+      //                                                               Colors.grey,
+      //                                                           fontSize: 10.0),
+      //                                                     )
+      //                                                   ],
+      //                                                 ),
+      //                                                 Padding(
+      //                                                   padding:
+      //                                                       const EdgeInsets
+      //                                                               .symmetric(
+      //                                                           vertical: 8.0),
+      //                                                   child:
+      //                                                       RatingBar.builder(
+      //                                                     initialRating:
+      //                                                         double.tryParse(
+      //                                                                 '${reviews![index]['rating']}')!
+      //                                                             .toDouble(),
+      //                                                     itemSize: 20.0,
+      //                                                     glowColor: Colors
+      //                                                         .amberAccent,
+      //                                                     minRating: 1,
+      //                                                     direction:
+      //                                                         Axis.horizontal,
+      //                                                     allowHalfRating: true,
+      //                                                     itemCount: 5,
+      //                                                     itemPadding: EdgeInsets
+      //                                                         .symmetric(
+      //                                                             horizontal:
+      //                                                                 4.0),
+      //                                                     itemBuilder:
+      //                                                         (context, _) =>
+      //                                                             Icon(
+      //                                                       Icons.star,
+      //                                                       color: Colors.amber,
+      //                                                     ),
+      //                                                     onRatingUpdate:
+      //                                                         (rating) {
+      //                                                       print(rating);
+      //                                                     },
+      //                                                   ),
+      //                                                 ),
+      //                                                 Text(
+      //                                                   reviews![index]
+      //                                                           ['review']
+      //                                                       .toString(),
+      //                                                   style: TextStyle(
+      //                                                     color: Colors.grey,
+      //                                                   ),
+      //                                                 ),
+      //                                               ],
+      //                                             ),
+      //                                           )
+      //                                         ],
+      //                                       ))
+      //                                   : Container();
+      //                             }),
+      //                           )
+      //                   ])),
+      //                   flex: 90,
+      //                 ),
+      //
+      //               ],
+      //             )
+      //
+      //         ),
+
+    ],
+    ),
     );
   }
 
@@ -529,4 +867,14 @@ String? blockname;
       ),
     );
   }
+  Future<void> _makePhoneCall(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+
 }
+
+  }
+

@@ -1,5 +1,6 @@
 import 'package:eBazaarMerchant/src/screens/ProductPage.dart';
 import 'package:eBazaarMerchant/src/shared/Product.dart';
+import 'package:eBazaarMerchant/src/shared/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:eBazaarMerchant/config/api.dart';
@@ -11,7 +12,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:geolocator/geolocator.dart';
+//import 'package:geolocator/geolocator.dart';
 import 'package:search_choices/search_choices.dart';
 
 class ShopPages extends StatefulWidget {
@@ -35,18 +36,18 @@ class ShopPages extends StatefulWidget {
 class _ShopPageState extends State<ShopPages> {
   TextEditingController editingController = TextEditingController();
   GlobalKey<RefreshIndicatorState>? refreshKey;
-  late Position _currentPosition;
+ // late Position _currentPosition;
   TextEditingController nameController = TextEditingController();
   String UserName = '';
-  Future<void> _checkPermission() async {
-    // verify permissions
-    LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
-      await Geolocator.openAppSettings();
-      await Geolocator.openLocationSettings();
-    }
-  }
+  // Future<void> _checkPermission() async {
+  //   // verify permissions
+  //   LocationPermission permission = await Geolocator.requestPermission();
+  //   if (permission == LocationPermission.denied ||
+  //       permission == LocationPermission.deniedForever) {
+  //     await Geolocator.openAppSettings();
+  //     await Geolocator.openLocationSettings();
+  //   }
+  // }
 
   String location = '1';
   String api = FoodApi.baseApi;
@@ -62,7 +63,7 @@ class _ShopPageState extends State<ShopPages> {
    String? locationonetypep;
    String? areaminp;
    String? areamaxp;
-   String? area_typep;
+  String? area_typep;
    String? priceminp;
    String? pricemaxp;
    String? properttypep;
@@ -118,21 +119,28 @@ class _ShopPageState extends State<ShopPages> {
     return "Success";
   }
 
-  Future<String> getShops(String areaID,String slug, String order  ) async {
+  Future<String> getShops(String areaID,String slug, String order   ) async {
 
     final url = areaID != null ? "$api/areasproduct?id=$areaID" : '$api/areas';
 print("pricerang");
 print(widget.pricemax);
 print(widget.pricemin);
 
+
+double mixmax = double.parse(widget.areamax!) * double.parse(widget.area_type!);
+double mixmin = double.parse(widget.areamin!) * double.parse(widget.area_type!);
+print(mixmin);
+print(mixmax);
+
     var response = await http.get(Uri.parse(url), headers: {
       "X-FOOD-LAT": "$order",
       "X-FOOD-LONG": "$slug",
-      "AREA-MAX": '${widget.areamax}',
-      "AREA-MIN": '${widget.areamin}',
+      "AREA-MAX": '${mixmax.toString()}',
+      "AREA-MIN": '${mixmin.toString()}',
+      "AREA-TYPE": '${widget.area_type}',
       "PRICE-MIN": '${widget.pricemin}',
       "PRICE-MAX": '${widget.pricemax}',
-      //"property-type": "${widget.properttype}",
+      "PROPERTY-TYPE": "${widget.properttype}",
 
       "Accept": "application/json"
     });
@@ -159,15 +167,19 @@ print(widget.pricemin);
               name: element['name'],
               user_id: element['user_id'].toString(),
 
-              socname: element['socname'],
-              phasename: element['phasename'],
-              blockname: element['blockname'],
               id: element['id'],
               productItemID: element['id'],
               imgUrl: element['image'],
               quantity: element['p_society'],
+              socname: element['socname'],
+              phasename: element['phasename'],
+              blockname: element['blockname'],
               plot_no: element['plot_no'].toString(),
+
               size: element['size'].toString(),
+              size_word: element['size_word'],
+              pricewords: element['unit_words'].toString(),
+
               price: double.tryParse('${element['unit_price']}')!.toDouble(),
               discount:
               double.tryParse('${element['discount_price']}')!.toDouble()));
@@ -191,9 +203,9 @@ print(widget.pricemin);
           '',
           ''
          );
-      this.getLocations(
-          _currentPosition != null ? _currentPosition.latitude : '',
-          _currentPosition != null ? _currentPosition.longitude : '');
+      // this.getLocations(
+      //     _currentPosition != null ? _currentPosition.latitude : '',
+      //     _currentPosition != null ? _currentPosition.longitude : '');
      // _getCurrentLocation();
     });
   }
@@ -229,6 +241,7 @@ print(widget.pricemin);
       widget.locationonetype!,
     );
     print('parameterfromold');
+    print(widget.properttype!);
     print(widget.locationone);
     print(widget.locationonetype);
     this.setting();
@@ -262,43 +275,43 @@ print(widget.pricemin);
     setState(() {});
   }
   TextEditingController txtQuery = new TextEditingController();
-  _getCurrentLocation() {
-    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-        .then((Position position) {
-      setState(() {
-        _selectedArea = null;
-        _selectedLocation = null;
-        _currentPosition = position;
-        this.getLocations(
-            _currentPosition != null ? _currentPosition.latitude : '',
-            _currentPosition != null ? _currentPosition.longitude : '');
-
-        this.getShops(
-            _selectedArea!,
-            '',
-            ''
-            );
-      });
-    }).catchError((e) {
-      print(e);
-      this.getLocations(
-          _currentPosition != null ? _currentPosition.latitude : '',
-          _currentPosition != null ? _currentPosition.longitude : '');
-
-      this.getShops(
-          _selectedArea!,
-          '',
-          ''
-          );
-      _checkPermission();
-    });
-  }
+  // _getCurrentLocation() {
+  //   Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+  //       .then((Position position) {
+  //     setState(() {
+  //       _selectedArea = null;
+  //       _selectedLocation = null;
+  //       _currentPosition = position;
+  //       this.getLocations(
+  //           _currentPosition != null ? _currentPosition.latitude : '',
+  //           _currentPosition != null ? _currentPosition.longitude : '');
+  //
+  //       this.getShops(
+  //           _selectedArea!,
+  //           '',
+  //           ''
+  //           );
+  //     });
+  //   }).catchError((e) {
+  //     print(e);
+  //     this.getLocations(
+  //         _currentPosition != null ? _currentPosition.latitude : '',
+  //         _currentPosition != null ? _currentPosition.longitude : '');
+  //
+  //     this.getShops(
+  //         _selectedArea!,
+  //         '',
+  //         ''
+  //         );
+  //     _checkPermission();
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xfffada36),
+        backgroundColor: primaryColor,
         centerTitle: true,
         
         leading: IconButton(
@@ -619,43 +632,62 @@ print(widget.pricemin);
                   // ),
                   //SizedBox(height: 15.0),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 15),
                     decoration: BoxDecoration(
                       color: Colors.green.withOpacity(0.9),
                       boxShadow: [
                         BoxShadow(
                             color: Theme.of(context).focusColor.withOpacity(0.1),
                             blurRadius: 5,
-                            offset: Offset(0, 2)),
+                            offset: Offset(6, 9)),
                       ],
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
 
-                        SizedBox(width: 15),
+
                         Flexible(
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Expanded(
-                                child: Column(
+                                flex:2,
+                                child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-                                    Text(
-                                      "Phase",
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                      style: Theme.of(context).textTheme.bodyText1,
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        // Text(
+                                        //   "Society/",
+                                        //   overflow: TextOverflow.ellipsis,
+                                        //   maxLines: 2,
+                                        //   style: Theme.of(context).textTheme.bodyText1,
+                                        // ),
+                                        Text(
+                                          "Phase",
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                          style: Theme.of(context).textTheme.bodyText1,
+                                        ),
+
+
+
+                                      ],
                                     ),
+
 
 
                                   ],
                                 ),
                               ),
                               Expanded(
-                                child: Column(
+                                flex:2,
+
+                                child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -671,10 +703,12 @@ print(widget.pricemin);
                                 ),
                               ),
                               Expanded(
-                                child: Column(
+                                flex:2,
+                                child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
+
                                     Text(
                                       "Plot",
                                       overflow: TextOverflow.ellipsis,
@@ -683,11 +717,13 @@ print(widget.pricemin);
                                     ),
 
 
+
                                   ],
                                 ),
                               ),
                               Expanded(
-                                child: Column(
+                                flex:3,
+                                child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -702,11 +738,14 @@ print(widget.pricemin);
                                   ],
                                 ),
                               ),
-                              SizedBox(width: 5),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: RichText(
+                              SizedBox(width: 2),
+                              Expanded(
+                                flex:2,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    RichText(
                                         text: TextSpan(children: [
                                           new TextSpan(
                                             text: ' Price' ,
@@ -714,15 +753,15 @@ print(widget.pricemin);
                                             style: TextStyle(
                                                 fontFamily: 'Google Sans',
                                                 color: Color(0xFFF75A4C),
-                                                fontSize: 14.0),
+                                                fontSize: 18.0),
                                           ),
                                         ])),
-                                    flex: -1,
-                                  ),
-                                  SizedBox(width: 15),
 
-                                ],
+
+                                  ],
+                                ),
                               ),
+
 
 //                Row(
 //                  children: <Widget>[
@@ -754,7 +793,7 @@ print(widget.pricemin);
                     itemBuilder: (context, index) {
 
                        return Container(
-                          height: 40,
+                          height: 45,
                           color: Colors.white,
                           child: _buildFoodCard(
                             context,
@@ -793,7 +832,7 @@ print(widget.pricemin);
       highlightColor: Theme.of(context).primaryColor,
       onTap: onTapped,
       child:    Container(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.9),
           boxShadow: [
@@ -812,7 +851,10 @@ print(widget.pricemin);
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
+
+
                   Expanded(
+                    flex:2,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -829,6 +871,7 @@ print(widget.pricemin);
                     ),
                   ),
                   Expanded(
+                    flex:2,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -845,6 +888,7 @@ print(widget.pricemin);
                     ),
                   ),
                   Expanded(
+                    flex:2,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -861,12 +905,13 @@ print(widget.pricemin);
                     ),
                   ),
                   Expanded(
+                    flex:3,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          food.size!.toString(),
+                          food.size_word!.toString(),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                           style: Theme.of(context).textTheme.bodyText1,
@@ -876,22 +921,24 @@ print(widget.pricemin);
                       ],
                     ),
                   ),
+
                   SizedBox(width: 5),
-                  Row(
+                  Column(
                     children: <Widget>[
                       Expanded(
+                        flex:2,
                         child: RichText(
                             text: TextSpan(children: [
                               new TextSpan(
-                                text: food.price!.toString() ,
+                                text: food.pricewords!.toString() ,
 
                                 style: TextStyle(
                                     fontFamily: 'Google Sans',
                                     color: Color(0xFFF75A4C),
-                                    fontSize: 14.0),
+                                    fontSize: 16.0),
                               ),
                             ])),
-                        flex: -1,
+
                       ),
                       SizedBox(width: 15),
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:eBazaarMerchant/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:eBazaarMerchant/config/api.dart';
@@ -387,7 +388,7 @@ print('sizesq*sizeValue');
                       MaterialPageRoute(
                           builder: (context) => MyHomePage(
                                 tabsIndex: 2,
-                                title: 'My Product',
+                                title: 'My Properties',
                               ))).then((_) => _formKey.currentState!.reset());
                 } else {
                   Navigator.of(context).pop();
@@ -519,7 +520,7 @@ print('sizesq*sizeValue');
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xfffada36),
+        backgroundColor: primaryColor,
         centerTitle: true,
         leading: IconButton(
             icon: Icon(
@@ -530,7 +531,7 @@ print('sizesq*sizeValue');
               Navigator.pop(context);
             }),
         title: Text(
-          "Product",
+          "Add Property",
           style: TextStyle(
               fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
         ),
