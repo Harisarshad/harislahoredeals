@@ -3,6 +3,7 @@ class Product {
   String? name;
   String? user_id;
   String? socname;
+  String? propType;
   String? phasename;
   String? blockname;
   String? categories;
@@ -10,19 +11,21 @@ class Product {
   String? description;
   String? imgUrl;
   double? price;
+  String? pricewords;
   double? discount;
   int? qty;
   int? stock_count;
   bool? in_stock;
   int? quantity;
   String? plot_no;
+  String? size_word;
   String? size;
   double? avgRating;
   int? productItemID;
   List? variations;
   List? options;
 
-  Product({this.options,this.variations,this.in_stock,this.avgRating,this.stock_count,this.id, this.name,this.user_id,this.socname,this.phasename,this.blockname,this.productItemID,this.discount, this.price, this.categories,this.categoriesID,this.description,this.qty,this.quantity,this.plot_no,this.size, this.imgUrl});
+  Product({this.options,this.variations,this.in_stock,this.avgRating,this.stock_count,this.id,this.size_word, this.name,this.pricewords,this.user_id,this.socname,this.propType,this.phasename,this.blockname,this.productItemID,this.discount, this.price, this.categories,this.categoriesID,this.description,this.qty,this.quantity,this.plot_no,this.size, this.imgUrl});
 }
 
 class OrderProduct {

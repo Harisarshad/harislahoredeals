@@ -1,6 +1,7 @@
 import 'package:eBazaarMerchant/src/screens/ProductPage.dart';
 import 'package:eBazaarMerchant/src/screens/shopPages.dart';
 import 'package:eBazaarMerchant/src/shared/Product.dart';
+import 'package:eBazaarMerchant/src/shared/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:eBazaarMerchant/config/api.dart';
@@ -12,7 +13,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:geolocator/geolocator.dart';
+//import 'package:geolocator/geolocator.dart';
 import 'package:search_choices/search_choices.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:eBazaarMerchant/src/Widget/styled_flat_button.dart';
@@ -39,18 +40,19 @@ class _ShopPageState extends State<SearchPage> {
 
   TextEditingController editingController = TextEditingController();
   GlobalKey<RefreshIndicatorState>? refreshKey;
-  late Position _currentPosition;
+  //late Position _currentPosition;
   TextEditingController nameController = TextEditingController();
   String UserName = '';
-  Future<void> _checkPermission() async {
-    // verify permissions
-    LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
-      await Geolocator.openAppSettings();
-      await Geolocator.openLocationSettings();
-    }
-  }
+
+  // Future<void> _checkPermission() async {
+  //   // verify permissions
+  //   LocationPermission permission = await Geolocator.requestPermission();
+  //   if (permission == LocationPermission.denied ||
+  //       permission == LocationPermission.deniedForever) {
+  //     await Geolocator.openAppSettings();
+  //     await Geolocator.openLocationSettings();
+  //   }
+  // }
 
   String location = '1';
   String api = FoodApi.baseApi;
@@ -73,19 +75,20 @@ class _ShopPageState extends State<SearchPage> {
   bool asTabs = false;
 
 
-String? locationone;
-String? locationonetype;
-String? areamin;
-String? areamax;
-String? area_type;
-String? pricemin;
-String? pricemax;
-String? properttype;
+  String? locationone;
+  String? locationonetype;
+  String? areamin;
+  String? areamax;
+  String area_type = '225';
+  String? pricemin;
+  String? pricemax;
+  String? properttype;
+  String? properttypeID ='5';
+
   final textController_areamin = TextEditingController();
   final textController_areamax = TextEditingController();
   final textController_pricemin = TextEditingController();
   final textController_pricemax = TextEditingController();
-
 
 
   List<DropdownMenuItem> itemsss = [];
@@ -102,6 +105,7 @@ String? properttype;
   final _items = _animals
       .map((animal) => MultiSelectItem<Animal>(animal, animal.name!))
       .toList();
+
   Future<void> setting() async {
     await Provider.of<AuthProvider>(context, listen: false).setting();
   }
@@ -139,11 +143,11 @@ String? properttype;
         _areas = resBody['data']['areas'];
 
 
-         original = resBody['data']['areas'];
-         print(original) ;
-         persons = resBody['data']['areas'];
+        original = resBody['data']['areas'];
+        print(original);
+        persons = resBody['data']['areas'];
         _shops.clear();
-       // _shops = resBody['data']['shops'];
+        // _shops = resBody['data']['shops'];
         print(url);
         setState(() {});
         print("harisurlgetArea");
@@ -155,10 +159,8 @@ String? properttype;
     return "Success";
   }
 
-  Future<String> getShops(String areaID,String slug, String order  ) async {
-
+  Future<String> getShops(String areaID, String slug, String order) async {
     final url = areaID != null ? "$api/areasproduct?id=$areaID" : '$api/areas';
-
 
 
     var response = await http.get(Uri.parse(url), headers: {
@@ -196,6 +198,8 @@ String? properttype;
               quantity: element['p_society'],
               plot_no: element['plot_no'].toString(),
               size: element['size'].toString(),
+              size_word: element['size_word'],
+              pricewords: element['unit_words'].toString(),
               price: double.tryParse('${element['unit_price']}')!.toDouble(),
               discount:
               double.tryParse('${element['discount_price']}')!.toDouble()));
@@ -235,17 +239,18 @@ String? properttype;
           area,
           '',
           ''
-         );
-      this.getLocations(
-          _currentPosition != null ? _currentPosition.latitude : '',
-          _currentPosition != null ? _currentPosition.longitude : '');
-     // _getCurrentLocation();
+      );
+      // this.getLocations(
+      //     _currentPosition != null ? _currentPosition.latitude : '',
+      //     _currentPosition != null ? _currentPosition.longitude : '');
+      // _getCurrentLocation();
     });
   }
 
   initAuthProvider(context) async {
     Provider.of<AuthProvider>(context, listen: false).initAuthProvider();
   }
+
   onItemChanged(String value) {
     setState(() {
       // newDataList = mainDataList
@@ -260,18 +265,17 @@ String? properttype;
     'Marla';
     _selectedPriceType =
     'PKR';
-    area_type =  '1';
+
     super.initState();
-    _checkPermission();
+   // _checkPermission();
     getArea();
-   // _getCurrentLocation();
+    // _getCurrentLocation();
     this.setting();
     initAuthProvider(context);
   }
 
   List original = [];
   List persons = [];
-
 
 
   void search(String query) {
@@ -281,7 +285,7 @@ String? properttype;
       setState(() {});
       return;
     }
-    haris =true;
+    haris = true;
     query = query.toLowerCase();
     print(query);
     List result = [];
@@ -295,38 +299,40 @@ String? properttype;
     persons = result;
     setState(() {});
   }
+
   TextEditingController txtQuery = new TextEditingController();
-  _getCurrentLocation() {
-    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-        .then((Position position) {
-      setState(() {
-        _selectedArea = null;
-        _selectedLocation = null;
-        _currentPosition = position;
-        this.getLocations(
-            _currentPosition != null ? _currentPosition.latitude : '',
-            _currentPosition != null ? _currentPosition.longitude : '');
 
-        this.getShops(
-            _selectedArea!,
-            '',
-            ''
-            );
-      });
-    }).catchError((e) {
-      print(e);
-      this.getLocations(
-          _currentPosition != null ? _currentPosition.latitude : '',
-          _currentPosition != null ? _currentPosition.longitude : '');
-
-      this.getShops(
-          _selectedArea!,
-          '',
-          ''
-          );
-      _checkPermission();
-    });
-  }
+  // _getCurrentLocation() {
+  //   Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+  //       .then((Position position) {
+  //     setState(() {
+  //       _selectedArea = null;
+  //       _selectedLocation = null;
+  //       _currentPosition = position;
+  //       this.getLocations(
+  //           _currentPosition != null ? _currentPosition.latitude : '',
+  //           _currentPosition != null ? _currentPosition.longitude : '');
+  //
+  //       this.getShops(
+  //           _selectedArea!,
+  //           '',
+  //           ''
+  //       );
+  //     });
+  //   }).catchError((e) {
+  //     print(e);
+  //     this.getLocations(
+  //         _currentPosition != null ? _currentPosition.latitude : '',
+  //         _currentPosition != null ? _currentPosition.longitude : '');
+  //
+  //     this.getShops(
+  //         _selectedArea!,
+  //         '',
+  //         ''
+  //     );
+  //     _checkPermission();
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -347,125 +353,155 @@ String? properttype;
 
                     children: <Widget>[
                       //SizedBox(width: 900),
-                    Container (
-                      width: MediaQuery.of(context).size.width,
+                      Container(
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width,
 
-                      child:
+                        child:
 
 
-                      //SizedBox(height: 40),
-                      //################################################################################################
-                      // Rounded blue MultiSelectDialogField
-                      //################################################################################################
-                       SearchChoices.multiple(
-///decoration of list
-                         // displayItem: (item, selected) {
-                         //   return (Row(children: [
-                         //     selected
-                         //         ? Icon(
-                         //       Icons.radio_button_checked,
-                         //       color: Colors.grey,
-                         //     )
-                         //         : Icon(
-                         //       Icons.radio_button_unchecked,
-                         //       color: Colors.grey,
-                         //     ),
-                         //     SizedBox(width: 7),
-                         //     Container(
-                         //
-                         //       child: item,
-                         //     ),
-                         //   ]));},
+                        //SizedBox(height: 40),
+                        //################################################################################################
+                        // Rounded blue MultiSelectDialogField
+                        //################################################################################################
+                        SearchChoices.multiple(
+
+                          ///decoration of list
+                          // displayItem: (item, selected) {
+                          //   return (Row(children: [
+                          //     selected
+                          //         ? Icon(
+                          //       Icons.radio_button_checked,
+                          //       color: Colors.grey,
+                          //     )
+                          //         : Icon(
+                          //       Icons.radio_button_unchecked,
+                          //       color: Colors.grey,
+                          //     ),
+                          //     SizedBox(width: 7),
+                          //     Container(
+                          //
+                          //       child: item,
+                          //     ),
+                          //   ]));},
                           items: _areas.map((area) {
-                    return DropdownMenuItem(
-                      child: new Text(
-                        area['name'],
-                        overflow: TextOverflow.fade,
-                        maxLines: 1,
-                       // softWrap: false,
-                      ),
-                      value: area['name'].toString(),
-                    );
-                  }).toList(),
-                        selectedItems: selectedItemsMultiDialog,
-                        hint: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Text("Select any"),
-                        ),
-                        searchHint: "Select any",
-                        onChanged: (area) {
-                          setState(() {
-                            selectedItemsMultiDialog = area;
-                            //selectedItemsMultiDialog = _areas[area]['id'];
-                          print(selectedItemsMultiDialog);
+                            return DropdownMenuItem(
+                              child: new Text(
+                                area['name'],
+                                overflow: TextOverflow.fade,
+                                maxLines: 1,
+                                // softWrap: false,
+                              ),
+                              value: area['name'].toString(),
+                            );
+                          }).toList(),
+                          selectedItems: selectedItemsMultiDialog,
+                          hint: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Text("Select location"),
+                          ),
+                          searchHint: "Select location",
+                          onChanged: (area) {
+                            setState(() {
+                              selectedItemsMultiDialog = area;
+                              //selectedItemsMultiDialog = _areas[area]['id'];
+                              print(selectedItemsMultiDialog);
 
 
-                           // print(area);
-                          //  print(_areas[area]['id']);
-                          });
-                        },
+                              // print(area);
+                              //  print(_areas[area]['id']);
+                            });
+                          },
 
-                         validator: (selectedItemsForValidator) {
-                           if (selectedItemsForValidator.length > 1) {
-                             return ("Max 1 Area Allowed");
-                           }
-                           return (null);
-                         },
+                          validator: (selectedItemsForValidator) {
+                            if (selectedItemsForValidator.length > 1) {
+                              return ("Max 1 Area Allowed");
+                            }
+                            return (null);
+                          },
 
-                         clearIcon: Icon(Icons.cancel),
-                         icon: Icon(Icons.arrow_drop_down_circle),
-                         iconDisabledColor: Colors.brown,
-                         iconEnabledColor: Colors.indigo,
-                        closeButton: (selectedItems) {
-                          selectedItemsMultiDialog = selectedItems;
-                          print(selectedItemsMultiDialog);
+                          clearIcon: Icon(Icons.cancel),
+                          icon: Icon(Icons.arrow_drop_down_circle),
+                          iconDisabledColor: Colors.brown,
+                          iconEnabledColor: Colors.indigo,
+                          closeButton: (selectedItems) {
+                            selectedItemsMultiDialog = selectedItems;
+                            print(selectedItemsMultiDialog);
 
-                          print(selectedItems
-                        );
-                          print(selectedItems.isNotEmpty ? selectedItems : "kuch b nai list") ;
-                         selectedItems.isNotEmpty ? locationone =_areas[selectedItems[0]]['order'].toString(): "1" ;
-                         selectedItems.isNotEmpty ? locationonetype =_areas[selectedItems[0]]['slug'].toString(): "society" ;
+                            print(selectedItems
+                            );
+                            print(selectedItems.isNotEmpty
+                                ? selectedItems
+                                : "kuch b nai list");
+                            selectedItems.isNotEmpty
+                                ? locationone =
+                                _areas[selectedItems[0]]['order'].toString()
+                                : "1";
+                            selectedItems.isNotEmpty
+                                ? locationonetype =
+                                _areas[selectedItems[0]]['slug'].toString()
+                                : "society";
 
-                         print(selectedItems.length>1  ? _areas[selectedItems[1]]['id'].toString(): "kuch b nai index == 1") ;
-                          print(selectedItems.length>2 ? _areas[selectedItems[2]]['id'].toString(): "kuch b nai index == 2") ;
-                          print(selectedItems.length>3  ? _areas[selectedItems[3]]['id'].toString(): "kuch b nai index == 3") ;
-                          final index1 = _areas.indexWhere((element) => element["id"] == "1");
-                          if (index1 != -1) {
-                           // print("Index $index1: ${_areas[index1]}");
-                          }
-                          return (selectedItems.isNotEmpty
-                              ? "Save ${selectedItems.length == 1 ? '"' + _areas[selectedItems.first]['id'].toString() + '"' : '(' + selectedItems.length.toString() + ')'}"
-                              : "Save without selection"
+                            print(selectedItems.length > 1
+                                ? _areas[selectedItems[1]]['id'].toString()
+                                : "kuch b nai index == 1");
+                            print(selectedItems.length > 2
+                                ? _areas[selectedItems[2]]['id'].toString()
+                                : "kuch b nai index == 2");
+                            print(selectedItems.length > 3
+                                ? _areas[selectedItems[3]]['id'].toString()
+                                : "kuch b nai index == 3");
+                            final index1 = _areas.indexWhere((
+                                element) => element["id"] == "1");
+                            if (index1 != -1) {
+                              // print("Index $index1: ${_areas[index1]}");
+                            }
+                            return (selectedItems.isNotEmpty
+                                ? "Select ${selectedItems.length == 1 ? '"' +
+                                _areas[selectedItems.first]['name'].toString() +
+                                '"' : '(' + selectedItems.length.toString() +
+                                ')'}"
+                                : "Cancel"
 
-                          );
-                        },
-                         isExpanded: true,
-                      ),)
+                            );
+                            // return (selectedItems.isNotEmpty
+                            //     ? "Save ${selectedItems.length == 1 ? '"' +
+                            //     _areas[selectedItems.first]['id'].toString() +
+                            //     '"' : '(' + selectedItems.length.toString() +
+                            //     ')'}"
+                            //     : "Save without selection"
+                            //
+                            // );
+                          },
+                          isExpanded: true,
+                        ),)
 
                       //     MultiSelectDialogField(
-                  //       items:_areas.map((animal) {
-                  //   return MultiSelectItem<Animal>(
-                  //       animal, animal.name!
-                  //     // child: new Text(
-                  //     //   area['name'],
-                  //     //   overflow: TextOverflow.fade,
-                  //     //   maxLines: 1,
-                  //     //   softWrap: false,
-                  //     // ),
-                  //   //  value: area['id'].toString(),
-                  //   );
-                  // }).toList(),
-                  //       // items: _areas
-                  //       //     .map((animal) => MultiSelectItem<Animal>(animal, animal.name!))
-                  //       //     .toList(),
-                  //       listType: MultiSelectListType.CHIP,
-                  //
-                  //       onConfirm: (e) {
-                  //         //_selectedAnimals = values;
-                  //         //_selectedAnimals = values;
-                  //         print(e);
-                  //       },
-                  //     ),
+                      //       items:_areas.map((animal) {
+                      //   return MultiSelectItem<Animal>(
+                      //       animal, animal.name!
+                      //     // child: new Text(
+                      //     //   area['name'],
+                      //     //   overflow: TextOverflow.fade,
+                      //     //   maxLines: 1,
+                      //     //   softWrap: false,
+                      //     // ),
+                      //   //  value: area['id'].toString(),
+                      //   );
+                      // }).toList(),
+                      //       // items: _areas
+                      //       //     .map((animal) => MultiSelectItem<Animal>(animal, animal.name!))
+                      //       //     .toList(),
+                      //       listType: MultiSelectListType.CHIP,
+                      //
+                      //       onConfirm: (e) {
+                      //         //_selectedAnimals = values;
+                      //         //_selectedAnimals = values;
+                      //         print(e);
+                      //       },
+                      //     ),
                       // Padding(
                       //   padding:
                       //       EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
@@ -638,14 +674,14 @@ String? properttype;
                       Expanded(
 
 
-                        child:Icon(Icons.square_foot)
-                                )
-                      ,Expanded(
+                          child: Icon(Icons.square_foot)
+                      )
+                      , Expanded(
                           flex: 5,
 
-                        child:
-                        Text('Area Range')
-                                ),
+                          child:
+                          Text('Area Range')
+                      ),
                       SizedBox(width: 10.0),
 
 
@@ -663,17 +699,17 @@ String? properttype;
                             overflow: TextOverflow.fade,
                             maxLines: 1,
                             softWrap: false,
-                          ), // Not necessary for Option 1
+                          ),
+                          // Not necessary for Option 1
                           value: _selectedProductType != null
                               ? _selectedProductType
                               : 'Marla',
                           onChanged: (dynamic value) {
                             setState(() {
                               if ('Marla' == value) {
-                                area_type = '1';
-
+                                area_type = '225';
                               } else {
-                                area_type = '2';
+                                area_type = '4500';
                               }
                               _selectedProductType = value;
                             });
@@ -698,41 +734,43 @@ String? properttype;
 
                       Expanded(
                         flex: 5,
-                      child:
-                      TextField(
-                        keyboardType: TextInputType.number,
-                        // onChanged: (text) {
-                        //   areamin = text;
-                        // },
-                        controller: textController_areamin,
-                        decoration: InputDecoration(
+                        child:
+                        TextField(
+                          keyboardType: TextInputType.number,
+                          // onChanged: (text) {
+                          //   areamin = text;
+                          // },
+                          controller: textController_areamin,
+                          decoration: InputDecoration(
 
-                          labelText:"Minimum Area",
-                          labelStyle: TextStyle(
+                            labelText: "Minimum Area",
+                            labelStyle: TextStyle(
                               //color: Colors.white,
-                              fontSize: 13
-                          ),
+                                fontSize: 13
+                            ),
 
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(2.0)),
-                          enabledBorder: myinputborder(), //enabled border
-                          focusedBorder: myfocusborder(),
-                        ),
-                      ),),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(2.0)),
+                            enabledBorder: myinputborder(),
+                            //enabled border
+                            focusedBorder: myfocusborder(),
+                          ),
+                        ),),
                       SizedBox(width: 10.0),
                       Expanded(
 
 
-                      child:Container(
-                        width: 23,
+                          child: Container(
+                              width: 23,
 
-                      child: new
-                      Text("To",style:TextStyle(
-                        fontFamily: "Roboto",
-                        fontSize: 20.0)))),
+                              child: new
+                              Text("To", style: TextStyle(
+                                  fontFamily: "Roboto",
+                                  fontSize: 20.0)))),
 
                       SizedBox(width: 10.0),
 
-                      Expanded(flex:5,
+                      Expanded(flex: 5,
                         child: TextField(
 
                           // onChanged: (text) {
@@ -742,20 +780,22 @@ String? properttype;
                           keyboardType: TextInputType.number,
 
                           decoration: InputDecoration(
-                          labelText:"Maximum Area",
-                          labelStyle: TextStyle(
-                         // color: Colors.white,
-                            fontSize: 13
-                          ),
+                            labelText: "Maximum Area",
+                            labelStyle: TextStyle(
+                              // color: Colors.white,
+                                fontSize: 13
+                            ),
 
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(2.0)),
-                          enabledBorder: myinputborder(), //enabled border
-                          focusedBorder: myfocusborder(),
-                        ),
-                      ),),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(2.0)),
+                            enabledBorder: myinputborder(),
+                            //enabled border
+                            focusedBorder: myfocusborder(),
+                          ),
+                        ),),
                       SizedBox(width: 10.0),
 
-                    //  OtherWidget(),
+                      //  OtherWidget(),
                     ],
                   ),
                   SizedBox(height: 10.0),
@@ -766,14 +806,14 @@ String? properttype;
                       Expanded(
 
 
-                        child:Icon(Icons.local_offer)
-                                )
-                      ,Expanded(
+                          child: Icon(Icons.local_offer)
+                      )
+                      , Expanded(
                           flex: 5,
 
-                        child:
-                        Text('Price Range')
-                                ),
+                          child:
+                          Text('Price Range')
+                      ),
                       SizedBox(width: 10.0),
 
 
@@ -791,7 +831,8 @@ String? properttype;
                             overflow: TextOverflow.fade,
                             maxLines: 1,
                             softWrap: false,
-                          ), // Not necessary for Option 1
+                          ),
+                          // Not necessary for Option 1
                           value: _selectedPriceType != null
                               ? _selectedPriceType
                               : 'PKR',
@@ -801,7 +842,7 @@ String? properttype;
                                 //product_type = '1';
 
                               } else {
-                              //  product_type = '1';
+                                //  product_type = '1';
                               }
                               _selectedPriceType = value;
                             });
@@ -826,40 +867,42 @@ String? properttype;
 
                       Expanded(
                         flex: 5,
-                      child:
-                      TextField(
-                        // controller: textController_pricemin,
-                        // onChanged: (text) {
-                        //   pricemin = text;
-                        // },
-                      keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText:"Minimum Price",
-                          labelStyle: TextStyle(
+                        child:
+                        TextField(
+                          // controller: textController_pricemin,
+                          // onChanged: (text) {
+                          //   pricemin = text;
+                          // },
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: "Minimum Price",
+                            labelStyle: TextStyle(
                               //color: Colors.white,
-                              fontSize: 13
-                          ),
+                                fontSize: 13
+                            ),
 
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(2.0)),
-                          enabledBorder: myinputborder(), //enabled border
-                          focusedBorder: myfocusborder(),
-                        ),
-                      ),),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(2.0)),
+                            enabledBorder: myinputborder(),
+                            //enabled border
+                            focusedBorder: myfocusborder(),
+                          ),
+                        ),),
                       SizedBox(width: 10.0),
                       Expanded(
 
 
-                      child:Container(
-                        width: 23,
+                          child: Container(
+                              width: 23,
 
-                      child: new
-                      Text("To",style:TextStyle(
-                        fontFamily: "Roboto",
-                        fontSize: 20.0)))),
+                              child: new
+                              Text("To", style: TextStyle(
+                                  fontFamily: "Roboto",
+                                  fontSize: 20.0)))),
 
                       SizedBox(width: 10.0),
 
-                      Expanded(flex:5,
+                      Expanded(flex: 5,
                         child: TextField(
                           controller: textController_pricemax,
                           // onChanged: (text) {
@@ -868,62 +911,65 @@ String? properttype;
                           keyboardType: TextInputType.number,
 
                           decoration: InputDecoration(
-                          labelText:"Maximum Price",
-                          labelStyle: TextStyle(
-                         // color: Colors.white,
-                            fontSize: 13
-                          ),
+                            labelText: "Maximum Price",
+                            labelStyle: TextStyle(
+                              // color: Colors.white,
+                                fontSize: 13
+                            ),
 
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(2.0)),
-                          enabledBorder: myinputborder(), //enabled border
-                          focusedBorder: myfocusborder(),
-                        ),
-                      ),),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(2.0)),
+                            enabledBorder: myinputborder(),
+                            //enabled border
+                            focusedBorder: myfocusborder(),
+                          ),
+                        ),),
                       SizedBox(width: 10.0),
 
-                    //  OtherWidget(),
+                      //  OtherWidget(),
                     ],
                   ),
                   SizedBox(height: 20.0),
                   Container(
 
+
                     margin: EdgeInsets.only(left: 40, right: 40),
-                  child: DropdownButton(
+                    child: DropdownButton(
 
-                    isExpanded: true,
-                    underline: SizedBox(
-                      width: 20,
-                    ),
-                    icon: SvgPicture.asset("assets/icons/dropdown.svg"),
-                    hint: Text(
-                      'choose a Type',
-                      overflow: TextOverflow.fade,
-                      maxLines: 1,
-                      softWrap: false,
-                    ), // Not necessary for Option 1
-                    value: properttype != null
-                        ? properttype
-                        : 'Residential',
-                    onChanged: (dynamic value) {
-                      setState(() {
-                        if ('Residential' == value) {
-                          properttype ='1';
-
-                        } else {
-                          //  product_type = '1';
-                          properttype ='2';
-                        }
-                        properttype = value;
-                      });
-                    },
-                    items:
-                    <String>['Commercial','Residential'].map((String value) {
-                      return new DropdownMenuItem<String>(
-                        value: value,
-                        child: new Text(value),
-                      );
-                    }).toList(),
-                  ),),
+                      isExpanded: true,
+                      underline: SizedBox(
+                        width: 20,
+                      ),
+                      icon: SvgPicture.asset("assets/icons/dropdown.svg"),
+                      hint: Text(
+                        'choose a Type',
+                        overflow: TextOverflow.fade,
+                        maxLines: 1,
+                        softWrap: false,
+                      ),
+                      // Not necessary for Option 1
+                      value: properttype != null
+                          ? properttype
+                          : 'Residential',
+                      onChanged: (dynamic value) {
+                        setState(() {
+                          if ('Residential' == value) {
+                            properttypeID = '1';
+                          } else {
+                            //  product_type = '1';
+                            properttypeID = '2';
+                          }
+                          properttype = value;
+                        });
+                      },
+                      items:
+                      <String>['Commercial', 'Residential'].map((String value) {
+                        return new DropdownMenuItem<String>(
+                          value: value,
+                          child: new Text(value),
+                        );
+                      }).toList(),
+                    ),),
 
                   SizedBox(
                     height: 20.0,
@@ -987,32 +1033,67 @@ String? properttype;
       ),
     );
   }
+
   Future<void> submit() async {
-    areamin = textController_areamin.text.isNotEmpty ?  textController_areamin.text : '1' ;
-    areamax = textController_areamax.text.isNotEmpty ?  textController_areamax.text : '9999999999' ;
-    pricemin = textController_pricemin.text.isNotEmpty ?  textController_pricemin.text : '1' ;
-    pricemax = textController_pricemax.text.isNotEmpty ?  textController_pricemax.text : '9999999999' ;
+    if (locationonetype == null) {
+      showAlertDialog(context,);
+
+    }
+    else {
+      areamin =
+      textController_areamin.text.isNotEmpty ? textController_areamin.text : '1';
+      areamax = textController_areamax.text.isNotEmpty
+          ? textController_areamax.text
+          : '9999999999';
+      pricemin = textController_pricemin.text.isNotEmpty
+          ? textController_pricemin.text
+          : '1';
+      pricemax = textController_pricemax.text.isNotEmpty
+          ? textController_pricemax.text
+          : '9999999999';
 
 
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => ShopPages(locationone: locationone, locationonetype: locationonetype, areamin: areamin,areamax: areamax,area_type: area_type,pricemin: pricemin,pricemax: pricemax,properttype: properttype,
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              ShopPages(locationone: locationone,
+                locationonetype: locationonetype,
+                areamin: areamin,
+                areamax: areamax,
+                area_type: area_type,
+                pricemin: pricemin,
+                pricemax: pricemax,
+                properttype: properttypeID,
 
-            )));
+              )));
+
     }
 
-  Widget _buildFoodCard(context,  Product food, onTapped) {
+  }
+
+  Widget _buildFoodCard(context, Product food, onTapped) {
     return InkWell(
-      splashColor: Theme.of(context).colorScheme.secondary,
-      focusColor: Theme.of(context).colorScheme.secondary,
-      highlightColor: Theme.of(context).primaryColor,
+      splashColor: Theme
+          .of(context)
+          .colorScheme
+          .secondary,
+      focusColor: Theme
+          .of(context)
+          .colorScheme
+          .secondary,
+      highlightColor: Theme
+          .of(context)
+          .primaryColor,
       onTap: onTapped,
-      child:    Container(
+      child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.9),
           boxShadow: [
             BoxShadow(
-                color: Theme.of(context).focusColor.withOpacity(0.1),
+                color: Theme
+                    .of(context)
+                    .focusColor
+                    .withOpacity(0.1),
                 blurRadius: 5,
                 offset: Offset(0, 2)),
           ],
@@ -1035,7 +1116,10 @@ String? properttype;
                           food.phasename.toString(),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyText1,
                         ),
 
 
@@ -1051,7 +1135,10 @@ String? properttype;
                           food.blockname.toString(),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyText1,
                         ),
 
 
@@ -1067,7 +1154,10 @@ String? properttype;
                           food.plot_no!.toString(),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyText1,
                         ),
 
 
@@ -1083,7 +1173,10 @@ String? properttype;
                           food.size!.toString(),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyText1,
                         ),
 
 
@@ -1097,7 +1190,7 @@ String? properttype;
                         child: RichText(
                             text: TextSpan(children: [
                               new TextSpan(
-                                text: food.price!.toString() ,
+                                text: food.price!.toString(),
 
                                 style: TextStyle(
                                     fontFamily: 'Google Sans',
@@ -1231,7 +1324,83 @@ String? properttype;
 //       ),
     );
   }
-  Widget _listView(persons) {
+
+  void showAlertDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+            width: MediaQuery
+                .of(context)
+                .size
+                .width / 1.3,
+            height: MediaQuery
+                .of(context)
+                .size
+                .height / 7.5,
+            decoration:  BoxDecoration(
+              shape: BoxShape.rectangle,
+              color: const Color(0xFFFFFF),
+              borderRadius:  BorderRadius.all(new Radius.circular(99.0)),
+            ),
+            child: new Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  "Please Select Location",
+                  maxLines: 11,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18.0,
+                    fontFamily: 'helvetica_neue_light',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                MaterialButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height / 12,
+                    padding: EdgeInsets.all(15.0),
+                    child: Material(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.circular(25.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'Continue',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.0,
+                                fontFamily: 'helvetica_neue_light',
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        )
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+    Widget _listView(persons) {
     return Expanded(
       child: ListView.builder(
           itemCount: persons.length,

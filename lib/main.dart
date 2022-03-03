@@ -20,6 +20,7 @@ import 'package:eBazaarMerchant/src/shared/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:http/http.dart' as http;
@@ -49,10 +50,11 @@ class MyApp extends StatelessWidget {
           model: CartModel(),
           child: OverlaySupport.global(
               child: MaterialApp(
-            title: 'LahoreDealz',
+            title: 'Smart Deals',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
-                primarySwatch: Colors.green, primaryColor: primaryColor),
+                primarySwatch: Colors.green,
+                primaryColor: primaryColor),
             initialRoute: '/',
             routes: {
               '/': (context) => Router(),
@@ -238,9 +240,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           index: widget.tabsIndex != null ? widget.tabsIndex! : _selectedIndex,
           items: <Widget>[
-            Icon(Fryo.shop, size: 30, color: Colors.white),
+            Icon(Fryo.home, size: 30, color: Colors.white),
 
-            Icon(Icons.fastfood, size: 30, color: Colors.white),
+            Icon(FontAwesomeIcons.bars, size: 30, color: Colors.white),
             Icon(Fryo.user_1, size: 30, color: Colors.white),
           ],
           onTap: _onItemTapped),
@@ -252,7 +254,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _selectedIndex = index;
        if (index == 1) {
         widget.tabsIndex = null;
-        widget.title = 'My Product';
+        widget.title = 'My Properties';
       } else if (index == 2) {
         widget.tabsIndex = null;
         widget.title = 'Profile';

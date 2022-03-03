@@ -13,7 +13,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:geolocator/geolocator.dart';
+//import 'package:geolocator/geolocator.dart';
 
 import 'ProductPage.dart';
 
@@ -27,17 +27,17 @@ class ShopPage extends StatefulWidget {
 class _ShopPageState extends State<ShopPage> {
   TextEditingController editingProductController = TextEditingController();
   GlobalKey<RefreshIndicatorState>? refreshKey;
-  Position? _currentPosition;
+ // Position? _currentPosition;
 
-  Future<void> _checkPermission() async {
-    // verify permissions
-    LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
-      await Geolocator.openAppSettings();
-      await Geolocator.openLocationSettings();
-    }
-  }
+  // Future<void> _checkPermission() async {
+  //   // verify permissions
+  //   LocationPermission permission = await Geolocator.requestPermission();
+  //   if (permission == LocationPermission.denied ||
+  //       permission == LocationPermission.deniedForever) {
+  //     await Geolocator.openAppSettings();
+  //     await Geolocator.openLocationSettings();
+  //   }
+  // }
 
   String api = FoodApi.baseApi;
   List? _categories = [];
@@ -150,22 +150,22 @@ class _ShopPageState extends State<ShopPage> {
     shop = Provider.of<AuthProvider>(context, listen: false).shopID;
     this.getCategories(shop);
     this.getProducts(shop);
-    _getCurrentLocation();
-    _checkPermission();
+   // _getCurrentLocation();
+ //   _checkPermission();
   }
 
-  _getCurrentLocation() {
-    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-        .then((Position position) {
-      _checkPermission();
-      setState(() {
-        _currentPosition = position;
-      });
-    }).catchError((e) {
-      print(e);
-      _checkPermission();
-    });
-  }
+  // _getCurrentLocation() {
+  //   Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+  //       .then((Position position) {
+  //     _checkPermission();
+  //     setState(() {
+  //       _currentPosition = position;
+  //     });
+  //   }).catchError((e) {
+  //     print(e);
+  //     _checkPermission();
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
