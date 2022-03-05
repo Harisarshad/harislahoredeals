@@ -129,8 +129,8 @@ print(widget.pricemin);
 
 double mixmax = double.parse(widget.areamax!) * double.parse(widget.area_type!);
 double mixmin = double.parse(widget.areamin!) * double.parse(widget.area_type!);
-print(mixmin);
-print(mixmax);
+print(mixmin.toString());
+print(mixmax.toString());
 
     var response = await http.get(Uri.parse(url), headers: {
       "X-FOOD-LAT": "$order",
@@ -649,6 +649,7 @@ print(mixmax);
 
                         Flexible(
                           child: Row(
+
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Expanded(

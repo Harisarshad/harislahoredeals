@@ -125,7 +125,7 @@ String harisarshad= '';
   void searchsoc(String query) {
     if (query.isEmpty) {
       personssoc = originalsoc;
-      harissoc =true;
+
       setState(() {});
       return;
     }
@@ -136,10 +136,7 @@ String harisarshad= '';
     personsphase.clear();
     originalblock.clear();
     personsblock.clear();
-    setState(() {
-
-    });
-
+    harissoc =true;
     query = query.toLowerCase();
     print(query);
     List result = [];
@@ -387,7 +384,7 @@ print('sizesq*sizeValue');
                       context,
                       MaterialPageRoute(
                           builder: (context) => MyHomePage(
-                                tabsIndex: 2,
+                                tabsIndex: 1,
                                 title: 'My Properties',
                               ))).then((_) => _formKey.currentState!.reset());
                 } else {

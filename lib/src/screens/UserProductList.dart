@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:eBazaarMerchant/src/screens/loginPage.dart';
 import 'package:eBazaarMerchant/src/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -19,19 +18,19 @@ import 'package:http/http.dart' as http;
 
 import '../../main.dart';
 
-class ProductList extends StatefulWidget {
+class UserProductList extends StatefulWidget {
   final String? categoryID;
   final String? category;
   final shop;
- // final CartModel? model;
-  ProductList({Key? key, this.category, this.categoryID, this.shop,})
+  final CartModel? model;
+  UserProductList({Key? key, this.category, this.categoryID, this.shop, this.model})
       : super(key: key);
 
   @override
   _ProductAllState createState() => _ProductAllState();
 }
 
-class _ProductAllState extends State<ProductList> {
+class _ProductAllState extends State<UserProductList> {
   TextEditingController editingProductsController = TextEditingController();
   GlobalKey<RefreshIndicatorState>? refreshKey;
 
@@ -42,7 +41,7 @@ class _ProductAllState extends State<ProductList> {
   String? shopID;
 
   Future<String> getProducts(String? shopID) async {
-    final url = "$api/shop-product/1/shop/product";
+    final url = "$api/property-user/$shopID/shop/product";
     print (url);
     var response = await http.get(Uri.parse(url), headers: {
       HttpHeaders.acceptHeader: "application/json",
@@ -82,7 +81,15 @@ class _ProductAllState extends State<ProductList> {
                   double.tryParse('${element['discount_price']}')!.toDouble()));
         });
       });
-    } else {
+    }
+    else if(
+         response.statusCode == 401)
+
+      {
+    print("loginagin");
+
+      }
+    else {
       throw Exception('Failed to');
     }
     return "Success";
@@ -128,9 +135,9 @@ class _ProductAllState extends State<ProductList> {
 
   Future<Null> refreshList() async {
     setState(() {
-      shopID = Provider.of<AuthProvider>(context, listen: false).shopID;
+      //shopID = Provider.of<AuthProvider>(context, listen: false).shopID;
       _products.clear();
-      this.getProducts(shopID);
+      this.getProducts(widget.categoryID);
     });
   }
 
@@ -139,23 +146,33 @@ class _ProductAllState extends State<ProductList> {
     super.initState();
     shopID = Provider.of<AuthProvider>(context, listen: false).shopID;
     token = Provider.of<AuthProvider>(context, listen: false).token;
-    getProducts(shopID);
+    getProducts(widget.categoryID);
   }
 
   @override
   Widget build(BuildContext context) {
     final currency = Provider.of<AuthProvider>(context).currency;
-    // token = Provider.of<AuthProvider>(context, listen: false).token;
-    // if (token == null) {
-    //   Navigator.push(
-    //       context,
-    //       new MaterialPageRoute(
-    //           builder: (context) => LoginPage()));
-    // }
     print("Bearer $token");
 
     return Scaffold(
         backgroundColor: Colors.indigo[50],
+        appBar: AppBar(
+          backgroundColor: primaryColor,
+          centerTitle: true,
+          leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          title: Text(
+            widget.category!,
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+        ),
         body: RefreshIndicator(
             key: refreshKey,
             onRefresh: () async {

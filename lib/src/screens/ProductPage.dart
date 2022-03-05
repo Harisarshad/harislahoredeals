@@ -1,3 +1,4 @@
+import 'package:eBazaarMerchant/src/screens/UserProductList.dart';
 import 'package:eBazaarMerchant/src/screens/dimensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -67,7 +68,7 @@ String? propType;
 
 
   Map<String, dynamic> ProductShow = {
-   // "id": '',
+    "id": '',
     "name": '',
     "first_name": '',
     "last_name": '',
@@ -101,6 +102,7 @@ String? propType;
        print('${resBody['data']['name'].toString()}') ;
         ProductShow['name'] = resBody['data']['name'];
         ProductShow['first_name'] = resBody['data']['first_name'];
+        ProductShow['id'] = resBody['data']['id'].toString();
         ProductShow['last_name'] = resBody['data']['last_name'];
 
         ProductShow['email'] = resBody['data']['email'];
@@ -444,14 +446,46 @@ String? propType;
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(ProductShow['first_name'] != null
-                                                            ? ProductShow['first_name']
-                                                            : '' + ' '+ ProductShow['last_name'] != null
-                              ? ProductShow['last_name']
-                              : '' , style: TextStyle(color: Colors.grey[800], fontSize : 18, fontWeight: FontWeight.w600),),
-                          Text(ProductShow['phone'] != null
-                              ? ProductShow['phone']
-                              : '' , style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w400),)
+                      ListTile(
+
+                      title: Text(ProductShow['first_name'] != null
+                      ? ProductShow['first_name']
+                          : '' + ' '+ ProductShow['last_name'] != null
+                      ? ProductShow['last_name']
+                          : '' ,textScaleFactor: 1.5,),
+                     // trailing: Icon(Icons.done),
+                      subtitle: Text(ProductShow['phone'] != null
+                          ? ProductShow['phone']
+                          : '' ),
+                      selected: true,
+                      onTap: () {
+                        setState(() {
+                          // Navigator.of(context).push(MaterialPageRoute(
+                          //   builder: (context) => ProductPost(),
+                          // )
+
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    UserProductList(categoryID: ProductShow['id'] != null
+                                        ? ProductShow['id']
+                                        : '',
+                                      category:ProductShow['first_name'] != null
+                                          ? ProductShow['first_name']
+                                          : '',
+
+
+                                    )));
+
+
+                        //  txt='List Tile pressed';
+                        });
+                      },
+                    ),
+
+                          //Text(, style: TextStyle(color: Colors.grey[800], fontSize : 18, fontWeight: FontWeight.w600),),
+                         // Text(ProductShow['phone'] != null
+                           //   ? ProductShow['phone']
+                           //   : '' , style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w400),)
                         ],
                       ),
                     ),

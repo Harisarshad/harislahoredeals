@@ -87,7 +87,7 @@ class _ProfilePageState extends State<ProfilePage> {
         },
         child: result['name'] == ''
             ? CircularLoadingWidget(
-                height: 500,
+                height: 400,
                 subtitleText: 'profile not found',
                 img: 'assets/shopping.png',
               )
@@ -110,7 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                               ///here we create space for the circle avatar to get ut of the box
                               child: Container(
-                                height: 230.0,
+                                height: 180.0,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15.0),
                                   color: Colors.white,
@@ -131,43 +131,43 @@ class _ProfilePageState extends State<ProfilePage> {
                                               fontWeight: FontWeight.bold,
                                               fontSize: 22.0),
                                         ),
-                                        SizedBox(
-                                          height: 10.0,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              Column(
-                                                children: <Widget>[
-                                                  Text(
-                                                    result['balance'] != ''
-                                                        ? result['balance']
-                                                        : '',
-                                                    style: TextStyle(
-                                                      fontFamily: 'Google Sans',
-                                                      fontSize: 20.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black87,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    'Credit',
-                                                    style: TextStyle(
-                                                      fontFamily: 'Google Sans',
-                                                      fontSize: 15.0,
-                                                      color: Colors.black54,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        )
+                                        // SizedBox(
+                                        //   height: 10.0,
+                                        // ),
+                                        // Padding(
+                                        //   padding: const EdgeInsets.symmetric(
+                                        //       horizontal: 10.0),
+                                        //   child: Row(
+                                        //     mainAxisAlignment:
+                                        //         MainAxisAlignment.center,
+                                        //     children: <Widget>[
+                                        //       Column(
+                                        //         children: <Widget>[
+                                        //           Text(
+                                        //             result['balance'] != ''
+                                        //                 ? result['balance']
+                                        //                 : '',
+                                        //             style: TextStyle(
+                                        //               fontFamily: 'Google Sans',
+                                        //               fontSize: 20.0,
+                                        //               fontWeight:
+                                        //                   FontWeight.bold,
+                                        //               color: Colors.black87,
+                                        //             ),
+                                        //           ),
+                                        //           Text(
+                                        //             'Credit',
+                                        //             style: TextStyle(
+                                        //               fontFamily: 'Google Sans',
+                                        //               fontSize: 15.0,
+                                        //               color: Colors.black54,
+                                        //             ),
+                                        //           ),
+                                        //         ],
+                                        //       ),
+                                        //     ],
+                                        //   ),
+                                        // )
                                       ],
                                     )),
                               ),

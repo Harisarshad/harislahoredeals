@@ -6,7 +6,7 @@ import 'package:eBazaarMerchant/src/shared/colors.dart';
 import 'package:eBazaarMerchant/src/utils/CustomTextStyle.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
+//import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 
 class PaymentStripe extends StatefulWidget {
@@ -34,8 +34,8 @@ class _PaymentStripeState extends State<PaymentStripe> {
         Provider.of<AuthProvider>(context, listen: false).stripekey;
     print(stripekey);
     print(stripesecret);
-    Stripe.publishableKey = stripekey!;
-    Stripe.instance.applySettings();
+    // Stripe.publishableKey = stripekey!;
+    // Stripe.instance.applySettings();
   }
 
   Map<String, dynamic>? paymentIntentData;
@@ -115,7 +115,7 @@ class _PaymentStripeState extends State<PaymentStripe> {
             ),
             InkWell(
               onTap: () async {
-                await makePayment(stripesecret!, currency);
+               // await makePayment(stripesecret!, currency);
               },
               child: Padding(
                 padding: const EdgeInsets.only(left: 18.0, right: 18),
@@ -144,70 +144,70 @@ class _PaymentStripeState extends State<PaymentStripe> {
     );
   }
 
-  Future<void> makePayment(stripeSecret, currency) async {
-    try {
-      paymentIntentData =
-          await createPaymentIntent(stripeSecret, widget.amount!, 'usd');
-      await Stripe.instance
-          .initPaymentSheet(
-              paymentSheetParameters: SetupPaymentSheetParameters(
-                  paymentIntentClientSecret:
-                      paymentIntentData!['client_secret'],
-                  applePay: true,
-                  googlePay: true,
-                  testEnv: true,
-                  style: ThemeMode.dark,
-                  merchantCountryCode: 'US',
-                  merchantDisplayName: 'MOKTADIR'))
-          .then((value) {});
-      displayPaymentSheet();
-    } catch (e) {
-      print('exception' + e.toString());
-    }
-  }
+  // Future<void> makePayment(stripeSecret, currency) async {
+  //   try {
+  //     paymentIntentData =
+  //         await createPaymentIntent(stripeSecret, widget.amount!, 'usd');
+  //     await Stripe.instance
+  //         .initPaymentSheet(
+  //             paymentSheetParameters: SetupPaymentSheetParameters(
+  //                 paymentIntentClientSecret:
+  //                     paymentIntentData!['client_secret'],
+  //                 applePay: true,
+  //                 googlePay: true,
+  //                 testEnv: true,
+  //                 style: ThemeMode.dark,
+  //                 merchantCountryCode: 'US',
+  //                 merchantDisplayName: 'MOKTADIR'))
+  //         .then((value) {});
+  //     displayPaymentSheet();
+  //   } catch (e) {
+  //     print('exception' + e.toString());
+  //   }
+  // }
 
-  displayPaymentSheet() async {
-    try {
-      await Stripe.instance
-          .presentPaymentSheet(
-              parameters: PresentPaymentSheetParameters(
-        clientSecret: paymentIntentData!['client_secret'],
-        confirmPayment: true,
-      ))
-          .then((newValue) async {
-        //orderPlaceApi(paymentIntentData!['id'].toString());
-        print('payment id =================================>');
-        print(paymentIntentData!['id'].toString());
-        final url = "$api/orders/payment";
-
-        Map<String, String> body = {
-          'order_id': widget.orderID!,
-          'amount': widget.amount!,
-          'payment_method': '15',
-          'payment_transaction_id': '',
-        };
-
-        final response = await http.post(Uri.parse(url), body: body, headers: {
-          HttpHeaders.authorizationHeader: 'Bearer ' + widget.customerToken!
-        });
-        print(jsonDecode(response.body));
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("paid successfully")));
-
-        paymentIntentData = null;
-      }).onError((error, stackTrace) {
-        print('Exception/DISPLAYPAYMENTSHEET==> $error $stackTrace');
-      });
-    } on StripeException catch (e) {
-      showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-                content: Text("Cancelled "),
-              ));
-    } catch (e) {
-      print('$e');
-    }
-  }
+  // displayPaymentSheet() async {
+  //   try {
+  //     await Stripe.instance
+  //         .presentPaymentSheet(
+  //             parameters: PresentPaymentSheetParameters(
+  //       clientSecret: paymentIntentData!['client_secret'],
+  //       confirmPayment: true,
+  //     ))
+  //         .then((newValue) async {
+  //       //orderPlaceApi(paymentIntentData!['id'].toString());
+  //       print('payment id =================================>');
+  //       print(paymentIntentData!['id'].toString());
+  //       final url = "$api/orders/payment";
+  //
+  //       Map<String, String> body = {
+  //         'order_id': widget.orderID!,
+  //         'amount': widget.amount!,
+  //         'payment_method': '15',
+  //         'payment_transaction_id': '',
+  //       };
+  //
+  //       final response = await http.post(Uri.parse(url), body: body, headers: {
+  //         HttpHeaders.authorizationHeader: 'Bearer ' + widget.customerToken!
+  //       });
+  //       print(jsonDecode(response.body));
+  //       ScaffoldMessenger.of(context)
+  //           .showSnackBar(SnackBar(content: Text("paid successfully")));
+  //
+  //       paymentIntentData = null;
+  //     }).onError((error, stackTrace) {
+  //       print('Exception/DISPLAYPAYMENTSHEET==> $error $stackTrace');
+  //     });
+  //   } on StripeException catch (e) {
+  //     showDialog(
+  //         context: context,
+  //         builder: (_) => AlertDialog(
+  //               content: Text("Cancelled "),
+  //             ));
+  //   } catch (e) {
+  //     print('$e');
+  //   }
+  // }
 
   createPaymentIntent(stripeSecret, String amount, String currency) async {
     try {

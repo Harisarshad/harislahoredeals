@@ -61,17 +61,17 @@ class AuthProvider with ChangeNotifier {
     String? address = await getShopAddress();
     String? shopimg = await getShopImg();
     if (token != null) {
-      if (shop != null) {
-        _shopID = shop;
-        _shopName = shopname;
-        _openingTime = openingTime;
-        _closingTime = closingtime;
-        _deliveryCharge = charge;
-        _shopAddress = address;
-        _shopImg = shopimg;
-      } else {
-        _shopID = null;
-      }
+      // if (shop != null) {
+      //   _shopID = shop;
+      //   _shopName = shopname;
+      //   _openingTime = openingTime;
+      //   _closingTime = closingtime;
+      //   _deliveryCharge = charge;
+      //   _shopAddress = address;
+      //   _shopImg = shopimg;
+      // } else {
+      //   _shopID = null;
+      // }
       _status = Status.Authenticated;
       _token = token;
       refreshToken();

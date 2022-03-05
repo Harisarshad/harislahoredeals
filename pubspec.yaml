@@ -34,8 +34,7 @@ dependencies:
   syncfusion_flutter_sliders: ^19.3.56
   image_picker: ^0.8.4+4
 
-  flutter_credit_card: ^3.0.1
-  flutter_stripe: ^2.0.2
+
   sn_progress_dialog: ^1.0.3
   html: ^0.15.0
   intl: ^0.17.0
