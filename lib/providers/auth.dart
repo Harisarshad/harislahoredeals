@@ -77,8 +77,8 @@ class AuthProvider with ChangeNotifier {
       refreshToken();
       _user = user;
     } else {
-      _token = null;
-      _shopID = null;
+     // _token = null;
+     // _shopID = null;
       _status = Status.Unauthenticated;
     }
 

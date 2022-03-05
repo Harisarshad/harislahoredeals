@@ -43,6 +43,7 @@ class _ProductAllState extends State<UserProductList> {
   Future<String> getProducts(String? shopID) async {
     final url = "$api/property-user/$shopID/shop/product";
     print (url);
+
     var response = await http.get(Uri.parse(url), headers: {
       HttpHeaders.acceptHeader: "application/json",
       HttpHeaders.authorizationHeader: 'Bearer $token'
@@ -54,7 +55,7 @@ class _ProductAllState extends State<UserProductList> {
       setState(() {
         print(resBody);
         _listProduct = resBody['data'];
-
+        _products.clear();
         print(_listProduct);
         _listProduct!.forEach((element) {
           _products.add(Product(
@@ -205,39 +206,7 @@ class _ProductAllState extends State<UserProductList> {
                           return SizedBox(height: 10);
                         },
                         itemBuilder: (context, index) {
-                          return Slidable(
-                            startActionPane: ActionPane(
-                              motion: const DrawerMotion(),
-                              extentRatio: 0.25,
-                              children: [
-
-                                //haris arshad
-                                // SlidableAction(
-                                //   label: 'Edit',
-                                //   backgroundColor: Colors.black45,
-                                //   icon: Icons.edit,
-                                //   onPressed: (context) {
-                                //     Navigator.of(context)
-                                //         .push(MaterialPageRoute(
-                                //       builder: (context) => ProductEdit(
-                                //         product: _products[index],
-                                //       ),
-                                //     ));
-                                //   },
-                                // ),
-                                SlidableAction(
-                                  label: 'Delete',
-                                  backgroundColor: Colors.red,
-                                  icon: Icons.delete,
-                                  onPressed: (context) {
-                                    getDelete(_products[index]
-                                        .productItemID
-                                        .toString());
-                                  },
-                                ),
-                              ],
-                            ),
-                            child: Container(
+                          return Container(
                               height: 80,
                               color: Colors.white,
                               child: _buildFoodCard(
@@ -255,26 +224,26 @@ class _ProductAllState extends State<UserProductList> {
                                   );
                                 },
                               ),
-                            ),
+
                           );
                         },
                       ),
-                Positioned(
-                  bottom: 10,
-                  right: 10,
-                  child: FloatingActionButton.extended(
-                    backgroundColor: primaryColor,
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ProductPost(),
-                      ));
-                    },
-                    isExtended: true,
-                    materialTapTargetSize: MaterialTapTargetSize.padded,
-                    icon: Icon(Icons.add_circle_outline),
-                    label: Text('Add'),
-                  ),
-                ),
+                // Positioned(
+                //   bottom: 10,
+                //   right: 10,
+                //   child: FloatingActionButton.extended(
+                //     backgroundColor: primaryColor,
+                //     onPressed: () {
+                //       Navigator.of(context).push(MaterialPageRoute(
+                //         builder: (context) => ProductPost(),
+                //       ));
+                //     },
+                //     isExtended: true,
+                //     materialTapTargetSize: MaterialTapTargetSize.padded,
+                //     icon: Icon(Icons.add_circle_outline),
+                //     label: Text('Add'),
+                //   ),
+                // ),
               ],
             )));
   }

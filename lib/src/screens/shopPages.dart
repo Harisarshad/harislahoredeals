@@ -324,9 +324,159 @@ print(mixmax.toString());
             }),
         
         title: Text(
-          "Search Result",
+          "DHA Lahore",
           style: TextStyle(color: Colors.white),
         ),
+        bottom: (PreferredSize(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 15),
+            decoration: BoxDecoration(
+              color: Colors.green.withOpacity(0.9),
+              boxShadow: [
+                BoxShadow(
+                    color: Theme.of(context).focusColor.withOpacity(0.1),
+                    blurRadius: 5,
+                    offset: Offset(6, 9)),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+
+
+                Flexible(
+                  child: Row(
+
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        width:MediaQuery. of(context). size. width * .14,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                // Text(
+                                //   "Society/",
+                                //   overflow: TextOverflow.ellipsis,
+                                //   maxLines: 2,
+                                //   style: Theme.of(context).textTheme.bodyText1,
+                                // ),
+                                Text(
+                                  "Phase",
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
+
+
+
+                              ],
+                            ),
+
+
+
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width:MediaQuery. of(context). size. width * .14,
+
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              "Block",
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+
+
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width:MediaQuery. of(context). size. width * .15,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+
+                            Text(
+                              "Plot",
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+
+
+
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width:MediaQuery. of(context). size. width * .22,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              "Size",
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+
+
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(width:15),
+                      Container(
+                        width:MediaQuery. of(context). size. width * .22,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            RichText(
+                                text: TextSpan(children: [
+                                  new TextSpan(
+                                    text: ' Price' ,
+
+                                    style: TextStyle(
+                                        fontFamily: 'Google Sans',
+                                        color: Color(0xFFF75A4C),
+                                        fontSize: 18.0),
+                                  ),
+                                ])),
+
+
+                          ],
+                        ),
+                      ),
+
+
+
+//                Row(
+//                  children: <Widget>[
+//                    Text('$currency' + food.price.toString(), style: TextStyle(fontFamily: 'Google Sans', fontSize: 18.0,fontWeight: FontWeight.bold, color: Colors.black87,),),
+//                    Text('$currency' + food.price.toString(), style: TextStyle( fontFamily: 'Google Sans',fontSize: 15.0,  color: Colors.black54,),),
+//                  ],
+//                ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+          preferredSize: Size(50, 50),
+        )),
         actions: <Widget>[Padding(
       padding: EdgeInsets.only(right: 20.0),
       child: GestureDetector(
@@ -345,7 +495,8 @@ print(mixmax.toString());
           },
           child: new LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-              return ListView(
+              return
+                ListView(
                 children: <Widget>[
                   SizedBox(height: 10.0),
                   // Row(
@@ -631,159 +782,159 @@ print(mixmax.toString());
                   //   ),
                   // ),
                   //SizedBox(height: 15.0),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 15),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.9),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Theme.of(context).focusColor.withOpacity(0.1),
-                            blurRadius: 5,
-                            offset: Offset(6, 9)),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-
-
-                        Flexible(
-                          child: Row(
-
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                flex:2,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        // Text(
-                                        //   "Society/",
-                                        //   overflow: TextOverflow.ellipsis,
-                                        //   maxLines: 2,
-                                        //   style: Theme.of(context).textTheme.bodyText1,
-                                        // ),
-                                        Text(
-                                          "Phase",
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                          style: Theme.of(context).textTheme.bodyText1,
-                                        ),
-
-
-
-                                      ],
-                                    ),
-
-
-
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex:2,
-
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      "Block",
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                      style: Theme.of(context).textTheme.bodyText1,
-                                    ),
-
-
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex:2,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-
-                                    Text(
-                                      "Plot",
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                      style: Theme.of(context).textTheme.bodyText1,
-                                    ),
-
-
-
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex:3,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      "Size",
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                      style: Theme.of(context).textTheme.bodyText1,
-                                    ),
-
-
-                                  ],
-                                ),
-                              ),
-                              SizedBox(width: 2),
-                              Expanded(
-                                flex:2,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    RichText(
-                                        text: TextSpan(children: [
-                                          new TextSpan(
-                                            text: ' Price' ,
-
-                                            style: TextStyle(
-                                                fontFamily: 'Google Sans',
-                                                color: Color(0xFFF75A4C),
-                                                fontSize: 18.0),
-                                          ),
-                                        ])),
-
-
-                                  ],
-                                ),
-                              ),
-
-
-//                Row(
-//                  children: <Widget>[
-//                    Text('$currency' + food.price.toString(), style: TextStyle(fontFamily: 'Google Sans', fontSize: 18.0,fontWeight: FontWeight.bold, color: Colors.black87,),),
-//                    Text('$currency' + food.price.toString(), style: TextStyle( fontFamily: 'Google Sans',fontSize: 15.0,  color: Colors.black54,),),
-//                  ],
-//                ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+//                   Container(
+//                     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 15),
+//                     decoration: BoxDecoration(
+//                       color: Colors.green.withOpacity(0.9),
+//                       boxShadow: [
+//                         BoxShadow(
+//                             color: Theme.of(context).focusColor.withOpacity(0.1),
+//                             blurRadius: 5,
+//                             offset: Offset(6, 9)),
+//                       ],
+//                     ),
+//                     child: Row(
+//                       mainAxisAlignment: MainAxisAlignment.start,
+//                       children: <Widget>[
+//
+//
+//                         Flexible(
+//                           child: Row(
+//
+//                             crossAxisAlignment: CrossAxisAlignment.center,
+//                             children: <Widget>[
+//                               Expanded(
+//                                 flex:2,
+//                                 child: Row(
+//                                   crossAxisAlignment: CrossAxisAlignment.start,
+//                                   mainAxisAlignment: MainAxisAlignment.center,
+//                                   children: <Widget>[
+//                                     Column(
+//                                       crossAxisAlignment: CrossAxisAlignment.start,
+//                                       mainAxisAlignment: MainAxisAlignment.center,
+//                                       children: <Widget>[
+//                                         // Text(
+//                                         //   "Society/",
+//                                         //   overflow: TextOverflow.ellipsis,
+//                                         //   maxLines: 2,
+//                                         //   style: Theme.of(context).textTheme.bodyText1,
+//                                         // ),
+//                                         Text(
+//                                           "Phase",
+//                                           overflow: TextOverflow.ellipsis,
+//                                           maxLines: 2,
+//                                           style: Theme.of(context).textTheme.bodyText1,
+//                                         ),
+//
+//
+//
+//                                       ],
+//                                     ),
+//
+//
+//
+//                                   ],
+//                                 ),
+//                               ),
+//                               Expanded(
+//                                 flex:2,
+//
+//                                 child: Row(
+//                                   crossAxisAlignment: CrossAxisAlignment.start,
+//                                   mainAxisAlignment: MainAxisAlignment.center,
+//                                   children: <Widget>[
+//                                     Text(
+//                                       "Block",
+//                                       overflow: TextOverflow.ellipsis,
+//                                       maxLines: 2,
+//                                       style: Theme.of(context).textTheme.bodyText1,
+//                                     ),
+//
+//
+//                                   ],
+//                                 ),
+//                               ),
+//                               Expanded(
+//                                 flex:2,
+//                                 child: Row(
+//                                   crossAxisAlignment: CrossAxisAlignment.start,
+//                                   mainAxisAlignment: MainAxisAlignment.center,
+//                                   children: <Widget>[
+//
+//                                     Text(
+//                                       "Plot",
+//                                       overflow: TextOverflow.ellipsis,
+//                                       maxLines: 2,
+//                                       style: Theme.of(context).textTheme.bodyText1,
+//                                     ),
+//
+//
+//
+//                                   ],
+//                                 ),
+//                               ),
+//                               Expanded(
+//                                 flex:3,
+//                                 child: Row(
+//                                   crossAxisAlignment: CrossAxisAlignment.start,
+//                                   mainAxisAlignment: MainAxisAlignment.center,
+//                                   children: <Widget>[
+//                                     Text(
+//                                       "Size",
+//                                       overflow: TextOverflow.ellipsis,
+//                                       maxLines: 2,
+//                                       style: Theme.of(context).textTheme.bodyText1,
+//                                     ),
+//
+//
+//                                   ],
+//                                 ),
+//                               ),
+//                               SizedBox(width: 2),
+//                               Expanded(
+//                                 flex:2,
+//                                 child: Row(
+//                                   crossAxisAlignment: CrossAxisAlignment.start,
+//                                   mainAxisAlignment: MainAxisAlignment.center,
+//                                   children: <Widget>[
+//                                     RichText(
+//                                         text: TextSpan(children: [
+//                                           new TextSpan(
+//                                             text: ' Price' ,
+//
+//                                             style: TextStyle(
+//                                                 fontFamily: 'Google Sans',
+//                                                 color: Color(0xFFF75A4C),
+//                                                 fontSize: 18.0),
+//                                           ),
+//                                         ])),
+//
+//
+//                                   ],
+//                                 ),
+//                               ),
+//
+//
+// //                Row(
+// //                  children: <Widget>[
+// //                    Text('$currency' + food.price.toString(), style: TextStyle(fontFamily: 'Google Sans', fontSize: 18.0,fontWeight: FontWeight.bold, color: Colors.black87,),),
+// //                    Text('$currency' + food.price.toString(), style: TextStyle( fontFamily: 'Google Sans',fontSize: 15.0,  color: Colors.black54,),),
+// //                  ],
+// //                ),
+//                             ],
+//                           ),
+//                         )
+//                       ],
+//                     ),
+//                   ),
                   _shops.isEmpty
                       ? CircularLoadingWidget(
                           height: 200,
-                          subtitleText: 'No Shops Found ',
+                          subtitleText: 'No Property Found ',
                           img: 'assets/shopping3.png',
                         )
                       : ListView.separated(
-                    padding: EdgeInsets.symmetric(vertical: 10),
+                    padding: EdgeInsets.symmetric(vertical: 0),
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     primary: false,
@@ -854,8 +1005,8 @@ print(mixmax.toString());
                 children: <Widget>[
 
 
-                  Expanded(
-                    flex:2,
+                  Container(
+                    width:MediaQuery. of(context). size. width * .14,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -871,8 +1022,8 @@ print(mixmax.toString());
                       ],
                     ),
                   ),
-                  Expanded(
-                    flex:2,
+                  Container(
+                    width:MediaQuery. of(context). size. width * .14,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -888,8 +1039,8 @@ print(mixmax.toString());
                       ],
                     ),
                   ),
-                  Expanded(
-                    flex:2,
+                  Container(
+                    width:MediaQuery. of(context). size. width * .15,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -905,8 +1056,8 @@ print(mixmax.toString());
                       ],
                     ),
                   ),
-                  Expanded(
-                    flex:3,
+                  Container(
+                    width:MediaQuery. of(context). size. width * .22,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -921,14 +1072,15 @@ print(mixmax.toString());
 
                       ],
                     ),
-                  ),
-
-                  SizedBox(width: 5),
-                  Column(
-                    children: <Widget>[
-                      Expanded(
-                        flex:2,
-                        child: RichText(
+                  ),SizedBox(width: 15,)
+                  ,
+                  Container(
+                    width:MediaQuery. of(context). size. width * .22,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        RichText(
                             text: TextSpan(children: [
                               new TextSpan(
                                 text: food.pricewords!.toString() ,
@@ -940,11 +1092,33 @@ print(mixmax.toString());
                               ),
                             ])),
 
-                      ),
-                      SizedBox(width: 15),
 
-                    ],
+                      ],
+                    ),
                   ),
+
+
+                  // Column(
+                  //   children: <Widget>[
+                  //     Container(
+                  //       width:MediaQuery. of(context). size. width * .20,
+                  //       child: RichText(
+                  //           text: TextSpan(children: [
+                  //             new TextSpan(
+                  //               text: food.pricewords!.toString() ,
+                  //
+                  //               style: TextStyle(
+                  //                   fontFamily: 'Google Sans',
+                  //                   color: Color(0xFFF75A4C),
+                  //                   fontSize: 16.0),
+                  //             ),
+                  //           ])),
+                  //
+                  //     ),
+                  //     SizedBox(width: 15),
+                  //
+                  //   ],
+                  // ),
 
 //                Row(
 //                  children: <Widget>[
